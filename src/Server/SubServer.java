@@ -11,6 +11,7 @@ package Server;
 import java.net.*;
 import java.util.*;
 import java.io.*;
+import Utility.*;
 
 
 public class SubServer extends Thread{
@@ -18,6 +19,7 @@ public class SubServer extends Thread{
 	private ServerSocket listener;
 	private Socket currentClient;
 	private int portNumber;
+	private int clientNumber = 0;
 
 	class ClientHandler extends Thread
 	{
@@ -32,9 +34,9 @@ public class SubServer extends Thread{
 			System.out.println("connection established from" + client.getInetAddress().toString());
 		}
 		
-		private boolean verify(long handShake)
+		private boolean verify(int handShake)
 		{
-			return true;
+			return (handShake == "dankweed".hashCode());
 		}
 		
 		public void run()
@@ -43,20 +45,21 @@ public class SubServer extends Thread{
 			{
 				read = new DataInputStream(client.getInputStream());
 				write = new DataOutputStream(client.getOutputStream());
-				write.writeChars("Welcome to the server");
-				if (!verify(read.readLong()))
+				
+				write.writeInt(69);write.writeInt(420);
+				write.writeChars("Welcome to the Server!\n");
+				if (!verify(read.readInt()))
 				{
-					write.writeChars("Verification Error!");
 					read.close();
 					write.close();
 					client.close();
 					return;
 				}
-				state = read.readChar();
+				System.out.println("verified");
 				switch (state)
 				{
 					case 't':
-						//do stuff
+						//TODO
 				}
 				read.close();
 				write.close();
@@ -79,7 +82,6 @@ public class SubServer extends Thread{
 
 	public void run()
 	{
-		int clientNumber = 0;
 		try
 		{
 			listener = new ServerSocket(portNumber);
