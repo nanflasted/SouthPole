@@ -89,17 +89,16 @@ public class SubServer extends Thread{
 			System.err.println(e.getMessage());
 			return;
 		}
-		while (clientNumber <= 5)
+		while (true)
 		{
 			try
 			{
-				System.out.println("server waiting on port" + new Integer(portNumber).toString() 
-						+ "at" + listener.getInetAddress().toString() + "with" + new Integer(clientNumber).toString()
-						+ "current communications");
+				System.out.println("server waiting on port " + new Integer(portNumber).toString() 
+						+ " at " + listener.getLocalSocketAddress().toString() + " with " + new Integer(clientNumber).toString()
+						+ " current communications.");
 				currentClient = listener.accept();
 				clientNumber++;
-				new ClientHandler(currentClient).start();	
-				clientNumber--;
+				new ClientHandler(currentClient).start();
 			}
 			catch (Exception e)
 			{

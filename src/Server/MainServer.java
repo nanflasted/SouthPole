@@ -20,7 +20,7 @@ public class MainServer {
 		for (int i = startingPort; i <= endingPort; i++)
 		{
 			worlds.add(new SubServer(i));
-			worlds.get(i).start();
+			worlds.get(i-startingPort).start();
 		}
 	}
 	
