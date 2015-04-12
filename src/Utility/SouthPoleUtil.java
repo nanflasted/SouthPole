@@ -22,4 +22,12 @@ public class SouthPoleUtil {
 		MOVERIGHT
 	}
 	
+	public static enum ServerResponse{
+		LOGIN_FAIL,
+		LOGIN_OK,
+		ACCOUNT_CREATE_FAIL,
+		ACCOUNT_CREATE_OK
+	}
+	
+	
 }
