@@ -19,7 +19,7 @@ public class MainServer {
 		worlds = new ArrayList<SubServer>();
 		for (int i = startingPort; i <= endingPort; i++)
 		{
-			worlds.add(new SubServer());
+			worlds.add(new SubServer(i));
 			worlds.get(i).start();
 		}
 	}
