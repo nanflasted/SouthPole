@@ -8,6 +8,8 @@ package Utility;
  * @author WJLIDDY
  *
  */
+
+import java.io.*;
 public class SouthPoleUtil {
 	
 	//CONVERT TO INT:Command.SIGNUP.ordinal();
@@ -29,5 +31,15 @@ public class SouthPoleUtil {
 		ACCOUNT_CREATE_OK
 	}
 	
+	public static String dataISReadLine(DataInputStream stream) throws IOException
+	{
+		StringBuilder res = new StringBuilder();
+		char temp;
+		while ((temp = stream.readChar())!='\n')
+		{
+			res.append(temp);
+		}
+		return res.toString();
+	}
 	
 }
