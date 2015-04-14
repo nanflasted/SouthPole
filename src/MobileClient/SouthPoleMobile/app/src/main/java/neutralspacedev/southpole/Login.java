@@ -28,10 +28,12 @@ public class Login extends Activity {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
+                //load in the username and password.
                 LocalState.username = ((EditText)findViewById(R.id.userLogin)).getText().toString();
                 LocalState.password = ((EditText)findViewById(R.id.passwordLogin)).getText().toString();
 
-               AsyncTask botherServer = new ContactServer().execute(SouthPoleUtil.Command.LOGIN);
+                //Try to login
+                AsyncTask botherServer = new ContactServer().execute(SouthPoleUtil.Command.LOGIN);
                 boolean loginStatus = false;
                 try {
                     loginStatus = SouthPoleUtil.ServerResponse.LOGIN_OK.equals((SouthPoleUtil.ServerResponse) botherServer.get());
@@ -40,22 +42,21 @@ public class Login extends Activity {
                 }
 
 
+
+                int duration = Toast.LENGTH_SHORT;
+
                 if(loginStatus) {
                     Context context = getApplicationContext();
                     CharSequence text = "Login Successful!";
-                    int duration = Toast.LENGTH_SHORT;
-
                     Toast toast = Toast.makeText(context, text, duration);
                     toast.show();
 
+                    //start game
                     Intent myIntent = new Intent(Login.this, GamePlay.class);
-                    //myIntent.putExtra("key", value); //Optional parameters
                     Login.this.startActivity(myIntent);
                 } else {
                     Context context = getApplicationContext();
                     CharSequence text = "Login Failed.";
-                    int duration = Toast.LENGTH_SHORT;
-
                     Toast toast = Toast.makeText(context, text, duration);
                     toast.show();
                 }

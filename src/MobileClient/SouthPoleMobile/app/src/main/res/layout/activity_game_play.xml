@@ -13,7 +13,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:id="@+id/tableLayout"
-        android:layout_above="@+id/textView2">
+        android:layout_above="@+id/weather">
 
         <TableRow
             android:layout_width="fill_parent"
@@ -246,18 +246,6 @@
                 android:layout_weight="1" />
         </TableRow>
 
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-
-        </TableRow>
-
 
     </TableLayout>
 
@@ -266,7 +254,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Snowy, 20 degrees"
-        android:id="@+id/textView2"
+        android:id="@+id/weather"
         android:layout_centerVertical="true"
         android:layout_alignLeft="@+id/tableLayout"
         android:layout_alignStart="@+id/tableLayout" />
@@ -278,7 +266,7 @@
         android:text="Condition"
         android:id="@+id/cond"
         android:layout_below="@+id/tableLayout"
-        android:layout_toRightOf="@+id/textView2"
+        android:layout_toRightOf="@+id/weather"
         android:layout_alignRight="@+id/tableLayout"
         android:layout_alignEnd="@+id/tableLayout"
         android:gravity="right" />
@@ -288,10 +276,10 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Ticker"
-        android:id="@+id/textView3"
-        android:layout_below="@+id/textView2"
-        android:layout_alignLeft="@+id/textView2"
-        android:layout_alignStart="@+id/textView2"
+        android:id="@+id/ticker"
+        android:layout_below="@+id/weather"
+        android:layout_alignLeft="@+id/weather"
+        android:layout_alignStart="@+id/weather"
         android:layout_alignRight="@+id/cond"
         android:layout_alignEnd="@+id/cond" />
 
@@ -301,10 +289,10 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="AP Left"
-        android:id="@+id/textView4"
-        android:layout_below="@+id/textView3"
-        android:layout_alignLeft="@+id/textView3"
-        android:layout_alignStart="@+id/textView3"
+        android:id="@+id/ap"
+        android:layout_below="@+id/ticker"
+        android:layout_alignLeft="@+id/ticker"
+        android:layout_alignStart="@+id/ticker"
         android:layout_alignRight="@+id/cond"
         android:layout_alignEnd="@+id/cond" />
 
@@ -312,7 +300,7 @@
     <TableLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/textView4"
+        android:layout_below="@+id/ap"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:id="@+id/tableLayout2">

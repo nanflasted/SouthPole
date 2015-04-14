@@ -30,6 +30,10 @@ public class MainServer {
 	 */
 	public static void main(String args[])
 	{
+		//
+		args = new String[]{"12000","12001"};
+		//
+		
 		if (args.length != 2) 
 		{
 			System.err.println("Wrong Number of Arguments: MainServer <Starting Port> <Ending Port>");

@@ -1,16 +1,19 @@
 package GenericClient;
 
+import android.util.Log;
+
 import java.net.*;
 import java.io.*;
 
 import Utility.SouthPoleUtil.Command;
 import Utility.SouthPoleUtil.ServerResponse;
+import Utility.SouthPoleUtil.Tile;
 
 public class Client{
 
 	private static DataInputStream read;
 	private static DataOutputStream write;		
-	private static String hostName = "172.20.88.219";
+	private static String hostName = "172.19.86.22";
 	private static int portNumber = 1337;
 	
 	public static ServerResponse sendServerCommand(Command c){
@@ -26,10 +29,13 @@ public class Client{
 			write.writeInt("connectpls".hashCode());
 			//send our commands
 			write.writeInt(c.ordinal());
-			System.out.println("test");
 			switch(c){
 				case GETCOND:
-					//get an update of the environment around me.
+					for(int x = 0; x != 5; x++){
+						for(int y = 0; y !=5; y++){
+							LocalState.localEnv[x][y] = Tile.values()[read.readInt()];
+						}
+					}
 					break;
 				case LOGIN:
 					write.writeChars(LocalState.username + '\n');
@@ -66,8 +72,21 @@ public class Client{
 	}
 
 	public static void main(String args[]){
-		ServerResponse u = ServerResponse.values()[sendServerCommand(Command.SIGNUP).ordinal()];
-		System.out.println("got " + u.toString());
+		ServerResponse test = sendServerCommand(Command.GETCOND);
+	
+		for(int x = 0; x != 5; x++){
+			for(int y = 0; y !=5; y++){				
+				System.out.println(x + " " + y + " " + LocalState.localEnv[x][y]);
+			}
+		}
+		
+
+		test = sendServerCommand(Command.LOGIN);
+		System.out.println(test.toString());
+		
+		LocalState.username = "admin";
+		test = sendServerCommand(Command.LOGIN);
+		System.out.println(test.toString());
 	}
 	
 

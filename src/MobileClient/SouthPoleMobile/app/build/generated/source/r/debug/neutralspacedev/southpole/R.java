@@ -1332,6 +1332,7 @@ containing a value of this type.
         public static final int action_settings=0x7f09006c;
         public static final int activity_chooser_view_content=0x7f090021;
         public static final int always=0x7f090016;
+        public static final int ap=0x7f09005c;
         public static final int beginning=0x7f090013;
         public static final int checkbox=0x7f090029;
         public static final int collapseActionView=0x7f090017;
@@ -1416,13 +1417,12 @@ containing a value of this type.
         public static final int tableLayout=0x7f09003f;
         public static final int tableLayout2=0x7f09005d;
         public static final int textView=0x7f090067;
-        public static final int textView2=0x7f090040;
-        public static final int textView3=0x7f09005b;
-        public static final int textView4=0x7f09005c;
+        public static final int ticker=0x7f09005b;
         public static final int title=0x7f090027;
         public static final int up=0x7f090008;
         public static final int useLogo=0x7f090012;
         public static final int userLogin=0x7f090068;
+        public static final int weather=0x7f090040;
         public static final int withText=0x7f09001a;
         public static final int wrap_content=0x7f09001d;
     }
