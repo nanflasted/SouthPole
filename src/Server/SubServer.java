@@ -13,7 +13,7 @@ import java.util.*;
 import java.io.*;
 import Utility.*;
 import Utility.SouthPoleUtil.Command;
-import Utility.SouthPoleUtil.ServerResponse;;
+import Utility.SouthPoleUtil.ServerResponse;
 
 
 public class SubServer extends Thread{
@@ -49,43 +49,50 @@ public class SubServer extends Thread{
 			System.out.println("connection established from" + client.getInetAddress().toString());
 		}
 		
-		private int login(String un, String pw)
+		private void login() throws IOException
 		{
+			String un = SouthPoleUtil.dataISReadLine(read);
+			String pw = SouthPoleUtil.dataISReadLine(read);
 			System.out.println("login from user " + un + " with password " + pw);
-			return (un.equals("admin"))?1:0;
+			write.writeInt(ServerProcess.login(un, pw));
 		}
 		
-		private int signup(String un, String pw)
+		private void signup() throws IOException
 		{
+			String un = SouthPoleUtil.dataISReadLine(read);
+			String pw = SouthPoleUtil.dataISReadLine(read);
 			System.out.println("sign up from user " + un + " with password " + pw);
-			return 3;
+			write.writeInt(ServerProcess.signup(un, pw));
 		}
 		
-		private int process(int state) throws IOException
+		private void move(int direction) throws IOException
 		{
-			String username, password;
+			for (int i = 0; i < 25; i++)
+			{
+				write.writeInt((int)(Math.random()*4));
+			}
+		}
+		
+		private void process(int state) throws IOException
+		{
 			switch (Command.values()[state])
 			{
 				case LOGIN:
-					username = SouthPoleUtil.dataISReadLine(read);
-					password = SouthPoleUtil.dataISReadLine(read);
-					return login(username,password);
+					login();
 				case SIGNUP:
-					username = SouthPoleUtil.dataISReadLine(read);
-					password = SouthPoleUtil.dataISReadLine(read);
-					return signup(username,password);
+					signup();
 				case GETCOND:
-					return -1;
+					move(-1);
 				case MOVEDOWN:
-					return -1;
+					move(0);
 				case MOVELEFT:
-					return -1;
+					move(1);
 				case MOVERIGHT:
-					return -1;
+					move(2);
 				case MOVEUP:
-					return -1;
+					move(3);
 				default:
-					return -1;
+					return;
 			}
 		}
 		
@@ -111,7 +118,7 @@ public class SubServer extends Thread{
 				}
 				System.out.println("verified");
 				state = read.readInt();
-				write.writeInt(process(state));
+				process(state);
 				read.close();
 				write.close();
 				client.close();
@@ -121,6 +128,7 @@ public class SubServer extends Thread{
 			catch(Exception e)
 			{
 				System.err.println(e.getMessage());
+				decCN();
 				return;
 			}
 		}
