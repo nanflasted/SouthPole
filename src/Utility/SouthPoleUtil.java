@@ -52,14 +52,14 @@ public class SouthPoleUtil {
 
     public static Tile[][] generateWorld(int size) {
 
-    	System.out.println("\u001B[36m");
+    	//System.out.println("\u001B[36m");
         Tile[][] world = new Tile[size][size];
 
         double distFromCenterToOcean = ((size / 2.0) - WATER_BORDER_SIZE);
 
         //generate the world.
         for (int x = 0; x != size; x++) {
-            System.out.println("");
+            //System.out.println("");
             for (int y = 0; y != size; y++) {
                 //100 % light snow at border, 100% heavy snow at center.
                 double distFromCenter = Math.sqrt(Math.pow((x - (size/2)), 2) + Math.pow((y - (size/2)), 2));

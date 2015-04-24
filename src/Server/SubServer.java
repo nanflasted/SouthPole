@@ -22,8 +22,9 @@ public class SubServer extends Thread{
 	private Socket currentClient;
 	private int portNumber;
 	private int clientNumber = 0;
-	
-	
+	private ObjectInputStream mapRead;
+	private ObjectOutputStream mapWrite;
+	private SubServerMap map;
 	
 	class ClientHandler extends Thread
 	{
@@ -31,6 +32,7 @@ public class SubServer extends Thread{
 		private DataInputStream read;
 		private DataOutputStream write;		
 		private int state;
+	
 		
 		public synchronized void incCN()
 		{
@@ -67,14 +69,29 @@ public class SubServer extends Thread{
 		
 		private void move(int direction) throws IOException
 		{
-			for (int i = 0; i < 25; i++)
+			String un = SouthPoleUtil.dataISReadLine(read);
+			ServerProcess.move(un,map,direction);
+		}
+		
+		private void getCond() throws IOException
+		{
+			System.out.println("rekt");
+			String un = SouthPoleUtil.dataISReadLine(read);
+			System.out.println("rekt");
+			int[][] out = ServerProcess.getCond(un,map);
+			
+			for (int i = 0; i < 5; i++)
 			{
-				write.writeInt((int)(Math.random()*4));
+				for (int j = 0; j < 5; j++)
+				{
+					write.writeInt(out[i][j]);
+				}
 			}
 		}
 		
 		private void process(int state) throws IOException
 		{
+			System.out.println(Command.values()[state].toString());
 			switch (Command.values()[state])
 			{
 				case LOGIN:
@@ -82,7 +99,7 @@ public class SubServer extends Thread{
 				case SIGNUP:
 					signup();
 				case GETCOND:
-					move(-1);
+					getCond();
 				case MOVEDOWN:
 					move(0);
 				case MOVELEFT:
@@ -151,6 +168,32 @@ public class SubServer extends Thread{
 			System.err.println(e.getMessage());
 			return;
 		}
+		
+		try
+		{
+			String sN = new Integer(portNumber).toString() + ".map";
+			FileInputStream fileIn = new FileInputStream(sN);
+			mapRead = new ObjectInputStream(fileIn);
+			map = (SubServerMap) mapRead.readObject();	
+		}
+		catch (IOException e)
+		{
+			map = new SubServerMap(100);
+			try
+			{
+				mapWrite = new ObjectOutputStream(new FileOutputStream(new Integer(portNumber).toString() + ".map"));
+				mapWrite.writeObject(map);
+			}
+			catch (Exception rek)
+			{
+				//rekt;
+			}
+		}
+		catch (ClassNotFoundException e)
+		{
+			//rekt;
+		}
+		
 		while (true)
 		{
 			try

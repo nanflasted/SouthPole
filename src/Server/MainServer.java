@@ -31,7 +31,7 @@ public class MainServer {
 	public static void main(String args[])
 	{
 		//
-		args = new String[]{"12000","12001"};
+		args = new String[]{"1336","1337"};
 		//
 		
 		if (args.length != 2) 
