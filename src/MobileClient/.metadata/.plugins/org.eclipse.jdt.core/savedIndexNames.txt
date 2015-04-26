@@ -1,3 +1,0 @@
-INDEX VERSION 1.126+C:\Users\JACK\Desktop\Projects\SouthPole\src\MobileClient\.metadata\.plugins\org.eclipse.jdt.core
-1284074322.index
-4177624832.index

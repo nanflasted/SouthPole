@@ -4,12 +4,22 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
+#*.jar
 *.war
 *.ear
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+#Mobile
+# =========================
+/src/MobileClient/SouthPoleMobile/.gradle
+/src/MobileClient/SouthPoleMobile/local.properties
+/src/MobileClient/SouthPoleMobile/.idea/workspace.xml
+/src/MobileClient/SouthPoleMobile/.idea/libraries
+/src/MobileClient/SouthPoleMobile/.DS_Store
+/src/MobileClient/SouthPoleMobile/build
+#==========================
 
 # =========================
 # Operating System Files
