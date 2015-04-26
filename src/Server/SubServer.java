@@ -51,35 +51,32 @@ public class SubServer extends Thread{
 			System.out.println("connection established from" + client.getInetAddress().toString());
 		}
 		
-		private void login() throws IOException
+		private void login() throws Exception
 		{
 			String un = SouthPoleUtil.dataISReadLine(read);
 			String pw = SouthPoleUtil.dataISReadLine(read);
 			System.out.println("login from user " + un + " with password " + pw);
-			write.writeInt(ServerProcess.login(un, pw));
+			write.writeInt(ServerProcess.login(un, pw, portNumber));
 		}
 		
-		private void signup() throws IOException
+		private void signup() throws Exception
 		{
 			String un = SouthPoleUtil.dataISReadLine(read);
 			String pw = SouthPoleUtil.dataISReadLine(read);
 			System.out.println("sign up from user " + un + " with password " + pw);
-			write.writeInt(ServerProcess.signup(un, pw));
+			write.writeInt(ServerProcess.signup(un, pw, portNumber));
 		}
 		
-		private void move(int direction) throws IOException
+		private void move(int direction) throws Exception
 		{
 			String un = SouthPoleUtil.dataISReadLine(read);
 			ServerProcess.move(un,map,direction);
 		}
 		
-		private void getCond() throws IOException
+		private void getCond() throws Exception
 		{
-			System.out.println("rekt");
 			String un = SouthPoleUtil.dataISReadLine(read);
-			System.out.println("rekt");
 			int[][] out = ServerProcess.getCond(un,map);
-			
 			for (int i = 0; i < 5; i++)
 			{
 				for (int j = 0; j < 5; j++)
@@ -89,7 +86,7 @@ public class SubServer extends Thread{
 			}
 		}
 		
-		private void process(int state) throws IOException
+		private void process(int state) throws Exception
 		{
 			System.out.println(Command.values()[state].toString());
 			switch (Command.values()[state])
@@ -159,6 +156,8 @@ public class SubServer extends Thread{
 
 	public void run()
 	{
+//===================================================================
+//server-end
 		try
 		{
 			listener = new ServerSocket(portNumber);
@@ -168,20 +167,32 @@ public class SubServer extends Thread{
 			System.err.println(e.getMessage());
 			return;
 		}
-		
-		try
+//====================================================================
+//map
+		if (new File("..\\data\\"+new Integer(portNumber).toString()+".map").exists())
 		{
-			String sN = new Integer(portNumber).toString() + ".map";
-			FileInputStream fileIn = new FileInputStream(sN);
-			mapRead = new ObjectInputStream(fileIn);
-			map = (SubServerMap) mapRead.readObject();	
+			try
+			{
+				String sN = new Integer(portNumber).toString() + ".map";
+				FileInputStream fileIn = new FileInputStream(sN);
+				mapRead = new ObjectInputStream(fileIn);
+				map = (SubServerMap) mapRead.readObject();	
+			}
+			catch (IOException e)
+			{
+				//rekt
+			}
+			catch (ClassNotFoundException e)
+			{
+				//rekt;
+			}
 		}
-		catch (IOException e)
+		else
 		{
 			map = new SubServerMap(100);
 			try
 			{
-				mapWrite = new ObjectOutputStream(new FileOutputStream(new Integer(portNumber).toString() + ".map"));
+				mapWrite = new ObjectOutputStream(new FileOutputStream("..\\data\\"+new Integer(portNumber).toString() + ".map"));
 				mapWrite.writeObject(map);
 			}
 			catch (Exception rek)
@@ -189,11 +200,15 @@ public class SubServer extends Thread{
 				//rekt;
 			}
 		}
-		catch (ClassNotFoundException e)
+//======================================================================
+//database
+		String dbname = "..\\data\\"+new Integer(portNumber).toString() + ".db";
+		if (!new File(dbname).exists())
 		{
-			//rekt;
+			ServerProcess.createDB(dbname);
 		}
-		
+//======================================================================
+//client-end
 		while (true)
 		{
 			try
