@@ -3,8 +3,8 @@ package Server;
 import java.net.*;
 import java.io.*;
 import java.util.*;
-import Utility.SouthPoleUtil;
-import Utility.SouthPoleUtil.*;
+import Utility.SPU;
+import Utility.SPU.*;
 
 public class SubServerMap implements java.io.Serializable {
 	private Tile[][] map;
@@ -14,7 +14,7 @@ public class SubServerMap implements java.io.Serializable {
 	public SubServerMap(int size)
 	{
 		this.size = size;
-		map = SouthPoleUtil.generateWorld(size);
+		map = SPU.generateWorld(size);
 	}
 	
 	public int size()

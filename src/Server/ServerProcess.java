@@ -5,7 +5,7 @@ import java.io.*;
 import java.util.*;
 import java.sql.*;
 
-import Utility.SouthPoleUtil;
+import Utility.SPU;
 
 
 public class ServerProcess {
@@ -13,7 +13,7 @@ public class ServerProcess {
 	private static Connection getDB(int server) throws Exception
 	{
 		Class.forName("org.sqlite.JDBC");
-		return DriverManager.getConnection("jdbc.sqlite:"+"..\\data\\"+new Integer(server).toString()+".db");
+		return DriverManager.getConnection("jdbc.sqlite:"+"data/info/"+new Integer(server).toString()+".db");
 	}
 	
 	public static int login(String un, String pw, int portNumber) throws Exception
@@ -25,18 +25,25 @@ public class ServerProcess {
 		{
 			 c = getDB(portNumber);
 			 s = c.createStatement();
-			 rs = s.executeQuery("SELECT username FROM USERS ORDER BY username ASC");
+			 rs = s.executeQuery("SELECT username FROM users ORDER BY username ASC");
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			return SouthPoleUtil.ServerResponse.LOGIN_FAIL.ordinal();
+			return SPU.ServerResponse.LOGIN_FAIL.ordinal();
 		}
 		if (rs!=null)
 		{
-			
+			while (rs.next())
+			{
+				String curr = rs.getString("username");
+				if (curr.equals(un))
+				{
+					return SPU.ServerResponse.LOGIN_OK.ordinal();
+				}
+			}
 		}
-		return -1;
+		return SPU.ServerResponse.LOGIN_FAIL.ordinal();
 	}
 	
 	public static int signup(String un, String pw, int portNumber)
@@ -73,7 +80,7 @@ public class ServerProcess {
 			c = DriverManager.getConnection("jdbc:sqlite:"+dbname);
 			System.out.println("Database File Created at"+dbname);
 			stmt = c.createStatement();
-			stmt.executeUpdate("CREATE DATABASE USERS");
+			stmt.executeUpdate("CREATE DATABASE users");
 			System.out.println("User Database Created");
 		}
 		catch (Exception e)

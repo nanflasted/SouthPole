@@ -12,8 +12,7 @@ import java.net.*;
 import java.util.*;
 import java.io.*;
 import Utility.*;
-import Utility.SouthPoleUtil.Command;
-import Utility.SouthPoleUtil.ServerResponse;
+import Utility.SPU.*;
 
 
 public class SubServer extends Thread{
@@ -53,29 +52,29 @@ public class SubServer extends Thread{
 		
 		private void login() throws Exception
 		{
-			String un = SouthPoleUtil.dataISReadLine(read);
-			String pw = SouthPoleUtil.dataISReadLine(read);
+			String un = SPU.dataISReadLine(read);
+			String pw = SPU.dataISReadLine(read);
 			System.out.println("login from user " + un + " with password " + pw);
 			write.writeInt(ServerProcess.login(un, pw, portNumber));
 		}
 		
 		private void signup() throws Exception
 		{
-			String un = SouthPoleUtil.dataISReadLine(read);
-			String pw = SouthPoleUtil.dataISReadLine(read);
+			String un = SPU.dataISReadLine(read);
+			String pw = SPU.dataISReadLine(read);
 			System.out.println("sign up from user " + un + " with password " + pw);
 			write.writeInt(ServerProcess.signup(un, pw, portNumber));
 		}
 		
 		private void move(int direction) throws Exception
 		{
-			String un = SouthPoleUtil.dataISReadLine(read);
+			String un = SPU.dataISReadLine(read);
 			ServerProcess.move(un,map,direction);
 		}
 		
 		private void getCond() throws Exception
 		{
-			String un = SouthPoleUtil.dataISReadLine(read);
+			String un = SPU.dataISReadLine(read);
 			int[][] out = ServerProcess.getCond(un,map);
 			for (int i = 0; i < 5; i++)
 			{
@@ -169,7 +168,7 @@ public class SubServer extends Thread{
 		}
 //====================================================================
 //map
-		if (new File("..\\data\\"+new Integer(portNumber).toString()+".map").exists())
+		if (new File("data/maps/"+new Integer(portNumber).toString()+".map").exists())
 		{
 			try
 			{
@@ -192,7 +191,7 @@ public class SubServer extends Thread{
 			map = new SubServerMap(100);
 			try
 			{
-				mapWrite = new ObjectOutputStream(new FileOutputStream("..\\data\\"+new Integer(portNumber).toString() + ".map"));
+				mapWrite = new ObjectOutputStream(new FileOutputStream("data/maps/"+new Integer(portNumber).toString() + ".map"));
 				mapWrite.writeObject(map);
 			}
 			catch (Exception rek)
@@ -202,7 +201,7 @@ public class SubServer extends Thread{
 		}
 //======================================================================
 //database
-		String dbname = "..\\data\\"+new Integer(portNumber).toString() + ".db";
+		String dbname = "data/info/"+new Integer(portNumber).toString() + ".db";
 		if (!new File(dbname).exists())
 		{
 			ServerProcess.createDB(dbname);
