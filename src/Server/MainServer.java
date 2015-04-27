@@ -13,9 +13,9 @@ import Utility.*;
 public class MainServer {
 	private ArrayList<SubServer> worlds;
 	private int worldNumber;
-	
 	public MainServer(int startingPort, int endingPort)
 	{
+		new RedirServer(startingPort, endingPort).start();
 		worldNumber = endingPort-startingPort+1;
 		worlds = new ArrayList<SubServer>();
 		for (int i = startingPort; i <= endingPort; i++)
@@ -30,10 +30,11 @@ public class MainServer {
 	 */
 	public static void main(String args[])
 	{
-		//
-		args = new String[]{"1336","1337"};
-		//
-		
+		if (Integer.parseInt(args[0])<=1337)
+		{
+			System.err.println("Used reserved port number");
+			System.exit(1);
+		}
 		if (args.length != 2) 
 		{
 			System.err.println("Wrong Number of Arguments: MainServer <Starting Port> <Ending Port>");

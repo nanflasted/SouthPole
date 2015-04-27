@@ -25,7 +25,7 @@ public class ServerProcess {
 		{
 			 c = getDB(portNumber);
 			 s = c.createStatement();
-			 rs = s.executeQuery("SELECT username FROM users ORDER BY username ASC");
+			 rs = s.executeQuery("SELECT * FROM usersinfo WHERE username = '"+un + "';");
 		}
 		catch (Exception e)
 		{
@@ -36,19 +36,62 @@ public class ServerProcess {
 		{
 			while (rs.next())
 			{
-				String curr = rs.getString("username");
-				if (curr.equals(un))
+				if (rs.getString("password").equals(pw))
 				{
 					return SPU.ServerResponse.LOGIN_OK.ordinal();
 				}
 			}
+			rs.close();
+		}
+		if (c!=null)
+		{
+			c.close();
+		}
+		if (s!=null)
+		{
+			s.close();
 		}
 		return SPU.ServerResponse.LOGIN_FAIL.ordinal();
 	}
 	
-	public static int signup(String un, String pw, int portNumber)
+	public static synchronized int signup(String un, String pw, int portNumber)
 	{
-		return 3;
+		Connection c=null;
+		Statement s=null;
+		ResultSet rs=null;
+		try
+		{
+			 c = getDB(portNumber);
+			 s = c.createStatement();
+			 rs = s.executeQuery("SELECT * FROM usersinfo WHERE username = '"+un + "';");
+			 if (rs.next())
+			 {
+				 return SPU.ServerResponse.ACCOUNT_CREATE_FAIL.ordinal();
+			 }
+			 s.executeUpdate("INSERT INTO userinfo (username, password, userclass) "
+			 		+ "VALUES ('" + un + "', '" + pw + "', '" + un + ".info');");
+			 ObjectOutputStream infowrite = new ObjectOutputStream(new FileOutputStream("data/userclass/"+un+".info"));
+			 infowrite.writeObject(new UserData(un,portNumber));
+			 infowrite.close();
+			 if (c!=null)
+			 {
+				 c.close();
+			 }
+			 if (s!=null)
+			 {
+				 s.close();
+			 }
+			 if (rs!=null)
+			 {
+				 rs.close();
+			 }
+			 return SPU.ServerResponse.ACCOUNT_CREATE_OK.ordinal();	
+		}
+		catch (Exception e)
+		{
+			System.err.println(e.getMessage());
+			return SPU.ServerResponse.ACCOUNT_CREATE_FAIL.ordinal();
+		}	
 	}
 	
 	public static int[][] getCond(String un, SubServerMap map)
@@ -78,10 +121,11 @@ public class ServerProcess {
 			System.out.println("Initializing user database" + dbname);
 			Class.forName("org.sqlite.JDBC");
 			c = DriverManager.getConnection("jdbc:sqlite:"+dbname);
-			System.out.println("Database File Created at"+dbname);
+			System.out.println("Database File Created at "+dbname);
 			stmt = c.createStatement();
-			stmt.executeUpdate("CREATE DATABASE users");
 			System.out.println("User Database Created");
+			stmt.executeUpdate("CREATE TABLE userinfo ( username TEXT PRIMARY KEY, password TEXT, userclass TEXT);");
+			System.out.println("User info Table created");
 		}
 		catch (Exception e)
 		{
