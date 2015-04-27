@@ -174,7 +174,7 @@ public class RedirServer extends Thread{
 				{
 					statement.close();
 					database.close();
-				}
+				}	
 				catch(Exception e)
 				{
 					e.printStackTrace();
