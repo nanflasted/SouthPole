@@ -1,6 +1,6 @@
 package Server;
 
-public class UserData {
+public class UserData implements java.io.Serializable{
 
 	private String un;
 	private int server;

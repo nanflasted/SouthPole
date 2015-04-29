@@ -31,12 +31,31 @@ public class RedirServer extends Thread{
 			try
 			{
 				Class.forName("org.sqlite.JDBC");
-				database = DriverManager.getConnection("jdbc.sqlite:"+"data/info/userredir.db");
+				database = DriverManager.getConnection("jdbc:sqlite:"+"data/info/userredir.db");
 				statement = database.createStatement();
 			}
 			catch (Exception e)
 			{
-				System.err.println(e.getMessage());
+				e.printStackTrace();
+			}
+		}
+		
+		private void disconnectDB()
+		{
+			try
+			{
+				if (statement != null)
+				{
+					statement.close();
+				}
+				if (database != null)
+				{
+					database.close();
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
 			}
 		}
 		
@@ -52,11 +71,13 @@ public class RedirServer extends Thread{
 				{
 					port = rsset.getInt("server");
 				}
+				System.out.println("User login " + un + " redirected to server " + new Integer(port).toString());
+				disconnectDB();
 				return port;
 			}
 			catch (Exception e)
 			{
-				System.err.println(e.getMessage());
+				e.printStackTrace();
 				return ServerResponse.LOGIN_FAIL.ordinal();
 			}
 		}
@@ -73,13 +94,15 @@ public class RedirServer extends Thread{
 				{
 					return ServerResponse.ACCOUNT_CREATE_FAIL.ordinal();
 				}
-				port = startPort + un.hashCode() % (endPort - startPort + 1);
+				port = startPort + Math.abs(un.hashCode() % (endPort - startPort + 1));
+				System.out.println("User signup " + un + " redirected to server " + new Integer(port).toString());
 				statement.executeUpdate("INSERT INTO redir (username, server) VALUES ('" + un + "', "
 					+ new Integer(port).toString() + ");");
+				disconnectDB();
 			}
 			catch (Exception e)
 			{
-				System.err.println(e.getMessage());
+				e.printStackTrace();
 				return ServerResponse.ACCOUNT_CREATE_FAIL.ordinal();
 			}
 			return port;
@@ -112,10 +135,10 @@ public class RedirServer extends Thread{
 				switch (Command.values()[state])
 				{
 					case LOGIN:
-						login();
+						write.writeInt(login());
 						break;
 					case SIGNUP:
-						signup();
+						write.writeInt(signup());
 						break;
 					default:
 						break;
@@ -127,7 +150,7 @@ public class RedirServer extends Thread{
 			}
 			catch (Exception e)
 			{
-				System.err.println(e.getMessage());
+				e.printStackTrace();
 			}
 		}
 	}
@@ -148,7 +171,7 @@ public class RedirServer extends Thread{
 		}
 		catch(Exception e)
 		{
-			System.err.println(e.getMessage());
+			e.printStackTrace();
 			return;
 		}
 		String dbname = "data/info/userredir.db";
@@ -183,12 +206,15 @@ public class RedirServer extends Thread{
 		}
 		try
 		{
-			client = listener.accept();
-			new ClientHandler(client).start();
+			while (true)
+			{
+				client = listener.accept();
+				new ClientHandler(client).start();
+			}
 		}
 		catch (Exception e)
 		{
-			System.err.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	

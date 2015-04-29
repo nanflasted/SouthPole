@@ -92,18 +92,25 @@ public class SubServer extends Thread{
 			{
 				case LOGIN:
 					login();
+					break;
 				case SIGNUP:
 					signup();
+					break;
 				case GETCOND:
 					getCond();
+					break;
 				case MOVEDOWN:
 					move(0);
+					break;
 				case MOVELEFT:
 					move(1);
+					break;
 				case MOVERIGHT:
 					move(2);
+					break;
 				case MOVEUP:
 					move(3);
+					break;
 				default:
 					return;
 			}
@@ -140,7 +147,7 @@ public class SubServer extends Thread{
 			}
 			catch(Exception e)
 			{
-				System.err.println(e.getMessage());
+				e.printStackTrace();
 				decCN();
 				return;
 			}
@@ -163,7 +170,7 @@ public class SubServer extends Thread{
 		}
 		catch (Exception e)
 		{
-			System.err.println(e.getMessage());
+			e.printStackTrace();
 			return;
 		}
 //====================================================================
@@ -172,7 +179,7 @@ public class SubServer extends Thread{
 		{
 			try
 			{
-				String sN = new Integer(portNumber).toString() + ".map";
+				String sN = "data/maps/"+new Integer(portNumber).toString()+".map";
 				FileInputStream fileIn = new FileInputStream(sN);
 				mapRead = new ObjectInputStream(fileIn);
 				map = (SubServerMap) mapRead.readObject();	
@@ -219,7 +226,7 @@ public class SubServer extends Thread{
 			}
 			catch (Exception e)
 			{
-				System.err.println(e.getMessage());
+				e.printStackTrace();
 				return;
 			}
 		}

@@ -364,6 +364,7 @@ int id action_mode_close_button 0x7f090020
 int id action_settings 0x7f09006c
 int id activity_chooser_view_content 0x7f090021
 int id always 0x7f090016
+int id ap 0x7f09005c
 int id beginning 0x7f090013
 int id checkbox 0x7f090029
 int id collapseActionView 0x7f090017
@@ -448,13 +449,12 @@ int id tabMode 0x7f09000b
 int id tableLayout 0x7f09003f
 int id tableLayout2 0x7f09005d
 int id textView 0x7f090067
-int id textView2 0x7f090040
-int id textView3 0x7f09005b
-int id textView4 0x7f09005c
+int id ticker 0x7f09005b
 int id title 0x7f090027
 int id up 0x7f090008
 int id useLogo 0x7f090012
 int id userLogin 0x7f090068
+int id weather 0x7f090040
 int id withText 0x7f09001a
 int id wrap_content 0x7f09001d
 int integer abc_config_activityDefaultDur 0x7f0a0000

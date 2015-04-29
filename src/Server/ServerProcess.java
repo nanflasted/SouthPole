@@ -13,7 +13,7 @@ public class ServerProcess {
 	private static Connection getDB(int server) throws Exception
 	{
 		Class.forName("org.sqlite.JDBC");
-		return DriverManager.getConnection("jdbc.sqlite:"+"data/info/"+new Integer(server).toString()+".db");
+		return DriverManager.getConnection("jdbc:sqlite:"+"data/info/"+new Integer(server).toString()+".db");
 	}
 	
 	public static int login(String un, String pw, int portNumber) throws Exception
@@ -25,7 +25,7 @@ public class ServerProcess {
 		{
 			 c = getDB(portNumber);
 			 s = c.createStatement();
-			 rs = s.executeQuery("SELECT * FROM usersinfo WHERE username = '"+un + "';");
+			 rs = s.executeQuery("SELECT * FROM userinfo WHERE username = '"+un + "';");
 		}
 		catch (Exception e)
 		{
@@ -38,18 +38,19 @@ public class ServerProcess {
 			{
 				if (rs.getString("password").equals(pw))
 				{
+					System.out.println("User " + un + "logged in at server " + new Integer(portNumber).toString());
 					return SPU.ServerResponse.LOGIN_OK.ordinal();
 				}
 			}
 			rs.close();
 		}
-		if (c!=null)
-		{
-			c.close();
-		}
 		if (s!=null)
 		{
 			s.close();
+		}
+		if (c!=null)
+		{
+			c.close();
 		}
 		return SPU.ServerResponse.LOGIN_FAIL.ordinal();
 	}
@@ -63,33 +64,35 @@ public class ServerProcess {
 		{
 			 c = getDB(portNumber);
 			 s = c.createStatement();
-			 rs = s.executeQuery("SELECT * FROM usersinfo WHERE username = '"+un + "';");
+			 rs = s.executeQuery("SELECT * FROM userinfo WHERE username = '"+un + "';");
 			 if (rs.next())
 			 {
 				 return SPU.ServerResponse.ACCOUNT_CREATE_FAIL.ordinal();
 			 }
 			 s.executeUpdate("INSERT INTO userinfo (username, password, userclass) "
 			 		+ "VALUES ('" + un + "', '" + pw + "', '" + un + ".info');");
-			 ObjectOutputStream infowrite = new ObjectOutputStream(new FileOutputStream("data/userclass/"+un+".info"));
+			 FileOutputStream fileout = new FileOutputStream("data/info/userclass/"+un+".info");
+			 ObjectOutputStream infowrite = new ObjectOutputStream(fileout);
 			 infowrite.writeObject(new UserData(un,portNumber));
 			 infowrite.close();
-			 if (c!=null)
+			 if (rs!=null)
 			 {
-				 c.close();
+				 rs.close();
 			 }
 			 if (s!=null)
 			 {
 				 s.close();
 			 }
-			 if (rs!=null)
+			 if (c!=null)
 			 {
-				 rs.close();
+				 c.close();
 			 }
+			 System.out.println("User " + un + "signed up at server " + new Integer(portNumber).toString());
 			 return SPU.ServerResponse.ACCOUNT_CREATE_OK.ordinal();	
 		}
 		catch (Exception e)
 		{
-			System.err.println(e.getMessage());
+			e.printStackTrace();
 			return SPU.ServerResponse.ACCOUNT_CREATE_FAIL.ordinal();
 		}	
 	}
