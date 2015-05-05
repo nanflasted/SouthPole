@@ -24,6 +24,7 @@ public class SubServer extends Thread{
 	private ObjectInputStream mapRead;
 	private ObjectOutputStream mapWrite;
 	private SubServerMap map;
+	private HashSet<String> onlineUsers = new HashSet<String>();
 	
 	class ClientHandler extends Thread
 	{
@@ -54,8 +55,16 @@ public class SubServer extends Thread{
 		{
 			String un = SPU.dataISReadLine(read);
 			String pw = SPU.dataISReadLine(read);
+			if (onlineUsers.add(un))
+			{
+				write.writeInt(SPU.ServerResponse.LOGIN_FAIL.ordinal());
+				System.out.println("user " + un + "already online!");
+				return;
+			}
 			System.out.println("login from user " + un + " with password " + pw);
-			write.writeInt(ServerProcess.login(un, pw, portNumber));
+			boolean fail = (ServerProcess.login(un, pw, portNumber)==SPU.ServerResponse.LOGIN_OK.ordinal());
+			write.writeInt(fail?SPU.ServerResponse.LOGIN_FAIL.ordinal():SPU.ServerResponse.LOGIN_OK.ordinal());
+			if (fail) {onlineUsers.remove(un);}
 		}
 		
 		private void signup() throws Exception
@@ -92,6 +101,9 @@ public class SubServer extends Thread{
 			{
 				case LOGIN:
 					login();
+					break;
+				case LOGOUT:
+					logout();
 					break;
 				case SIGNUP:
 					signup();
