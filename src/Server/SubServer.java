@@ -94,6 +94,11 @@ public class SubServer extends Thread{
 			}
 		}
 		
+		private void logout()
+		{
+			//TODO: let a user log out of the server
+		}
+		
 		private void process(int state) throws Exception
 		{
 			System.out.println(Command.values()[state].toString());

@@ -26,7 +26,8 @@ public class SPU {
         MOVEUP,
         MOVELEFT,
         MOVEDOWN,
-        MOVERIGHT
+        MOVERIGHT,
+        LOGOUT
     }
 
     public static enum ServerResponse {
