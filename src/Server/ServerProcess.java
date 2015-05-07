@@ -73,7 +73,9 @@ public class ServerProcess {
 			 		+ "VALUES ('" + un + "', '" + pw + "', '" + un + ".info');");
 			 FileOutputStream fileout = new FileOutputStream("data/info/userclass/"+un+".info");
 			 ObjectOutputStream infowrite = new ObjectOutputStream(fileout);
-			 infowrite.writeObject(new UserData(un,portNumber));
+			 UserData newuser = new UserData(un,portNumber);
+			 newuser.spawn();
+			 infowrite.writeObject(newuser);
 			 infowrite.close();
 			 if (rs!=null)
 			 {

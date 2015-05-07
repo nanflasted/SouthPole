@@ -15,8 +15,8 @@ import java.util.*;
 
 public class SPU {
 
-    public static final int WATER_BORDER_SIZE = 10;
-
+    public static final int WATER_BORDER_SIZE = 15;
+    public static final int DEFAULT_MAP_SIZE = 100;
     //CONVERT TO INT:Command.SIGNUP.ordinal();
     //CONVERT TO ENUM:Command.values()[(int)Command.SIGNUP.ordinal()];
     public static enum Command {
@@ -34,7 +34,9 @@ public class SPU {
         LOGIN_FAIL,
         LOGIN_OK,
         ACCOUNT_CREATE_FAIL,
-        ACCOUNT_CREATE_OK
+        ACCOUNT_CREATE_OK,
+        LOGOUT_OK,
+        LOGOUT_FAIL
     }
 
     public static enum Tile {

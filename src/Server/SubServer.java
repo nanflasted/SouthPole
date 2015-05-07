@@ -94,9 +94,11 @@ public class SubServer extends Thread{
 			}
 		}
 		
-		private void logout()
+		private void logout() throws Exception
 		{
-			//TODO: let a user log out of the server
+			String un = SPU.dataISReadLine(read);
+			write.writeInt((onlineUsers.remove(un)?SPU.ServerResponse.LOGOUT_OK.ordinal():SPU.ServerResponse.LOGOUT_FAIL.ordinal()));
+			//TODO serialize and write userdata when logout
 		}
 		
 		private void process(int state) throws Exception
@@ -212,7 +214,7 @@ public class SubServer extends Thread{
 		}
 		else
 		{
-			map = new SubServerMap(100);
+			map = new SubServerMap(SPU.DEFAULT_MAP_SIZE);
 			try
 			{
 				mapWrite = new ObjectOutputStream(new FileOutputStream("data/maps/"+new Integer(portNumber).toString() + ".map"));
