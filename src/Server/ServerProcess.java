@@ -55,6 +55,14 @@ public class ServerProcess {
 		return SPU.ServerResponse.LOGIN_FAIL.ordinal();
 	}
 	
+	public static void logout(String un, int portNumber)
+	{
+		/*TODO 
+		 * 1. create a data structure that stores UserDatas for users online
+		 * 2. serialize and rewrite the class stored for this user to local
+		 * 3. clear class from data heap 
+		 */
+	}
 	public static synchronized int signup(String un, String pw, int portNumber)
 	{
 		Connection c=null;

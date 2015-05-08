@@ -97,8 +97,13 @@ public class SubServer extends Thread{
 		private void logout() throws Exception
 		{
 			String un = SPU.dataISReadLine(read);
-			write.writeInt((onlineUsers.remove(un)?SPU.ServerResponse.LOGOUT_OK.ordinal():SPU.ServerResponse.LOGOUT_FAIL.ordinal()));
-			//TODO serialize and write userdata when logout
+			boolean online = onlineUsers.remove(un);
+			if (online)
+			{
+				ServerProcess.logout(un,portNumber);
+			}
+			write.writeInt((online?SPU.ServerResponse.LOGOUT_OK.ordinal():SPU.ServerResponse.LOGOUT_FAIL.ordinal()));
+			
 		}
 		
 		private void process(int state) throws Exception
