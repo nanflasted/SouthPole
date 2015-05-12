@@ -24,7 +24,8 @@ public class SubServer extends Thread{
 	private ObjectInputStream mapRead;
 	private ObjectOutputStream mapWrite;
 	private SubServerMap map;
-	private HashSet<String> onlineUsers = new HashSet<String>();
+	private ArrayList<String> onlineUsers = new ArrayList<String>();
+	private ArrayList<UserData> onlineUserData = new ArrayList<UserData>();
 	
 	class ClientHandler extends Thread
 	{
@@ -55,16 +56,26 @@ public class SubServer extends Thread{
 		{
 			String un = SPU.dataISReadLine(read);
 			String pw = SPU.dataISReadLine(read);
-			if (!onlineUsers.add(un))
+			if (onlineUsers.contains(un))
 			{
 				write.writeInt(SPU.ServerResponse.LOGIN_FAIL.ordinal());
 				System.out.println("user " + un + " already online!");
 				return;
 			}
+			onlineUsers.add(un);
 			System.out.println("login from user " + un + " with password " + pw);
 			boolean fail = (ServerProcess.login(un, pw, portNumber)!=SPU.ServerResponse.LOGIN_OK.ordinal());
-			write.writeInt(fail?SPU.ServerResponse.LOGIN_FAIL.ordinal():SPU.ServerResponse.LOGIN_OK.ordinal());
-			if (fail) {onlineUsers.remove(un);}
+			if (fail) 
+			{
+				onlineUsers.remove(un);
+				write.writeInt(SPU.ServerResponse.LOGIN_FAIL.ordinal());
+			}
+			else
+			{
+				ObjectInputStream reader = new ObjectInputStream(new FileInputStream("data/info/userclass/"+un+".info"));
+				onlineUserData.add((UserData)reader.readObject());
+				reader.close();
+			}
 		}
 		
 		private void signup() throws Exception
@@ -78,20 +89,31 @@ public class SubServer extends Thread{
 		private void move(int direction) throws Exception
 		{
 			String un = SPU.dataISReadLine(read);
-			ServerProcess.move(un,map,direction);
+			if (!onlineUsers.contains(un))
+			{
+				return;
+			}
+			UserData temp = onlineUserData.get(onlineUsers.indexOf(un));
+			int[][] out = ServerProcess.move(un,map,direction,onlineUserData.get(onlineUsers.indexOf(un)));
+			if (out!=null)
+			{
+				for (int i = 0; i < temp.getVisibility(); i++)
+				{
+					for (int j = 0; j < temp.getVisibility(); j++)
+					{
+						write.writeInt(out[i][j]);
+					}
+				}
+			}
+			else
+			{
+				write.writeInt(-1);
+			}
 		}
 		
 		private void getCond() throws Exception
 		{
-			String un = SPU.dataISReadLine(read);
-			int[][] out = ServerProcess.getCond(un,map);
-			for (int i = 0; i < 11; i++)
-			{
-				for (int j = 0; j < 11; j++)
-				{
-					write.writeInt(out[i][j]);
-				}
-			}
+			move(SPU.Command.STAY.ordinal());
 		}
 		
 		private void logout() throws Exception
@@ -100,10 +122,11 @@ public class SubServer extends Thread{
 			boolean online = onlineUsers.remove(un);
 			if (online)
 			{
-				ServerProcess.logout(un,portNumber);
+				int i = onlineUsers.indexOf(un);
+				ServerProcess.logout(un,portNumber,onlineUserData.get(i));
+				onlineUserData.remove(i);
 			}
 			write.writeInt((online?SPU.ServerResponse.LOGOUT_OK.ordinal():SPU.ServerResponse.LOGOUT_FAIL.ordinal()));
-			
 		}
 		
 		private void process(int state) throws Exception
@@ -124,16 +147,16 @@ public class SubServer extends Thread{
 					getCond();
 					break;
 				case MOVEDOWN:
-					move(0);
+					move(SPU.Command.MOVEDOWN.ordinal());
 					break;
 				case MOVELEFT:
-					move(1);
+					move(SPU.Command.MOVELEFT.ordinal());
 					break;
 				case MOVERIGHT:
-					move(2);
+					move(SPU.Command.MOVERIGHT.ordinal());
 					break;
 				case MOVEUP:
-					move(3);
+					move(SPU.Command.MOVEUP.ordinal());
 					break;
 				default:
 					return;

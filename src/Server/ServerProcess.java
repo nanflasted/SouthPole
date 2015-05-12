@@ -55,13 +55,11 @@ public class ServerProcess {
 		return SPU.ServerResponse.LOGIN_FAIL.ordinal();
 	}
 	
-	public static void logout(String un, int portNumber)
+	public static void logout(String un, int portNumber, UserData data) throws IOException
 	{
-		/*TODO 
-		 * 1. create a data structure that stores UserDatas for users online
-		 * 2. serialize and rewrite the class stored for this user to local
-		 * 3. clear class from data heap 
-		 */
+		ObjectOutputStream writer = new ObjectOutputStream(new FileOutputStream("/data/info/userclass/"+un+".info"));
+		writer.writeObject(data);
+		writer.close();
 	}
 	public static synchronized int signup(String un, String pw, int portNumber)
 	{
@@ -77,6 +75,7 @@ public class ServerProcess {
 			 {
 				 return SPU.ServerResponse.ACCOUNT_CREATE_FAIL.ordinal();
 			 }
+			 rs.close();
 			 s.close();
 			 c.close();
 			 c = getDB(portNumber);
@@ -103,6 +102,8 @@ public class ServerProcess {
 		{
 			try
 			{
+				rs.close();
+				s.close();
 				c.close();
 			}
 			catch(Exception e)
@@ -112,22 +113,31 @@ public class ServerProcess {
 		}
 	}
 	
-	public static int[][] getCond(String un, SubServerMap map)
+	public static int[][] getCond(String un, SubServerMap map, UserData data)
 	{
-		int [][] out = new int[11][11];
-		for (int i = 0; i < 11; i++)
+		return move(un,map,SPU.Command.STAY.ordinal(),data);
+	}
+	
+	public static int[][] move(String un, SubServerMap map, int direction, UserData data)
+	{
+		if (!map.move(un,direction))
 		{
-			for (int j = 0; j < 11; j++)
+			return null;
+		}
+		if (!data.move(map,direction))
+		{
+			return null;
+		}
+		int v = data.getVisibility();
+		int [][] out = new int[v][v];
+		for (int i = data.getX()-v; i <= data.getX()+v; i++)
+		{
+			for (int j = data.getY()-v; j <= data.getY()+v; j++)
 			{
-				out[i][j] = map.getTile(i+44,j+44).ordinal();
+				out[i][j] = map.getTile(i,j).ordinal();
 			}
 		}
 		return out;
-	}
-	
-	public static int[][] move(String un, SubServerMap map, int direction)
-	{
-		return getCond(un, map);
 	}
 	
 	public static void createDB(String dbname)

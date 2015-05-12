@@ -345,9 +345,10 @@ int drawable abc_textfield_search_activated_mtrl_alpha 0x7f020034
 int drawable abc_textfield_search_default_mtrl_alpha 0x7f020035
 int drawable abc_textfield_search_material 0x7f020036
 int drawable mountain 0x7f020037
-int drawable snowheavy 0x7f020038
-int drawable snowlight 0x7f020039
-int drawable water 0x7f02003a
+int drawable mush_outline 0x7f020038
+int drawable snowheavy 0x7f020039
+int drawable snowlight 0x7f02003a
+int drawable water 0x7f02003b
 int id action_bar 0x7f090031
 int id action_bar_activity_content 0x7f090000
 int id action_bar_container 0x7f090030
@@ -446,10 +447,10 @@ int id signUpBut 0x7f09006b
 int id split_action_bar 0x7f090007
 int id submit_area 0x7f09003c
 int id tabMode 0x7f09000b
-int id tableLayout 0x7f09003f
 int id tableLayout2 0x7f09005d
 int id textView 0x7f090067
 int id ticker 0x7f09005b
+int id tileGrid 0x7f09003f
 int id title 0x7f090027
 int id up 0x7f090008
 int id useLogo 0x7f090012

@@ -7,6 +7,10 @@ import Utility.SPU;
 import Utility.SPU.*;
 
 public class SubServerMap implements java.io.Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7587568064925349058L;
 	private Tile[][] map;
 	private int size;
 	
@@ -25,6 +29,11 @@ public class SubServerMap implements java.io.Serializable {
 	public Tile getTile(int x, int y)
 	{
 		return map[x][y];
+	}
+	
+	public boolean move(String un, int direction)
+	{
+		return true;
 	}
 	
 }

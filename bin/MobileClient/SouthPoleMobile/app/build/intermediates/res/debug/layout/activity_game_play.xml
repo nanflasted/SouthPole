@@ -12,7 +12,7 @@
         android:layout_height="20dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:id="@+id/tableLayout"
+        android:id="@+id/tileGrid"
         android:layout_above="@+id/weather">
 
         <TableRow
@@ -256,8 +256,8 @@
         android:text="Snowy, 20 degrees"
         android:id="@+id/weather"
         android:layout_centerVertical="true"
-        android:layout_alignLeft="@+id/tableLayout"
-        android:layout_alignStart="@+id/tableLayout" />
+        android:layout_alignLeft="@+id/tileGrid"
+        android:layout_alignStart="@+id/tileGrid" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -265,10 +265,10 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Condition"
         android:id="@+id/cond"
-        android:layout_below="@+id/tableLayout"
+        android:layout_below="@+id/tileGrid"
         android:layout_toRightOf="@+id/weather"
-        android:layout_alignRight="@+id/tableLayout"
-        android:layout_alignEnd="@+id/tableLayout"
+        android:layout_alignRight="@+id/tileGrid"
+        android:layout_alignEnd="@+id/tileGrid"
         android:gravity="right" />
 
     <TextView

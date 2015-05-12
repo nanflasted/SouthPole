@@ -23,6 +23,7 @@ public class SPU {
         LOGIN,
         SIGNUP,
         GETCOND,
+        STAY,
         MOVEUP,
         MOVELEFT,
         MOVEDOWN,
