@@ -11,11 +11,11 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import GenericClient.Client;
-import Utility.SouthPoleUtil;
+import Utility.SPU;
 
-public class ContactServer extends AsyncTask<SouthPoleUtil.Command, Integer, SouthPoleUtil.ServerResponse> {
+public class ContactServer extends AsyncTask<SPU.Command, Integer, SPU.ServerResponse> {
 
-    protected SouthPoleUtil.ServerResponse doInBackground(SouthPoleUtil.Command... c) {
+    protected SPU.ServerResponse doInBackground(SPU.Command... c) {
         return Client.sendServerCommand(c[0]);
     }
 

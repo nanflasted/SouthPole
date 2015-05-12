@@ -1,17 +1,25 @@
 package neutralspacedev.southpole;
 
 import android.app.Activity;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.EditText;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.view.ViewGroup.LayoutParams;
 
 import GenericClient.LocalState;
-import Utility.SouthPoleUtil;
+import Utility.SPU;
 
 
 public class GamePlay extends Activity {
@@ -23,8 +31,9 @@ public class GamePlay extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_play);
 
+
         //Get Current Condition.
-        AsyncTask botherServer = new ContactServer().execute(SouthPoleUtil.Command.GETCOND);
+        AsyncTask botherServer = new ContactServer().execute(SPU.Command.GETCOND);
         boolean loginStatus = false;
         try {
             botherServer.get();
@@ -33,33 +42,45 @@ public class GamePlay extends Activity {
         }
 
         //get all the buttons and put in array.
-        tileButtons = loadTileButtons();
+        tileButtons = initTileButtons(LocalState.viewSize);
         //load the buttons
         updateTileButtons();
 
     }
 
     private void updateTileButtons(){
-        for(int x = 0; x != 5; x++){
-            for(int y = 0; y != 5; y++){
-                switch(LocalState.localEnv[x][y]){
+        for(int x = 0; x != LocalState.viewSize; x++){
+            for(int y = 0; y != LocalState.viewSize; y++){
+                int bkgTile = -1;
+                switch (LocalState.localEnv[x][y]) {
                     case SNOW_LIGHT:
-                        tileButtons[x][y].setBackgroundResource(R.drawable.snowlight);
+                        bkgTile = R.drawable.snowlight;
                         break;
                     case SNOW_HEAVY:
-                        tileButtons[x][y].setBackgroundResource(R.drawable.snowheavy);
+                        bkgTile = R.drawable.snowheavy;
                         break;
                     case WATER:
-                        tileButtons[x][y].setBackgroundResource(R.drawable.water);
+                        bkgTile =R.drawable.water;
                         break;
                     case MOUNTAIN:
-                        tileButtons[x][y].setBackgroundResource(R.drawable.mountain);
+                        bkgTile =R.drawable.mountain;
                         break;
                     case GOAL:
-                        tileButtons[x][y].setBackgroundResource(R.drawable.abc_btn_radio_material);
+                        bkgTile =R.drawable.abc_btn_radio_material;
                         break;
                 }
 
+                if(LocalState.viewSize/2 == x && x == y ){
+                    Resources r = getResources();
+                    Drawable[] layers = new Drawable[2];
+                    layers[0] = r.getDrawable(bkgTile);
+                    layers[1] = r.getDrawable(R.drawable.mush_outline);
+                    LayerDrawable layerDrawable = new LayerDrawable(layers);
+                    tileButtons[x][y].setBackground(layerDrawable.mutate());
+
+                } else {
+                    tileButtons[x][y].setBackgroundResource(bkgTile);
+                }
             }
         }
 
@@ -67,38 +88,28 @@ public class GamePlay extends Activity {
 
     }
 
-    private ImageButton[][] loadTileButtons(){
-        ImageButton returnButs[][] = new ImageButton[5][5];
+    private ImageButton[][] initTileButtons(int dim){
+        //list of imageButtons to return
+        ImageButton returnButs[][] = new ImageButton[dim][dim];
 
-        returnButs[0][0] = ((ImageButton)findViewById(R.id.imageButton));
-        returnButs[0][1] = ((ImageButton)findViewById(R.id.imageButton2));
-        returnButs[0][2] = ((ImageButton)findViewById(R.id.imageButton3));
-        returnButs[0][3] = ((ImageButton)findViewById(R.id.imageButton4));
-        returnButs[0][4] = ((ImageButton)findViewById(R.id.imageButton5));
+        //refernce to grid of buttons
+        TableLayout layout = (TableLayout) findViewById(R.id.tileGrid);
+        layout.removeAllViews();
 
-        returnButs[1][0] = ((ImageButton)findViewById(R.id.imageButton6));
-        returnButs[1][1] = ((ImageButton)findViewById(R.id.imageButton7));
-        returnButs[1][2] = ((ImageButton)findViewById(R.id.imageButton8));
-        returnButs[1][3] = ((ImageButton)findViewById(R.id.imageButton9));
-        returnButs[1][4] = ((ImageButton)findViewById(R.id.imageButton10));
-
-        returnButs[2][0] = ((ImageButton)findViewById(R.id.imageButton11));
-        returnButs[2][1] = ((ImageButton)findViewById(R.id.imageButton12));
-        returnButs[2][2] = ((ImageButton)findViewById(R.id.imageButton13));
-        returnButs[2][3] = ((ImageButton)findViewById(R.id.imageButton14));
-        returnButs[2][4] = ((ImageButton)findViewById(R.id.imageButton15));
-
-        returnButs[3][0] = ((ImageButton)findViewById(R.id.imageButton16));
-        returnButs[3][1] = ((ImageButton)findViewById(R.id.imageButton17));
-        returnButs[3][2] = ((ImageButton)findViewById(R.id.imageButton18));
-        returnButs[3][3] = ((ImageButton)findViewById(R.id.imageButton19));
-        returnButs[3][4] = ((ImageButton)findViewById(R.id.imageButton20));
-
-        returnButs[4][0] = ((ImageButton)findViewById(R.id.imageButton21));
-        returnButs[4][1] = ((ImageButton)findViewById(R.id.imageButton22));
-        returnButs[4][2] = ((ImageButton)findViewById(R.id.imageButton23));
-        returnButs[4][3] = ((ImageButton)findViewById(R.id.imageButton24));
-        returnButs[4][4] = ((ImageButton)findViewById(R.id.imageButton25));
+        //for each y
+        for(int y = 0; y != dim; y++) {
+            //add the row
+            TableRow row = new TableRow(this);
+            row.setLayoutParams(new TableLayout.LayoutParams(LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT,1f));
+            layout.addView(row);
+            //for each x
+            for (int x = 0; x != dim; x++) {
+                //add the button
+                ImageButton tile = new ImageButton(this);
+                row.addView(tile);
+                returnButs[x][y] = tile;
+            }
+        }
 
         return returnButs;
     }
