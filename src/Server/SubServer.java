@@ -55,14 +55,14 @@ public class SubServer extends Thread{
 		{
 			String un = SPU.dataISReadLine(read);
 			String pw = SPU.dataISReadLine(read);
-			if (onlineUsers.add(un))
+			if (!onlineUsers.add(un))
 			{
 				write.writeInt(SPU.ServerResponse.LOGIN_FAIL.ordinal());
-				System.out.println("user " + un + "already online!");
+				System.out.println("user " + un + " already online!");
 				return;
 			}
 			System.out.println("login from user " + un + " with password " + pw);
-			boolean fail = (ServerProcess.login(un, pw, portNumber)==SPU.ServerResponse.LOGIN_OK.ordinal());
+			boolean fail = (ServerProcess.login(un, pw, portNumber)!=SPU.ServerResponse.LOGIN_OK.ordinal());
 			write.writeInt(fail?SPU.ServerResponse.LOGIN_FAIL.ordinal():SPU.ServerResponse.LOGIN_OK.ordinal());
 			if (fail) {onlineUsers.remove(un);}
 		}
@@ -85,9 +85,9 @@ public class SubServer extends Thread{
 		{
 			String un = SPU.dataISReadLine(read);
 			int[][] out = ServerProcess.getCond(un,map);
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; i < 11; i++)
 			{
-				for (int j = 0; j < 5; j++)
+				for (int j = 0; j < 11; j++)
 				{
 					write.writeInt(out[i][j]);
 				}

@@ -16,7 +16,7 @@ public class ServerProcess {
 		return DriverManager.getConnection("jdbc:sqlite:"+"data/info/"+new Integer(server).toString()+".db");
 	}
 	
-	public static int login(String un, String pw, int portNumber) throws Exception
+	public static synchronized int login(String un, String pw, int portNumber) throws Exception
 	{
 		Connection c=null;
 		Statement s=null;
@@ -77,6 +77,10 @@ public class ServerProcess {
 			 {
 				 return SPU.ServerResponse.ACCOUNT_CREATE_FAIL.ordinal();
 			 }
+			 s.close();
+			 c.close();
+			 c = getDB(portNumber);
+			 s = c.createStatement();
 			 s.executeUpdate("INSERT INTO userinfo (username, password, userclass) "
 			 		+ "VALUES ('" + un + "', '" + pw + "', '" + un + ".info');");
 			 FileOutputStream fileout = new FileOutputStream("data/info/userclass/"+un+".info");
@@ -85,18 +89,8 @@ public class ServerProcess {
 			 newuser.spawn();
 			 infowrite.writeObject(newuser);
 			 infowrite.close();
-			 if (rs!=null)
-			 {
-				 rs.close();
-			 }
-			 if (s!=null)
-			 {
-				 s.close();
-			 }
-			 if (c!=null)
-			 {
-				 c.close();
-			 }
+			 s.close();
+			 c.close();
 			 System.out.println("User " + un + "signed up at server " + new Integer(portNumber).toString());
 			 return SPU.ServerResponse.ACCOUNT_CREATE_OK.ordinal();	
 		}
@@ -104,17 +98,28 @@ public class ServerProcess {
 		{
 			e.printStackTrace();
 			return SPU.ServerResponse.ACCOUNT_CREATE_FAIL.ordinal();
-		}	
+		}
+		finally
+		{
+			try
+			{
+				c.close();
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public static int[][] getCond(String un, SubServerMap map)
 	{
-		int [][] out = new int[5][5];
-		for (int i = 0; i < 5; i++)
+		int [][] out = new int[11][11];
+		for (int i = 0; i < 11; i++)
 		{
-			for (int j = 0; j < 5; j++)
+			for (int j = 0; j < 11; j++)
 			{
-				out[i][j] = map.getTile(i,j).ordinal();
+				out[i][j] = map.getTile(i+44,j+44).ordinal();
 			}
 		}
 		return out;
