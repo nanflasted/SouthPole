@@ -52,6 +52,7 @@ public class ServerProcess {
 		{
 			c.close();
 		}
+		System.out.println(rs.isClosed()&&s.isClosed()&&c.isClosed());
 		return SPU.ServerResponse.LOGIN_FAIL.ordinal();
 	}
 	
@@ -78,6 +79,7 @@ public class ServerProcess {
 			 rs.close();
 			 s.close();
 			 c.close();
+			 System.out.println(rs.isClosed()&&s.isClosed()&&c.isClosed());
 			 c = getDB(portNumber);
 			 s = c.createStatement();
 			 s.executeUpdate("INSERT INTO userinfo (username, password, userclass) "
@@ -105,6 +107,7 @@ public class ServerProcess {
 				rs.close();
 				s.close();
 				c.close();
+				System.out.println(rs.isClosed()&&s.isClosed()&&c.isClosed());
 			}
 			catch(Exception e)
 			{

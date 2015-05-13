@@ -33,6 +33,11 @@ public class SubServerMap implements java.io.Serializable {
 	
 	public boolean move(String un, int direction)
 	{
+		/*
+		 * TODO
+		 * 1. store users on this map
+		 * 2. move user un
+		 */
 		return true;
 	}
 	
