@@ -1,0 +1,18 @@
+ServerProcess
+  After testing among isClosed() clauses:
+    share the JDBC connecions in the ServerProcess among all threads to avoid database locks.
+
+SubServerMap
+  Make towns
+  Store user positions on the map, and being able to move users around
+    So that user interactions could be processed easier
+
+UserData
+  This is generic, but start making rules:
+    dogs
+    supply
+    visibility
+    items,
+    etc.
+
+
