@@ -1,6 +1,7 @@
 ServerProcess
   After testing among isClosed() clauses:
-    share the JDBC connecions in the ServerProcess among all threads to avoid database locks.
+    share the JDBC connections in the ServerProcess among all threads to avoid database locks.
+  Try implementing using PreparedStatements to make things (potentially) easier
 
 SubServerMap
   Make towns
