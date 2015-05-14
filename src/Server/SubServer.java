@@ -11,6 +11,8 @@ package Server;
 import java.net.*;
 import java.util.*;
 import java.io.*;
+import java.sql.*;
+
 import Utility.*;
 import Utility.SPU.*;
 
@@ -24,6 +26,7 @@ public class SubServer extends Thread{
 	private ObjectInputStream mapRead;
 	private ObjectOutputStream mapWrite;
 	private SubServerMap map;
+	private Connection conn;
 	private ArrayList<String> onlineUsers = new ArrayList<String>();
 	private ArrayList<UserData> onlineUserData = new ArrayList<UserData>();
 	
@@ -64,7 +67,7 @@ public class SubServer extends Thread{
 			}
 			onlineUsers.add(un);
 			System.out.println("login from user " + un + " with password " + pw);
-			boolean fail = (ServerProcess.login(un, pw, portNumber)!=SPU.ServerResponse.LOGIN_OK.ordinal());
+			boolean fail = (ServerProcess.login(conn,un, pw, portNumber)!=SPU.ServerResponse.LOGIN_OK.ordinal());
 			if (fail) 
 			{
 				onlineUsers.remove(un);
@@ -83,7 +86,7 @@ public class SubServer extends Thread{
 			String un = SPU.dataISReadLine(read);
 			String pw = SPU.dataISReadLine(read);
 			System.out.println("sign up from user " + un + " with password " + pw);
-			write.writeInt(ServerProcess.signup(un, pw, portNumber));
+			write.writeInt(ServerProcess.signup(conn,un, pw, portNumber));
 		}
 		
 		private void move(int direction) throws Exception
@@ -262,19 +265,39 @@ public class SubServer extends Thread{
 		}
 //======================================================================
 //client-end
-		while (true)
+		try
+		{
+			Class.forName("org.sqlite.JDBC");
+			conn = DriverManager.getConnection("jdbc:sqlite:"+"data/info/"+new Integer(portNumber).toString()+".db");
+			while (true)
+			{
+				try
+				{
+					System.out.println("server waiting on port " + new Integer(portNumber).toString() 
+							+ " at " + listener.getLocalSocketAddress().toString());
+					currentClient = listener.accept();
+					new ClientHandler(currentClient).start();
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+					return;
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
 		{
 			try
 			{
-				System.out.println("server waiting on port " + new Integer(portNumber).toString() 
-						+ " at " + listener.getLocalSocketAddress().toString());
-				currentClient = listener.accept();
-				new ClientHandler(currentClient).start();
+				conn.close();
 			}
-			catch (Exception e)
+			catch(Exception e)
 			{
-				e.printStackTrace();
-				return;
+				//
 			}
 		}
 	}

@@ -16,14 +16,14 @@ public class ServerProcess {
 		return DriverManager.getConnection("jdbc:sqlite:"+"data/info/"+new Integer(server).toString()+".db");
 	}
 	
-	public static synchronized int login(String un, String pw, int portNumber) throws Exception
+	public static synchronized int login(Connection c, String un, String pw, int portNumber) throws Exception
 	{
 		Connection c=null;
 		Statement s=null;
 		ResultSet rs=null;
 		try
 		{
-			 c = getDB(portNumber);
+			 //c = getDB(portNumber);
 			 s = c.createStatement();
 			 rs = s.executeQuery("SELECT * FROM userinfo WHERE username = '"+un + "';");
 		}
@@ -48,11 +48,7 @@ public class ServerProcess {
 		{
 			s.close();
 		}
-		if (c!=null)
-		{
-			c.close();
-		}
-		System.out.println(rs.isClosed()&&s.isClosed()&&c.isClosed());
+		System.out.println(rs.isClosed()&&s.isClosed());
 		return SPU.ServerResponse.LOGIN_FAIL.ordinal();
 	}
 	
@@ -62,9 +58,8 @@ public class ServerProcess {
 		writer.writeObject(data);
 		writer.close();
 	}
-	public static synchronized int signup(String un, String pw, int portNumber)
+	public static synchronized int signup(Connection c, String un, String pw, int portNumber)
 	{
-		Connection c=null;
 		Statement s=null;
 		ResultSet rs=null;
 		try
@@ -106,8 +101,7 @@ public class ServerProcess {
 			{
 				rs.close();
 				s.close();
-				c.close();
-				System.out.println(rs.isClosed()&&s.isClosed()&&c.isClosed());
+				System.out.println(rs.isClosed()&&s.isClosed());
 			}
 			catch(Exception e)
 			{
