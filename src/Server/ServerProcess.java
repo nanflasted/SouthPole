@@ -58,7 +58,7 @@ public class ServerProcess {
 		writer.writeObject(data);
 		writer.close();
 	}
-	public static synchronized int signup(Connection c, String un, String pw, int portNumber)
+	public static synchronized int signup(Connection c, String un, String pw, SubServerMap map, int portNumber)
 	{
 		Statement s=null;
 		ResultSet rs=null;
@@ -83,6 +83,7 @@ public class ServerProcess {
 			 ObjectOutputStream infowrite = new ObjectOutputStream(fileout);
 			 UserData newuser = new UserData(un,portNumber);
 			 newuser.spawn();
+			 map.spawnUser(un, newuser.getX(), newuser.getY());
 			 infowrite.writeObject(newuser);
 			 infowrite.close();
 			 s.close();

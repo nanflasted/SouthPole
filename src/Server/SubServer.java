@@ -86,7 +86,7 @@ public class SubServer extends Thread{
 			String un = SPU.dataISReadLine(read);
 			String pw = SPU.dataISReadLine(read);
 			System.out.println("sign up from user " + un + " with password " + pw);
-			write.writeInt(ServerProcess.signup(conn,un, pw, portNumber));
+			write.writeInt(ServerProcess.signup(conn,un, pw, map, portNumber));
 		}
 		
 		private void move(int direction) throws Exception

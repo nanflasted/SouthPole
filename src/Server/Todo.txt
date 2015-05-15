@@ -4,15 +4,20 @@ ServerProcess
   Try implementing using PreparedStatements to make things (potentially) easier
 
 SubServerMap
-  Make towns
-  Store user positions on the map, and being able to move users around
+  Be able to move users around on the map
     So that user interactions could be processed easier
+  Spawn towns in a way so that less towns are spawned closer to the center(goal)
+
+TownData
+  Spawn towns properly onto the map, aka no hardcoding
+  Figure out what a town should have
 
 UserData
   This is generic, but start making rules:
     dogs
     supply
-    visibility
+    towns
+    //visibility-done
     items,
     etc.
 
