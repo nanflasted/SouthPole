@@ -54,6 +54,7 @@ public class SubServerMap implements java.io.Serializable {
                  * 'T' means a tile
                  * 'C' means a town/city
                  * 'U' means a user
+                 * " " means an empty space in the storage
                  * and to add more
                  * then details are stored in -.get(1~inf)
                  * e.g.: 'TUCUUU' means there are a terrain, a city, and 4 users on this tile,
@@ -97,12 +98,40 @@ public class SubServerMap implements java.io.Serializable {
     	mapOverlay[x][y].set(0,((String)mapOverlay[x][y].get(0))+"U");
     	mapOverlay[x][y].add(un);
     }
-	public boolean move(String un, int direction)
+    
+    
+    public ArrayList<Object> ad2Overlay(String type, Object o, ArrayList<Object> target) //add to overlay
+    {
+    	ArrayList<Object> temp = target;
+    	temp.add(o);
+    	temp.set(0,(String)temp.get(0)+type);
+    	return temp;
+    }
+    
+    public ArrayList<Object> removeFromOverlay(Object o, ArrayList<Object> target)
+    {
+    	ArrayList<Object> temp = target;
+    	int i = 0;
+    	for (Object obj : temp)
+    	{
+    		if (obj.equals(o))
+    		{
+    			temp.remove(i);
+    			String control = (String)temp.get(0);
+    			temp.set(0, control.substring(0, i-1)+control.substring(i+1, control.length()));
+    			break;
+    		}
+    		i++;
+    	}
+    	return temp;
+    }
+    
+	public boolean move(String un, int x, int y, int direction)
 	{
-		/*
-		 * TODO
-		 * 1. move user un
-		 */
+		mapOverlay[x][y] = removeFromOverlay(un,mapOverlay[x][y]);
+		int targetX = SPU.moveX(x,direction);
+		int targetY = SPU.moveY(y,direction);
+		mapOverlay[targetX][targetY] = ad2Overlay("U",un,mapOverlay[targetX][targetY]);
 		return true;
 	}
 	

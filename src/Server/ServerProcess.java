@@ -118,7 +118,7 @@ public class ServerProcess {
 	
 	public static int[][] move(String un, SubServerMap map, int direction, UserData data)
 	{
-		if (!map.move(un,direction))
+		if (!map.move(un,data.getX(),data.getY(),direction))
 		{
 			return null;
 		}

@@ -48,47 +48,18 @@ public class UserData implements java.io.Serializable{
 	
 	public boolean move(SubServerMap map, int direction)
 	{
-		SPU.Tile targetTile;
-		switch (SPU.Command.values()[direction])
-		{
-			case MOVEDOWN:
-				targetTile = map.getTile(x, y+1);
-				break;
-			case MOVELEFT:
-				targetTile = map.getTile(x-1, y);
-				break;
-			case MOVERIGHT:
-				targetTile = map.getTile(x+1, y);
-				break;
-			case MOVEUP:
-				targetTile = map.getTile(x, y-1);
-				break;
-			case STAY:
-				return true;
-			default:
-				return false;
-		}
-		if (targetTile.equals(SPU.Tile.WATER))
+		int targetX = SPU.moveX(x,direction);
+		int targetY = SPU.moveY(y,direction);
+		if ((targetX==-1)||(targetY==-1))
 		{
 			return false;
 		}
-		switch (SPU.Command.values()[direction])
+		if (map.getTile(targetX, targetY).equals(SPU.Tile.WATER))
 		{
-			case MOVEDOWN:
-				y=y+1;
-				break;
-			case MOVELEFT:
-				x=x-1;
-				break;
-			case MOVERIGHT:
-				x=x+1;
-				break;
-			case MOVEUP:
-				y=y-1;
-				break;
-			default:
-				return false;
+			return false;
 		}
+		x = targetX;
+		y = targetY;
 		return true;
 	}
 }

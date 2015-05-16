@@ -49,6 +49,38 @@ public class SPU {
         TOWN
     }
 
+    public static int moveX(int x, int direction)
+    {
+    	switch (Command.values()[direction])
+    	{
+    	case MOVELEFT:
+    		return x;
+    	case MOVERIGHT:
+    		return x;
+    	case MOVEUP:
+    		return x-1;
+    	case MOVEDOWN:
+    		return x+1;
+		default:
+    		return -1;	
+    	}
+    }
+    public static int moveY(int y, int direction)
+    {
+    	switch (Command.values()[direction])
+    	{
+    	case MOVELEFT:
+    		return y-1;
+    	case MOVERIGHT:
+    		return y+1;
+    	case MOVEUP:
+    		return y;
+    	case MOVEDOWN:
+    		return y;
+		default:
+    		return -1;	
+    	}
+    }
     public static String dataISReadLine(DataInputStream stream) throws IOException {
         StringBuilder res = new StringBuilder();
         char temp;
