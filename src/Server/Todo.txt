@@ -1,24 +1,18 @@
 ServerProcess
   After testing among isClosed() clauses:
-    share the JDBC connections in the ServerProcess among all threads to avoid database locks.
+    share the JDBC connections in the ServerProcess among all threads to avoid database locks
   Try implementing using PreparedStatements to make things (potentially) easier
 
 SubServerMap
-  Be able to move users around on the map
-    So that user interactions could be processed easier
   Spawn towns in a way so that less towns are spawned closer to the center(goal)
+  eventually put everything into databases.
 
 TownData
-  Spawn towns properly onto the map, aka no hardcoding
   Figure out what a town should have
 
 UserData
+  Store user data, or at the very least items, into databases instead of a chaotic array list and then serialize it  
   This is generic, but start making rules:
-    dogs
-    supply
-    towns
-    //visibility-done
-    items,
-    etc.
+    dogs, supply, towns, items, etc.
 
 

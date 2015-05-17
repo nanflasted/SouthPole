@@ -2,19 +2,19 @@ package Server;
 
 import java.util.*;
 
+import Server.Resource.*;
 import Utility.SPU;
 
 public class UserData implements java.io.Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private String un;
+	private int dailyMoves = SPU.DAILY_MOVES;
 	private int server;
 	private int x;
 	private int y;
 	private int visibility; //how many tiles can be seen by this user around himself on each side
+	
 	
 	public UserData(String un, int server)
 	{
@@ -46,8 +46,14 @@ public class UserData implements java.io.Serializable{
 		return y;
 	}
 	
+	public int getMoves()
+	{
+		return dailyMoves;
+	}
+	
 	public boolean move(SubServerMap map, int direction)
 	{
+		if (dailyMoves==0) return false;
 		int targetX = SPU.moveX(x,direction);
 		int targetY = SPU.moveY(y,direction);
 		if ((targetX==-1)||(targetY==-1))
@@ -60,6 +66,7 @@ public class UserData implements java.io.Serializable{
 		}
 		x = targetX;
 		y = targetY;
+		dailyMoves -= 1;
 		return true;
 	}
 }

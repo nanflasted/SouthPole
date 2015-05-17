@@ -16,7 +16,8 @@ import java.util.*;
 public class SPU {
 
     public static final int WATER_BORDER_SIZE = 15;
-    public static final int DEFAULT_MAP_SIZE = 100;
+    public static final int DEFAULT_MAP_SIZE = 1000;
+    public static final int DAILY_MOVES = 10;
     //CONVERT TO INT:Command.SIGNUP.ordinal();
     //CONVERT TO ENUM:Command.values()[(int)Command.SIGNUP.ordinal()];
     public static enum Command {
@@ -65,6 +66,7 @@ public class SPU {
     		return -1;	
     	}
     }
+    
     public static int moveY(int y, int direction)
     {
     	switch (Command.values()[direction])
@@ -81,6 +83,7 @@ public class SPU {
     		return -1;	
     	}
     }
+    
     public static String dataISReadLine(DataInputStream stream) throws IOException {
         StringBuilder res = new StringBuilder();
         char temp;
@@ -88,6 +91,19 @@ public class SPU {
             res.append(temp);
         }
         return res.toString();
+    }
+    
+    public static ArrayList<String> generateName() throws Exception
+    {
+    	FileReader fin = new FileReader("data/namesdict.txt");
+    	BufferedReader in = new BufferedReader(fin);
+    	String line;
+    	ArrayList<String> names = new ArrayList<String>();
+    	while ((line = in.readLine())!=null)
+    	{
+    		names.add(line);
+    	}
+    	return names;
     }
 
 

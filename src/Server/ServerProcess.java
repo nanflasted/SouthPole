@@ -18,7 +18,6 @@ public class ServerProcess {
 	
 	public static synchronized int login(Connection c, String un, String pw, int portNumber) throws Exception
 	{
-		Connection c=null;
 		Statement s=null;
 		ResultSet rs=null;
 		try
