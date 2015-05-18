@@ -97,9 +97,10 @@ public class SubServer extends Thread{
 				return;
 			}
 			UserData temp = onlineUserData.get(onlineUsers.indexOf(un));
-			int[][] out = ServerProcess.move(un,map,direction,onlineUserData.get(onlineUsers.indexOf(un)));
+			int[][] out = ServerProcess.move(un,map,direction,temp);
 			if (out!=null)
 			{
+				write.writeInt(temp.getVisibility());
 				for (int i = 0; i < temp.getVisibility(); i++)
 				{
 					for (int j = 0; j < temp.getVisibility(); j++)
@@ -245,15 +246,20 @@ public class SubServer extends Thread{
 		}
 		else
 		{
-			map = new SubServerMap(SPU.DEFAULT_MAP_SIZE);
+			try {
+				map = new SubServerMap(SPU.DEFAULT_MAP_SIZE);
+			} 
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 			try
 			{
 				mapWrite = new ObjectOutputStream(new FileOutputStream("data/maps/"+new Integer(portNumber).toString() + ".map"));
 				mapWrite.writeObject(map);
 			}
-			catch (Exception rek)
+			catch (Exception rekt)
 			{
-				//rekt;
+				rekt.printStackTrace();
 			}
 		}
 //======================================================================

@@ -1,7 +1,6 @@
 ServerProcess
   After testing among isClosed() clauses:
     share the JDBC connections in the ServerProcess among all threads to avoid database locks
-  Try implementing using PreparedStatements to make things (potentially) easier
 
 SubServerMap
   Spawn towns in a way so that less towns are spawned closer to the center(goal)
