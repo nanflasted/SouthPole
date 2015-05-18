@@ -80,10 +80,10 @@ $RECYCLE.BIN/
 
 # PC-Client
 # =========================
-/src/PCClient/Library/
-/src/PCClient/Temp/
-/src/PCClient/Obj/
-/src/PCClient/Build/
+/src/PCClient/SouthPole/Library/
+/src/PCClient/SouthPole/Temp/
+/src/PCClient/SouthPole/Obj/
+/src/PCClient/SouthPole/Build/
 /src/PCClient/SouthPole/Assets/Standard Assets/
 /src/PCClient/SouthPole/Assets/Editor/
 
