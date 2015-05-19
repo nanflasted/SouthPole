@@ -6,20 +6,25 @@ package Utility;
 /**
  * @author NanflasTed
  * @author WJLIDDY
+ * Last Edit 5/18 by WJLIDDY
  *
  */
 
 import java.io.*;
-import java.sql.*;
 import java.util.*;
 
 public class SPU {
 
+    //amount of water to put at edge of map
     public static final int WATER_BORDER_SIZE = 15;
+    //length of edge of map in tiles
     public static final int DEFAULT_MAP_SIZE = 1000;
+    //amount of moves given per day.
     public static final int DAILY_MOVES = 10;
-    //CONVERT TO INT:Command.SIGNUP.ordinal();
-    //CONVERT TO ENUM:Command.values()[(int)Command.SIGNUP.ordinal()];
+
+    //Commands are requests sent to the server by to the client.
+    //To encode a command to int for transmission, use: Command.XXX.ordinal();
+    //To convert an int back to a command, use: Command.values()[(int)Command.XXX.ordinal()];
     public static enum Command {
         LOGIN,
         SIGNUP,
@@ -29,18 +34,22 @@ public class SPU {
         MOVELEFT,
         MOVEDOWN,
         MOVERIGHT,
-        LOGOUT
+        LOGOUT,
     }
 
+    //A response sent from a server back to a client.
     public static enum ServerResponse {
         LOGIN_FAIL,
         LOGIN_OK,
         ACCOUNT_CREATE_FAIL,
         ACCOUNT_CREATE_OK,
         LOGOUT_OK,
-        LOGOUT_FAIL
+        LOGOUT_FAIL,
+        //used by client
+        SERVER_UNRESPONSIVE
     }
 
+    //A type of base tile on the map.
     public static enum Tile {
         SNOW_LIGHT,
         SNOW_HEAVY,
@@ -92,7 +101,8 @@ public class SPU {
         }
         return res.toString();
     }
-    
+
+    //generates a list of town names
     public static ArrayList<String> generateName() throws Exception
     {
     	FileReader fin = new FileReader("data/namesdict.txt");

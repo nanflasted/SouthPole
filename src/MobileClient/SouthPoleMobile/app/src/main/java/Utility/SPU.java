@@ -6,30 +6,38 @@ package Utility;
 /**
  * @author NanflasTed
  * @author WJLIDDY
+ * Last Edit 5/18 by WJLIDDY
  *
  */
 
 import java.io.*;
-import java.sql.*;
 import java.util.*;
 
 public class SPU {
 
+    //amount of water to put at edge of map
     public static final int WATER_BORDER_SIZE = 15;
-    public static final int DEFAULT_MAP_SIZE = 100;
-    //CONVERT TO INT:Command.SIGNUP.ordinal();
-    //CONVERT TO ENUM:Command.values()[(int)Command.SIGNUP.ordinal()];
+    //length of edge of map in tiles
+    public static final int DEFAULT_MAP_SIZE = 1000;
+    //amount of moves given per day.
+    public static final int DAILY_MOVES = 10;
+
+    //Commands are requests sent to the server by to the client.
+    //To encode a command to int for transmission, use: Command.XXX.ordinal();
+    //To convert an int back to a command, use: Command.values()[(int)Command.XXX.ordinal()];
     public static enum Command {
         LOGIN,
         SIGNUP,
         GETCOND,
+        STAY,
         MOVEUP,
         MOVELEFT,
         MOVEDOWN,
         MOVERIGHT,
-        LOGOUT
+        LOGOUT,
     }
 
+    //A response sent from a server back to a client.
     public static enum ServerResponse {
         LOGIN_FAIL,
         LOGIN_OK,
@@ -37,17 +45,54 @@ public class SPU {
         ACCOUNT_CREATE_OK,
         LOGOUT_OK,
         LOGOUT_FAIL,
+        //used by client
         SERVER_UNRESPONSIVE
     }
 
+    //A type of base tile on the map.
     public static enum Tile {
         SNOW_LIGHT,
         SNOW_HEAVY,
         WATER,
         MOUNTAIN,
-        GOAL
+        GOAL,
+        TOWN
     }
 
+    public static int moveX(int x, int direction)
+    {
+    	switch (Command.values()[direction])
+    	{
+    	case MOVELEFT:
+    		return x;
+    	case MOVERIGHT:
+    		return x;
+    	case MOVEUP:
+    		return x-1;
+    	case MOVEDOWN:
+    		return x+1;
+		default:
+    		return -1;	
+    	}
+    }
+    
+    public static int moveY(int y, int direction)
+    {
+    	switch (Command.values()[direction])
+    	{
+    	case MOVELEFT:
+    		return y-1;
+    	case MOVERIGHT:
+    		return y+1;
+    	case MOVEUP:
+    		return y;
+    	case MOVEDOWN:
+    		return y;
+		default:
+    		return -1;	
+    	}
+    }
+    
     public static String dataISReadLine(DataInputStream stream) throws IOException {
         StringBuilder res = new StringBuilder();
         char temp;
@@ -57,55 +102,19 @@ public class SPU {
         return res.toString();
     }
 
-    public static Tile[][] generateWorld(int size) {
-
-    	//System.out.println("\u001B[36m");
-        Tile[][] world = new Tile[size][size];
-
-        double distFromCenterToOcean = ((size / 2.0) - WATER_BORDER_SIZE);
-
-        //generate the world.
-        for (int x = 0; x != size; x++) {
-            //System.out.println("");
-            for (int y = 0; y != size; y++) {
-                //100 % light snow at border, 100% heavy snow at center.
-                double distFromCenter = Math.sqrt(Math.pow((x - (size/2)), 2) + Math.pow((y - (size/2)), 2));
-                if (distFromCenter >= distFromCenterToOcean)
-                    world[x][y] = Tile.WATER;
-                else if ((distFromCenter / distFromCenterToOcean) > Math.random())
-                    world[x][y] = Tile.SNOW_LIGHT;
-                else
-                    world[x][y] = Tile.SNOW_HEAVY;
-
-                //add a mountain every once in a while
-                if (Math.random() < .02 && !(world[x][y] == Tile.WATER)) {
-                    world[x][y] = Tile.MOUNTAIN;
-                }
-
-                //debug draw
-                switch (world[x][y]) {
-                    case SNOW_LIGHT:
-                        System.out.print("~ ");
-                        break;
-                    case SNOW_HEAVY:
-                        System.out.print("* ");
-                        break;
-                    case WATER:
-                        System.out.print("  ");
-                        break;
-                    case MOUNTAIN:
-                        System.out.print("M ");
-                        break;
-                    case GOAL:
-                        break;
-                }
-
-            }
-
-
-        }
-
-        return world;
+    //generates a list of town names
+    public static ArrayList<String> generateName() throws Exception
+    {
+    	FileReader fin = new FileReader("data/namesdict.txt");
+    	BufferedReader in = new BufferedReader(fin);
+    	String line;
+    	ArrayList<String> names = new ArrayList<String>();
+    	while ((line = in.readLine())!=null)
+    	{
+    		names.add(line);
+    	}
+    	return names;
     }
+
 
 }

@@ -76,6 +76,7 @@ public class GamePlay extends Activity {
                     layers[0] = r.getDrawable(bkgTile);
                     layers[1] = r.getDrawable(R.drawable.mush_outline);
                     LayerDrawable layerDrawable = new LayerDrawable(layers);
+                    //TODO Fix this
                     tileButtons[x][y].setBackground(layerDrawable.mutate());
 
                 } else {
