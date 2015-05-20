@@ -14,7 +14,8 @@ public class UserData implements java.io.Serializable{
 	private int x;
 	private int y;
 	private int visibility; //how many tiles can be seen by this user around himself on each side
-	
+	private double health;
+	private ArrayList<ItemData> supplies = new ArrayList<CItemData>();
 	
 	public UserData(String un, int server)
 	{
