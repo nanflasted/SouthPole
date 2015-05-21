@@ -1,13 +1,13 @@
 package Server;
 
 import java.util.*;
+import java.sql.*;
 
 import Server.Resource.*;
 import Utility.SPU;
 
 public class UserData implements java.io.Serializable{
 
-	private static final long serialVersionUID = 1L;
 	private String un;
 	private int dailyMoves = SPU.DAILY_MOVES;
 	private int server;
@@ -15,7 +15,11 @@ public class UserData implements java.io.Serializable{
 	private int y;
 	private int visibility; //how many tiles can be seen by this user around himself on each side
 	private double health;
-	private ArrayList<ItemData> supplies = new ArrayList<CItemData>();
+	private ArrayList<ItemData> supplies = new ArrayList<ItemData>();
+	
+	private Connection conn;
+	private Statement stmt;
+	private ResultSet rset;
 	
 	public UserData(String un, int server)
 	{
