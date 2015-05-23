@@ -12,8 +12,8 @@ public class ServerProcess {
 	
 	private static Connection getDB(int server) throws Exception
 	{
-		Class.forName("org.sqlite.JDBC");
-		return DriverManager.getConnection("jdbc:sqlite:"+"data/info/"+new Integer(server).toString()+".db");
+		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+		return DriverManager.getConnection("jdbc:sqlserver:"+"data/info/"+new Integer(server).toString()+".db");
 	}
 	
 	public static synchronized int login(Connection c, String un, String pw, int portNumber) throws Exception
