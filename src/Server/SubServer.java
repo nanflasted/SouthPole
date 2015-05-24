@@ -273,8 +273,8 @@ public class SubServer extends Thread{
 //client-end
 		try
 		{
-			Class.forName("org.sqlite.JDBC");
-			conn = DriverManager.getConnection("jdbc:sqlite:"+"data/info/"+new Integer(portNumber).toString()+".db");
+			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+			conn = DriverManager.getConnection("jdbc:sqlserver://127.0.0.1:1336, DatabaseName = SouthPole","SouthPole","southpole");
 			while (true)
 			{
 				try

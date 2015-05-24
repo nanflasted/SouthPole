@@ -13,7 +13,7 @@ public class ServerProcess {
 	private static Connection getDB(int server) throws Exception
 	{
 		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-		return DriverManager.getConnection("jdbc:sqlserver:"+"data/info/"+new Integer(server).toString()+".db");
+		return DriverManager.getConnection("jdbc:sqlserver://127.0.0.1:1336;DatabaseName=SouthPole","SouthPole","southpole");
 	}
 	
 	public static synchronized int login(Connection c, String un, String pw, int portNumber) throws Exception
@@ -143,10 +143,10 @@ public class ServerProcess {
 		Statement stmt = null;
 		try
 		{
-			System.out.println("Initializing user database" + dbname);
-			Class.forName("org.sqlite.JDBC");
-			c = DriverManager.getConnection("jdbc:sqlite:"+dbname);
-			System.out.println("Database File Created at "+dbname);
+			System.out.println("Initializing user database");
+			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+			c = DriverManager.getConnection("jdbc:sqlserver//127.0.0.1:1336; DatabaseName = SouthPole", "SouthPole", "southpole");
+			System.out.println("Database File Created at ");
 			stmt = c.createStatement();
 			System.out.println("User Database Created");
 			stmt.executeUpdate("CREATE TABLE userinfo ( username TEXT PRIMARY KEY, password TEXT, userclass TEXT);");

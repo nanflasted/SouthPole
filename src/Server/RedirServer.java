@@ -30,8 +30,8 @@ public class RedirServer extends Thread{
 		{
 			try
 			{
-				Class.forName("org.sqlite.JDBC");
-				database = DriverManager.getConnection("jdbc:sqlite:"+"data/info/userredir.db");
+				Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+				database = DriverManager.getConnection("jdbc:sqlserver://127.0.0.1:1336; DatabaseName = SouthPole", "SouthPole", "southpole");
 				statement = database.createStatement();
 			}
 			catch (Exception e)
