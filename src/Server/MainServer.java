@@ -1,51 +1,51 @@
-package Server;
+package ...
 
-/**
- * @author NanflasTed
- *
- */
-import java.net.*;
-import java.util.*;
-import java.io.*;
-import Utility.*;
+import ...
 
-
-public class MainServer {
-	private ArrayList<SubServer> worlds;
-	private int worldNumber;
-	public MainServer(int startingPort, int endingPort)
+public class MainServer
+{
+	public Connection dbc;
+	private Statement stmt;
+	private ResultSet rsset;
+	private ServerSocket listener;
+	private Socket client;
+	private int startPort, endPort;
+	
+	public MainServer(int sp, int ep) throws Exception
 	{
-		new RedirServer(startingPort, endingPort).start();
-		worldNumber = endingPort-startingPort+1;
-		worlds = new ArrayList<SubServer>();
-		for (int i = startingPort; i <= endingPort; i++)
+		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+		dbc = DriverManager.getConnection("jdbc:sqlserver://127.0.0.1:1336, DatabaseName = SouthPole", "SouthPole", "southpole");
+		for (int i = sp; i <= ep; i++)
 		{
-			worlds.add(new SubServer(i));
-			worlds.get(i-startingPort).start();
+			new SubServer(i, dbc).start();
+		}
+		listener = new ServerSocket(1337);
+		while (true)
+		{
+			client = listener.accept();
 		}
 	}
 	
-	/**
-	 * @param args Starting Port and Ending Port
-	 */
-	public static void main(String args[])
+	public static void main(String[] args)
 	{
-		if (Integer.parseInt(args[0])<=1337)
-		{
-			System.err.println("Used reserved port number");
-			System.exit(1);
-		}
-		if (args.length != 2) 
-		{
-			System.err.println("Wrong Number of Arguments: MainServer <Starting Port> <Ending Port>");
-			System.exit(1);
-		}
 		try
 		{
-			MainServer server = new MainServer(Integer.parseInt(args[0]),Integer.parseInt(args[1]));
+			if (args.length!=2) 
+			{
+				throw new Exception("Wrong Number of Arguments: MainServer <Starting Port> <Ending Port>");
+			}
+			int sp = Integer.parseInt(args[0]);
+			if (sp <= 1337)
+			{
+				throw new Exception("Reserved Port Number");
+			}
+			int ep = Integer.parseInt(args[1]);
+			
+			MainServer ms = new MainServer(sp,ep);
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
+			System.out.println(e.getMessage());
 			e.printStackTrace();
 			System.exit(1);
 		}
