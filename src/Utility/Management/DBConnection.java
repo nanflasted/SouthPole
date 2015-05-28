@@ -1,4 +1,4 @@
-package Utility.DatabaseManagement;
+package Utility.Management;
 
 import Utility.*;
 import java.sql.*;

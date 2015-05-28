@@ -6,7 +6,7 @@ import java.net.*;
 import java.io.*;
 
 import Utility.*;
-import Utility.DatabaseManagement.*;
+import Utility.Management.*;
 
 public class MainServer
 {
@@ -19,9 +19,10 @@ public class MainServer
 	public MainServer(int sp, int ep) throws Exception
 	{
 		dbpool = new DBConnectionPool();
+		mapmgr = new MapManager();
 		for (int i = sp; i <= ep; i++)
 		{
-			new SubServer(i,dbpool).start();
+			new SubServer(i,dbpool,mapmgr).start();
 		}
 		listener = new ServerSocket(1337);
 		while (true)
