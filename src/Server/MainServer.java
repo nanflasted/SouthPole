@@ -1,28 +1,32 @@
-package ...
+package Server;
 
-import ...
+import java.sql.*;
+import java.util.*;
+import java.net.*;
+import java.io.*;
 
 public class MainServer
 {
-	public Connection dbc;
+	private Connection dbc;
 	private Statement stmt;
 	private ResultSet rsset;
 	private ServerSocket listener;
 	private Socket client;
-	private int startPort, endPort;
 	
 	public MainServer(int sp, int ep) throws Exception
 	{
-		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-		dbc = DriverManager.getConnection("jdbc:sqlserver://127.0.0.1:1336, DatabaseName = SouthPole", "SouthPole", "southpole");
 		for (int i = sp; i <= ep; i++)
 		{
-			new SubServer(i, dbc).start();
+			new SubServer(i).start();
 		}
 		listener = new ServerSocket(1337);
 		while (true)
 		{
 			client = listener.accept();
+			ObjectInputStream in = new ObjectInputStream(client.getInputStream());
+			String un = (String)in.readObject();
+			ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
+			
 		}
 	}
 	
