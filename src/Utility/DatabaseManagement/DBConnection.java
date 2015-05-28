@@ -70,12 +70,13 @@ public class DBConnection {
 		timer.schedule(kill = new KillTask(conn), TTL);
 	}
 	
-	public void executeQuery(String query) throws Exception
+	public ResultSet executeQuery(String query) throws Exception
 	{
 		Statement stmt = conn.createStatement();
-		stmt.executeUpdate(query);
+		ResultSet rsset = stmt.executeQuery(query);
 		kill.cancel();
 		timer.schedule(kill = new KillTask(conn), TTL);
+		return rsset;
 	}
 	
 	public void close()

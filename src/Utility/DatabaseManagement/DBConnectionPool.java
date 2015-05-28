@@ -35,7 +35,7 @@ public class DBConnectionPool {
 	
 	public synchronized DBConnection getConnection() throws Exception
 	{
-		if ((pool.isEmpty())&&(inUse>=MAXCONN))
+		if ((pool.isEmpty())&&(inUse+available>=MAXCONN))
 		{
 			return null;
 		}

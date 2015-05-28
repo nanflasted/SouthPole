@@ -5,19 +5,23 @@ import java.util.*;
 import java.net.*;
 import java.io.*;
 
+import Utility.*;
+import Utility.DatabaseManagement.*;
+
 public class MainServer
 {
-	private Connection dbc;
-	private Statement stmt;
+	private DBConnectionPool dbpool;
+	private DBConnection dbc;
 	private ResultSet rsset;
 	private ServerSocket listener;
 	private Socket client;
 	
 	public MainServer(int sp, int ep) throws Exception
 	{
+		dbpool = new DBConnectionPool();
 		for (int i = sp; i <= ep; i++)
 		{
-			new SubServer(i).start();
+			new SubServer(i,dbpool).start();
 		}
 		listener = new ServerSocket(1337);
 		while (true)
@@ -26,7 +30,20 @@ public class MainServer
 			ObjectInputStream in = new ObjectInputStream(client.getInputStream());
 			String un = (String)in.readObject();
 			ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
-			
+			dbc = dbpool.getConnection();
+			rsset = dbc.executeQuery("SELECT server FROM redir WHERE username = '" + un + "'");
+			if (rsset.next())
+			{
+				out.writeInt(rsset.getInt("server"));
+			}
+			else
+			{
+				out.writeInt(-1);
+			}
+			in.close();
+			out.close();
+			client.close();
+			dbpool.freeConnection(dbc);
 		}
 	}
 	
@@ -45,6 +62,7 @@ public class MainServer
 			}
 			int ep = Integer.parseInt(args[1]);
 			
+			@SuppressWarnings("unused")
 			MainServer ms = new MainServer(sp,ep);
 		}
 		catch (Exception e)
