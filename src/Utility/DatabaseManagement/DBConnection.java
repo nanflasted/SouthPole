@@ -90,4 +90,9 @@ public class DBConnection {
 			e.printStackTrace();
 		}
 	}
+	
+	public boolean isClosed() throws Exception
+	{
+		return (conn==null)?true:conn.isClosed();
+	}
 }
