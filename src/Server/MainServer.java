@@ -1,7 +1,6 @@
 package Server;
 
 import java.sql.*;
-import java.util.*;
 import java.net.*;
 import java.io.*;
 
@@ -15,24 +14,32 @@ public class MainServer
 	private ResultSet rsset;
 	private ServerSocket listener;
 	private Socket client;
+	private MapManager mapMgr;
 	
 	public MainServer(int sp, int ep) throws Exception
 	{
 		dbpool = new DBConnectionPool();
-		mapmgr = new MapManager();
+		mapMgr = new MapManager();
 		for (int i = sp; i <= ep; i++)
 		{
-			new SubServer(i,dbpool,mapmgr).start();
+			new SubServer(i,dbpool,mapMgr).start();
 		}
 		listener = new ServerSocket(1337);
 		while (true)
 		{
 			client = listener.accept();
 			ObjectInputStream in = new ObjectInputStream(client.getInputStream());
+			int handshake = in.readInt();
+			if (!SPU.verifyHandshake(handshake))
+			{
+				in.close();
+				client.close();
+				continue;
+			}
 			String un = (String)in.readObject();
 			ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
 			dbc = dbpool.getConnection();
-			rsset = dbc.executeQuery("SELECT server FROM redir WHERE username = '" + un + "'");
+			rsset = dbc.executeQuery("SELECT * FROM redir WHERE username = '" + un + "'");
 			if (rsset.next())
 			{
 				out.writeInt(rsset.getInt("server"));

@@ -10,7 +10,6 @@ import java.util.*;
  */
 public class DBConnection {
 
-	public static final int TTL = 30*60*1000;
 	public String driver = SPU.DRIVERNAME;
 	public String un = SPU.DBUN;
 	public String pw = SPU.DBPW;
@@ -50,7 +49,7 @@ public class DBConnection {
 			Class.forName(driver);
 			conn = DriverManager.getConnection(url,un,pw);
 			timer = new Timer();
-			timer.schedule(kill = new KillTask(conn), TTL);
+			timer.schedule(kill = new KillTask(conn), SPU.DBTTL);
 		}
 		catch(ClassNotFoundException e1)
 		{
@@ -67,7 +66,8 @@ public class DBConnection {
 		Statement stmt = conn.createStatement();
 		stmt.executeUpdate(update);
 		kill.cancel();
-		timer.schedule(kill = new KillTask(conn), TTL);
+		timer.schedule(kill = new KillTask(conn), SPU.DBTTL);
+		stmt.close();
 	}
 	
 	public ResultSet executeQuery(String query) throws Exception
@@ -75,7 +75,8 @@ public class DBConnection {
 		Statement stmt = conn.createStatement();
 		ResultSet rsset = stmt.executeQuery(query);
 		kill.cancel();
-		timer.schedule(kill = new KillTask(conn), TTL);
+		timer.schedule(kill = new KillTask(conn), SPU.DBTTL);
+		stmt.close();
 		return rsset;
 	}
 	

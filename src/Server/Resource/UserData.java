@@ -1,8 +1,9 @@
-package Server;
+package Server.Resource;
 
 import java.util.*;
 import java.sql.*;
 
+import Server.SubServerMap;
 import Server.Resource.*;
 import Utility.SPU;
 

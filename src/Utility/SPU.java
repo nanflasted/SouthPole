@@ -15,11 +15,15 @@ import java.util.*;
 
 public class SPU {
 
+	//Time to live definition: time to autodisconnect client when idle
+	public static final int TTL = 30*60*1000; //30 minutes
+	
 	//Database related definitions
 	public static final String DRIVERNAME = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 	public static final String DBUN = "SouthPole";
 	public static final String DBPW = "southpole";
 	public static final String DBURL = "jdbc:sqlserver://127.0.0.1:1336, DatabaseName = SouthPole";
+	public static final int DBTTL = 30*1000;
 	
     //amount of water to put at edge of map
     public static final int WATER_BORDER_SIZE = 15;
@@ -41,6 +45,7 @@ public class SPU {
         MOVEDOWN,
         MOVERIGHT,
         LOGOUT,
+        DISCONNECT
     }
 
     //A response sent from a server back to a client.
@@ -120,6 +125,11 @@ public class SPU {
     		names.add(line);
     	}
     	return names;
+    }
+    
+    public static boolean verifyHandshake(int handshake)
+    {
+    	return (handshake == "connectpls".hashCode());
     }
 
 
