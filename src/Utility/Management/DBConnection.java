@@ -80,6 +80,14 @@ public class DBConnection {
 		return rsset;
 	}
 	
+	public PreparedStatement getPS(String statement) throws Exception
+	{
+		PreparedStatement pst = conn.prepareStatement(statement);
+		kill.cancel();
+		timer.schedule(kill = new KillTask(conn), SPU.DBTTL);
+		return pst;
+	}
+	
 	public void close()
 	{
 		try

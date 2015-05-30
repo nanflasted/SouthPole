@@ -10,13 +10,12 @@ import Utility.SPU;
 
 
 public class ServerProcess {
-	
+	/*obsolete
 	private static Connection getDB(int server) throws Exception
 	{
 		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 		return DriverManager.getConnection("jdbc:sqlserver://127.0.0.1:1336;DatabaseName=SouthPole","SouthPole","southpole");
-	}
-	
+	}	
 	public static synchronized int login(Connection c, String un, String pw, int portNumber) throws Exception
 	{
 		Statement s=null;
@@ -51,7 +50,6 @@ public class ServerProcess {
 		System.out.println(rs.isClosed()&&s.isClosed());
 		return SPU.ServerResponse.LOGIN_FAIL.ordinal();
 	}
-	
 	public static void logout(String un, int portNumber, UserData data) throws IOException
 	{
 		ObjectOutputStream writer = new ObjectOutputStream(new FileOutputStream("/data/info/userclass/"+un+".info"));
@@ -111,33 +109,6 @@ public class ServerProcess {
 		}
 	}
 	
-	public static int[][] getCond(String un, SubServerMap map, UserData data)
-	{
-		return move(un,map,SPU.Command.STAY.ordinal(),data);
-	}
-	
-	public static int[][] move(String un, SubServerMap map, int direction, UserData data)
-	{
-		if (!map.move(un,data.getX(),data.getY(),direction))
-		{
-			return null;
-		}
-		if (!data.move(map,direction))
-		{
-			return null;
-		}
-		int v = data.getVisibility();
-		int [][] out = new int[v][v];
-		for (int i = data.getX()-v; i <= data.getX()+v; i++)
-		{
-			for (int j = data.getY()-v; j <= data.getY()+v; j++)
-			{
-				out[i][j] = map.getTile(i,j).ordinal();
-			}
-		}
-		return out;
-	}
-	
 	public static void createDB(String dbname)
 	{
 		Connection c = null;
@@ -170,4 +141,32 @@ public class ServerProcess {
 			}
 		}
 	}
+*/
+	public static int[][] getCond(String un, SubServerMap map, UserData data)
+	{
+		return move(un,map,SPU.Command.STAY.ordinal(),data);
+	}
+	
+	public static int[][] move(String un, SubServerMap map, int direction, UserData data)
+	{
+		if (!map.move(un,data.getX(),data.getY(),direction))
+		{
+			return null;
+		}
+		if (!data.move(map,direction))
+		{
+			return null;
+		}
+		int v = data.getVisibility();
+		int [][] out = new int[v][v];
+		for (int i = data.getX()-v; i <= data.getX()+v; i++)
+		{
+			for (int j = data.getY()-v; j <= data.getY()+v; j++)
+			{
+				out[i][j] = map.getTile(i,j).ordinal();
+			}
+		}
+		return out;
+	}
+	
 }

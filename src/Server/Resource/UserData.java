@@ -57,7 +57,7 @@ public class UserData implements java.io.Serializable{
 		return dailyMoves;
 	}
 	
-	public boolean move(SubServerMap map, int direction)
+	public boolean move(MapData map, int direction)
 	{
 		if (dailyMoves==0) return false;
 		int targetX = SPU.moveX(x,direction);
@@ -74,5 +74,9 @@ public class UserData implements java.io.Serializable{
 		y = targetY;
 		dailyMoves -= 1;
 		return true;
+	}
+
+	public String getName() {
+		return un;
 	}
 }

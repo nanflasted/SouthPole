@@ -21,16 +21,16 @@ public class ClientHandler extends Thread{
 	private int port;
 	
 	private Timer timer;
+	
+	private UserData data;
 	private class DCTask extends TimerTask
 	{
 		private Socket client=null;
 		private ObjectInputStream in;
 		private ObjectOutputStream out;
-		protected DCTask(Socket client,ObjectInputStream in, ObjectOutputStream out)
+		protected DCTask(ClientHandler handle)
 		{
-			this.client = client;
-			this.in = in;
-			this.out = out;
+			handle.logout();
 		}
 		
 		public void run()
@@ -58,7 +58,7 @@ public class ClientHandler extends Thread{
 		in = new ObjectInputStream(client.getInputStream());
 		out = new ObjectOutputStream(client.getOutputStream());
 		timer = new Timer();
-		autoDC = new DCTask(client,in,out);
+		autoDC = new DCTask(this);
 		timer.schedule(autoDC, SPU.TTL);
 	}
 	
@@ -77,15 +77,11 @@ public class ClientHandler extends Thread{
 				return;
 			}
 			int state;
-			while ((state = in.readInt())!=SPU.Command.DISCONNECT.ordinal())
+			while ((state = in.readInt())!=SPU.Command.LOGOUT.ordinal())
 			{
 				process(state);
 			}
 			process(state);
-			in.close();
-			out.close();
-			client.close();
-			return;
 		}
 		catch (Exception e)
 		{
@@ -96,7 +92,7 @@ public class ClientHandler extends Thread{
 	private void process(int state)
 	{
 		autoDC.cancel();
-		autoDC = new DCTask(client,in,out);
+		autoDC = new DCTask(this);
 		timer.schedule(autoDC, SPU.TTL);
 		switch (SPU.Command.values()[state])
 		{
@@ -107,19 +103,19 @@ public class ClientHandler extends Thread{
 			signup();
 			break;
 		case GETCOND:
-			move(SPU.Command.STAY);
+			move(SPU.Command.STAY.ordinal());
 			break;
 		case MOVEUP:
-			move(SPU.Command.MOVEUP);
+			move(SPU.Command.MOVEUP.ordinal());
 			break;
 		case MOVEDOWN:
-			move(SPU.Command.MOVEDOWN);
+			move(SPU.Command.MOVEDOWN.ordinal());
 			break;
 		case MOVELEFT:
-			move(SPU.Command.MOVELEFT);
+			move(SPU.Command.MOVELEFT.ordinal());
 			break;
 		case MOVERIGHT:
-			move(SPU.Command.MOVERIGHT);
+			move(SPU.Command.MOVERIGHT.ordinal());
 			break;		
 		case LOGOUT:
 			logout();
@@ -145,6 +141,7 @@ public class ClientHandler extends Thread{
 			if (server.isOnline(un))
 			{
 				out.writeInt(SPU.ServerResponse.LOGIN_FAIL.ordinal());
+				
 				return;
 			}
 			if (!(rsset.getString("password").equals((String)in.readObject())))
@@ -153,8 +150,8 @@ public class ClientHandler extends Thread{
 				return;
 			}
 			rsset.next();
-			UserData thisUser = (UserData)new ObjectInputStream(rsset.getBinaryStream("UserData")).readObject();
-			server.userLogin(thisUser);
+			data = (UserData)new ObjectInputStream(rsset.getBinaryStream("UserData")).readObject();
+			server.userLogin(data);
 			rsset.close();
 			dbpool.freeConnection(conn);
 		}
@@ -179,14 +176,74 @@ public class ClientHandler extends Thread{
 			}
 			rsset.close();
 			dbpool.freeConnection(conn);
+			
 			String pw = (String)in.readObject();
+			
 			UserData thisUser = new UserData(un,server.getPort());
 			thisUser.spawn();
 			MapManager mapMgr = server.getMapMgr();
 			mapMgr.spawnUser(thisUser.getX(),thisUser.getY());
+			
+			ObjectOutputStream temp = new ObjectOutputStream(new FileOutputStream("temp.ser"));
+			temp.writeObject(thisUser);
+			temp.flush();
+			temp.close();
+			
 			conn = dbpool.getConnection();
-			conn.executeUpdate("INSERT INTO ")
+			PreparedStatement pst = conn.getPS("INSERT INTO "+new Integer(server.getPort()).toString()+" (username,password,UserData) VALUES (?,?,?,?);");
+			pst.setString(1, thisUser.getName());
+			pst.setString(2, pw);
+			pst.setBinaryStream(3, new ObjectInputStream(new FileInputStream("temp.ser")));
+			pst.executeUpdate();
+			pst.close();
+			dbpool.freeConnection(conn);
+			
+			out.writeInt(SPU.ServerResponse.ACCOUNT_CREATE_OK.ordinal());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			out.writeInt(SPU.ServerResponse.ACCOUNT_CREATE_FAIL.ordinal());
 		}
 	}
 
+	private void move(int dir)
+	{
+		MapManager mapmgr = server.getMapMgr();
+		mapmgr.moveUser(data.getName(), dir);
+		data.move(mapmgr.load(), dir);
+		out.writeInt(data.getVisibility());
+		out.writeObject(data.look());
+		out.flush();
+	}
+	
+	private void logout()
+	{
+		server.userLogoff(data.getName());
+		dbpool = server.getDBPool();
+		try
+		{
+			ObjectOutputStream temp = new ObjectOutputStream(new FileOutputStream("temp.ser"));
+			temp.writeObject(data);
+			temp.flush();
+			temp.close();
+			
+			DBConnection conn = dbpool.getConnection();
+			PreparedStatement pst = conn.getPS("UPDATE "+new Integer(server.getPort()).toString()+" SET UserData = ? WHERE un = " + data.getName() + ";");
+			pst.setBinaryStream(1, new ObjectInputStream(new FileInputStream("temp.ser")));
+			pst.executeUpdate();
+			pst.close();
+			dbpool.freeConnection(conn);
+			
+			
+			in.close();
+			out.close();
+			client.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
 }
