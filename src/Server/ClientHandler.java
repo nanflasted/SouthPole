@@ -25,21 +25,26 @@ public class ClientHandler extends Thread{
 	private UserData data;
 	private class DCTask extends TimerTask
 	{
-		private Socket client=null;
-		private ObjectInputStream in;
-		private ObjectOutputStream out;
-		protected DCTask(ClientHandler handle)
+		private ClientHandler handler;
+		protected DCTask(ClientHandler handler)
 		{
-			handle.logout();
+			this.handler = handler;
 		}
 		
 		public void run()
 		{
 			try
 			{
-				if (in!=null) {in.close();}
-				if (out!=null) {out.close();}
-				if ((client!=null)&&(!client.isClosed())) {client.close();}
+				if (handler.data!=null)
+				{
+					handler.logout();
+				}
+				else
+				{
+					if (in!=null) {in.close();}
+					if (out!=null) {out.close();}
+					if ((client!=null)&&(!client.isClosed())) {client.close();}
+				}
 			}
 			catch (Exception e)
 			{
