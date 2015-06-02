@@ -79,4 +79,8 @@ public class UserData implements java.io.Serializable{
 	public String getName() {
 		return un;
 	}
+
+	public int[][] look() {
+		return null;
+	}
 }
