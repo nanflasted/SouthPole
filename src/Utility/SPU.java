@@ -55,6 +55,8 @@ public class SPU {
         ACCOUNT_CREATE_OK,
         LOGOUT_OK,
         LOGOUT_FAIL,
+        MOVE_OK,
+        MOVE_FAIL,
         //used by client
         SERVER_UNRESPONSIVE
     }

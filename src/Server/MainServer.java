@@ -19,7 +19,7 @@ public class MainServer
 	public MainServer(int sp, int ep) throws Exception
 	{
 		dbpool = new DBConnectionPool();
-		mapMgr = new MapManager();
+		mapMgr = new MapManager(dbpool);
 		for (int i = sp; i <= ep; i++)
 		{
 			new SubServer(i,dbpool,mapMgr).start();

@@ -216,7 +216,7 @@ public class ClientHandler extends Thread{
 	{
 		MapManager mapmgr = server.getMapMgr();
 		mapmgr.moveUser(data.getName(), dir);
-		data.move(mapmgr.load(), dir);
+		data.move(mapmgr.load(server.getPort()), dir);
 		out.writeInt(data.getVisibility());
 		out.writeObject(data.look());
 		out.flush();

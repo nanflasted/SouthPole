@@ -7,6 +7,7 @@ import Server.SubServerMap;
 import Server.Resource.*;
 import Utility.SPU;
 
+@SuppressWarnings("serial")
 public class UserData implements java.io.Serializable{
 
 	private String un;
