@@ -89,4 +89,9 @@ public class SubServer extends Thread
 		onlineUsers.remove(i);
 		onlineUserData.remove(i);
 	}
+	
+	public synchronized MapData getMap()
+	{
+		return map;
+	}
 }

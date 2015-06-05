@@ -24,48 +24,6 @@ public class SubServerMap implements java.io.Serializable {
 		spawnTowns();
 	}
 	
-	public Tile[][] generateWorld(int size) {
-
-        Tile[][] world = new Tile[size][size];
-
-        double distFromCenterToOcean = ((size / 2.0) - SPU.WATER_BORDER_SIZE);
-
-        //generate the world.
-        for (int x = 0; x != size; x++) {
-            //System.out.println("");
-            for (int y = 0; y != size; y++) {
-                //100 % light snow at border, 100% heavy snow at center.
-            	mapOverlay[x][y] = new ArrayList<String>();
-            	mapOverlay[x][y].add("");
-                double distFromCenter = Math.sqrt(Math.pow((x - (size/2)), 2) + Math.pow((y - (size/2)), 2));
-                if (distFromCenter >= distFromCenterToOcean)
-                    world[x][y] = Tile.WATER;
-                else if ((distFromCenter / distFromCenterToOcean) > Math.random())
-                    world[x][y] = Tile.SNOW_LIGHT;
-                else
-                    world[x][y] = Tile.SNOW_HEAVY;
-                //add a mountain every once in a while
-                if (Math.random() < .02 && !(world[x][y] == Tile.WATER)) {
-                    world[x][y] = Tile.MOUNTAIN;
-                }
-                /*
-                 * overlay rules:
-                 * mapOverlay[?][?].get(0) is always a string that represents what follows:
-                 * 'T' means a town/city
-                 * 'G' means the terrain of current tile
-                 * 'U' means a user
-                 * " " means an empty space in the storage
-                 * and more to be added
-                 * then details are stored in -.get(1~inf)
-                 * e.g.: 'UTUUUU' means there are a city, and 5 users on this tile,
-                 * the storage sequence is as represented.
-                 */
-                mapOverlay[x][y] = ad2Overlay("G",world[x][y].name(),mapOverlay[x][y]);
-            }
-        }
-
-        return world;
-    }
 	
 	public int size()
 	{

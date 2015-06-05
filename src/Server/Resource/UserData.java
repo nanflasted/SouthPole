@@ -77,11 +77,22 @@ public class UserData implements java.io.Serializable{
 		return true;
 	}
 
-	public String getName() {
+	public String getName() 
+	{
 		return un;
 	}
 
-	public int[][] look() {
-		return null;
+	public SPU.Tile[][] look(MapData map) 
+	{
+		SPU.Tile[][] res = new SPU.Tile[visibility*2+1][visibility*2+1];
+		for (int i = x-visibility;i<=x+visibility;i++)
+		{
+			for (int j = y-visibility;j<=y+visibility;j++)
+			{
+				res[i][j] = map.getTile(i, j);
+			}
+		}
+		return res;
 	}
 }
+

@@ -1,0 +1,17 @@
+Protocols:
+	overlay:
+		overlay rules:
+		mapOverlay[?][?].get(0) is always a string that represents what follows:
+		'T' means a town/city
+		'G' means the terrain of current tile
+		'U' means a user
+		" " means an empty space in the storage
+		and more to be added
+		then details are stored in -.get(1~inf)
+		e.g.: 'UTUUUU' means there are a city, and 5 users on this tile,
+		the storage sequence is as represented.
+     handshake:
+     	"connectpls".hashcode();
+     to be added
+    
+    

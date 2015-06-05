@@ -187,7 +187,7 @@ public class ClientHandler extends Thread{
 			UserData thisUser = new UserData(un,server.getPort());
 			thisUser.spawn();
 			MapManager mapMgr = server.getMapMgr();
-			mapMgr.spawnUser(thisUser.getX(),thisUser.getY());
+			mapMgr.spawnUser(server.getMap(),thisUser.getX(),thisUser.getY());
 			
 			ObjectOutputStream temp = new ObjectOutputStream(new FileOutputStream("temp.ser"));
 			temp.writeObject(thisUser);
@@ -215,11 +215,18 @@ public class ClientHandler extends Thread{
 	private void move(int dir)
 	{
 		MapManager mapmgr = server.getMapMgr();
-		mapmgr.moveUser(data.getName(), dir);
-		data.move(mapmgr.load(server.getPort()), dir);
-		out.writeInt(data.getVisibility());
-		out.writeObject(data.look());
-		out.flush();
+		mapmgr.moveUser(server.getMap(),data.getName(), dir);
+		data.move(server.getMap(), dir);
+		try
+		{
+			out.writeInt(data.getVisibility());
+			out.writeObject(data.look(server.getMap()));
+			out.flush();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	private void logout()
