@@ -39,9 +39,24 @@ public class MapManager {
 		return null;
 	}
 	
-	public void moveUser(MapData mapData, String un, int dir)
+	public void spawnUser(MapData map, UserData user)
 	{
-		//TODO move user on the map
+		map.getOverlay(user.getX(),user.getY()).addUser(user);
+	}
+	
+	public void moveUser(MapData map, UserData user, int dir)
+	{
+		try
+		{
+			boolean flag = map.getOverlay(user.getX(), user.getY()).removeUser(user);
+			if (!flag) {throw new Exception("Fatal: map and user out of sync");}
+			map.getOverlay(SPU.moveX(user.getX(), dir), SPU.moveY(user.getY(), dir)).addUser(user);
+		}
+		catch (Exception e)
+		{
+			System.err.println(e.getMessage());
+			System.exit(1);
+		}
 	}
 	
 	public static void generateWorld(MapData map, int size) {
@@ -70,6 +85,6 @@ public class MapManager {
             }
         }
         map = new MapData(size);
-        map.setOverlay(world);
+        map.setWorld(world);
     }
 }

@@ -12,9 +12,19 @@ public class MapData {
 		this.size= size;
 	}
 	
-	public void setOverlay(MapOverlay[][] overlay)
+	public void setOverlay(MapOverlay newOverlay, int x, int y)
 	{
-		this.overlay = overlay;
+		overlay[x][y] = newOverlay;
+	}
+	
+	public MapOverlay getOverlay(int x, int y)
+	{
+		return overlay[x][y];
+	}
+	
+	public void setWorld(MapOverlay[][] world)
+	{
+		this.overlay = world;
 	}
 	
 	public Tile getTile(int x, int y)
