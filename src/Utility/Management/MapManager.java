@@ -9,14 +9,10 @@ import Utility.SPU;
 import Utility.SPU.Tile;
 
 public class MapManager {
-
-	private DBConnectionPool dbpool;
-	public MapManager(DBConnectionPool dbpool)
-	{
-		this.dbpool = dbpool;
-	}
 	
-	public MapData load(int server)
+	private int size;
+		
+	public static MapData load(int server, DBConnectionPool dbpool)
 	{
 		DBConnection dbc;
 		try
@@ -39,12 +35,17 @@ public class MapManager {
 		return null;
 	}
 	
-	public void spawnUser(MapData map, UserData user)
+	public static void save(MapData data, int server, DBConnectionPool dbpool)
+	{
+		
+	}
+	
+	public static void spawnUser(MapData map, UserData user)
 	{
 		map.getOverlay(user.getX(),user.getY()).addUser(user);
 	}
 	
-	public void moveUser(MapData map, UserData user, int dir)
+	public static void moveUser(MapData map, UserData user, int dir)
 	{
 		try
 		{

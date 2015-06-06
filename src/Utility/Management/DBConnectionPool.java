@@ -14,12 +14,18 @@ public class DBConnectionPool {
 	private int inUse;
 	private int available;
 	
-	public DBConnectionPool()
+	private String url;
+	private String un,pw;
+	
+	public DBConnectionPool(String url, String un, String pw)
 	{
 		pool = new LinkedList<DBConnection>();
+		this.url = url;
+		this.un = un;
+		this.pw = pw;
 		for (int i = 0; i < MINCONN; i++)
 		{
-			pool.add(new DBConnection());
+			pool.add(new DBConnection(url,un,pw));
 		}
 		inUse = 0;
 		available = MINCONN;
@@ -28,7 +34,7 @@ public class DBConnectionPool {
 	public synchronized void freeConnection(DBConnection conn) throws Exception
 	{
 		conn.close();
-		pool.add(new DBConnection());
+		pool.add(new DBConnection(url,un,pw));
 		inUse--;
 		available++;
 	}
@@ -59,7 +65,7 @@ public class DBConnectionPool {
 	
 	private synchronized void ad2Pool()
 	{
-		pool.add(new DBConnection());
+		pool.add(new DBConnection(url,un,pw));
 		available++;
 	}
 	

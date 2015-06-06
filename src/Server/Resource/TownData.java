@@ -1,7 +1,5 @@
 package Server.Resource;
 
-import Utility.SPU;
-
 public class TownData {
 
 	private int x;

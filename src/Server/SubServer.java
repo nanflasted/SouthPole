@@ -16,15 +16,16 @@ public class SubServer extends Thread
 	private ServerSocket server;
 	private ArrayList<String> onlineUsers = new ArrayList<String>();
 	private ArrayList<UserData> onlineUserData = new ArrayList<UserData>();
+	private ArrayList<ClientHandler> handlers = new ArrayList<ClientHandler>();
 	private MapData map;
-	private MapManager mapMgr;
+	private String hs;
 	
-	public SubServer(int portNumber, DBConnectionPool dbpool, MapManager mgr)
+	public SubServer(int portNumber, String hs, DBConnectionPool dbpool)
 	{
 		port = portNumber;
+		this.hs = hs;
 		this.dbpool = dbpool;
-		this.mapMgr = mgr;
-		map = mapMgr.load(portNumber);
+		map = MapManager.load(portNumber,dbpool);
 	}
 	
 	public void run()
@@ -42,7 +43,9 @@ public class SubServer extends Thread
 			try
 			{				
 				client = server.accept();
-				new ClientHandler(this, client).start();
+				ClientHandler ch = new ClientHandler(this, client);
+				addHandler(ch);
+				ch.start();
 				client.close();
 			}
 			catch(Exception e)
@@ -50,11 +53,6 @@ public class SubServer extends Thread
 				e.printStackTrace();
 			}
 		}
-	}
-	
-	public MapManager getMapMgr()
-	{
-		return mapMgr;
 	}
 	
 	public DBConnectionPool getDBPool()
@@ -65,6 +63,16 @@ public class SubServer extends Thread
 	public int getPort()
 	{
 		return port;
+	}
+	
+	public void addHandler(ClientHandler ch)
+	{
+		handlers.add(ch);
+	}
+	
+	public void removeHandler(ClientHandler ch)
+	{
+		handlers.remove(ch);
 	}
 	
 	public synchronized UserData getUserData(String un)
@@ -93,5 +101,20 @@ public class SubServer extends Thread
 	public synchronized MapData getMap()
 	{
 		return map;
+	}
+	
+	public String getHandShake()
+	{
+		return hs;
+	}
+	
+	public void forceStop()
+	{
+		for (ClientHandler ch : handlers)
+		{
+			ch.forceStop();
+		}
+		MapManager.save(map, port, dbpool);
+		this.interrupt();
 	}
 }

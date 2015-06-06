@@ -18,7 +18,6 @@ public class ClientHandler extends Thread{
 	
 	private SubServer server;
 	private DBConnectionPool dbpool;
-	private int port;
 	
 	private Timer timer;
 	
@@ -37,6 +36,7 @@ public class ClientHandler extends Thread{
 			{
 				if (handler.data!=null)
 				{
+					out.writeInt(-1337);
 					handler.logout();
 				}
 				else
@@ -58,7 +58,6 @@ public class ClientHandler extends Thread{
 	public ClientHandler(SubServer server, Socket client) throws Exception
 	{
 		this.server = server;
-		port = server.getPort();
 		this.client = client;
 		in = new ObjectInputStream(client.getInputStream());
 		out = new ObjectOutputStream(client.getOutputStream());
@@ -74,7 +73,7 @@ public class ClientHandler extends Thread{
 		try
 		{
 			dbpool = server.getDBPool();
-			if(!SPU.verifyHandshake(in.readInt()))
+			if(!SPU.verifyHandshake(server.getHandShake(),in.readInt()))
 			{
 				in.close();
 				out.close();
@@ -87,6 +86,7 @@ public class ClientHandler extends Thread{
 				process(state);
 			}
 			process(state);
+			server.removeHandler(this);
 		}
 		catch (Exception e)
 		{
@@ -137,7 +137,8 @@ public class ClientHandler extends Thread{
 		{
 			DBConnection conn = dbpool.getConnection();
 			String un = (String)in.readObject();
-			ResultSet rsset = conn.executeQuery("SELECT * FROM " + new Integer(port).toString() + " WHERE username = " + un + ";");
+			ResultSet rsset = conn.executeQuery("SELECT * FROM userdata" + " WHERE username = " + un + "AND server = " 
+					+ new Integer(server.getPort()).toString() + ";");
 			if (!rsset.next())
 			{
 				out.writeInt(SPU.ServerResponse.LOGIN_FAIL.ordinal());
@@ -155,7 +156,7 @@ public class ClientHandler extends Thread{
 				return;
 			}
 			rsset.next();
-			data = (UserData)new ObjectInputStream(rsset.getBinaryStream("UserData")).readObject();
+			data = (UserData)new ObjectInputStream(rsset.getBinaryStream("class")).readObject();
 			server.userLogin(data);
 			rsset.close();
 			dbpool.freeConnection(conn);
@@ -173,7 +174,7 @@ public class ClientHandler extends Thread{
 		{
 			DBConnection conn = dbpool.getConnection();
 			String un = (String)in.readObject();
-			ResultSet rsset = conn.executeQuery("SELECT * FROM "+new Integer(server.getPort()).toString()+" WHERE username = " + un + ";");
+			ResultSet rsset = conn.executeQuery("SELECT * FROM userdata" +" WHERE username = " + un + ";");
 			if (rsset.next())
 			{
 				out.writeInt(SPU.ServerResponse.ACCOUNT_CREATE_FAIL.ordinal());
@@ -186,8 +187,7 @@ public class ClientHandler extends Thread{
 			
 			UserData thisUser = new UserData(un,server.getPort());
 			thisUser.spawn();
-			MapManager mapMgr = server.getMapMgr();
-			mapMgr.spawnUser(server.getMap(),thisUser);
+			MapManager.spawnUser(server.getMap(),thisUser);
 			
 			ObjectOutputStream temp = new ObjectOutputStream(new FileOutputStream("temp.ser"));
 			temp.writeObject(thisUser);
@@ -195,10 +195,11 @@ public class ClientHandler extends Thread{
 			temp.close();
 			
 			conn = dbpool.getConnection();
-			PreparedStatement pst = conn.getPS("INSERT INTO "+new Integer(server.getPort()).toString()+" (username,password,UserData) VALUES (?,?,?,?);");
+			PreparedStatement pst = conn.getPS("INSERT INTO userdata" +" (username,password,class,server) VALUES (?,?,?,?);");
 			pst.setString(1, thisUser.getName());
 			pst.setString(2, pw);
 			pst.setBinaryStream(3, new ObjectInputStream(new FileInputStream("temp.ser")));
+			pst.setInt(4, server.getPort());
 			pst.executeUpdate();
 			pst.close();
 			dbpool.freeConnection(conn);
@@ -221,8 +222,7 @@ public class ClientHandler extends Thread{
 
 	private void move(int dir)
 	{
-		MapManager mapmgr = server.getMapMgr();
-		mapmgr.moveUser(server.getMap(),data, dir);
+		MapManager.moveUser(server.getMap(),data, dir);
 		data.move(server.getMap(), dir);
 		try
 		{
@@ -265,4 +265,15 @@ public class ClientHandler extends Thread{
 		}
 	}
 	
+	public void forceStop()
+	{
+		try {
+			out.writeInt(-1337);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		logout();
+		server.removeHandler(this);
+		this.interrupt();
+	}
 }

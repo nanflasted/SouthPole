@@ -3,11 +3,10 @@ package Server.Resource;
 import java.util.*;
 import java.sql.*;
 
-import Server.SubServerMap;
 import Server.Resource.*;
 import Utility.SPU;
 
-@SuppressWarnings("serial")
+@SuppressWarnings({ "serial", "unused" })
 public class UserData implements java.io.Serializable{
 
 	private String un;
@@ -19,9 +18,6 @@ public class UserData implements java.io.Serializable{
 	private double health;
 	private ArrayList<ItemData> supplies = new ArrayList<ItemData>();
 	
-	private Connection conn;
-	private Statement stmt;
-	private ResultSet rset;
 	
 	public UserData(String un, int server)
 	{

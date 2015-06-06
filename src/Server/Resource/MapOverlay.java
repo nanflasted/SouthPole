@@ -8,6 +8,7 @@ public class MapOverlay {
 
 	private Tile terrain;
 	private ArrayList<String> users;
+	private ArrayList<String> towns;
 	
 	public MapOverlay(Tile ground)
 	{
@@ -40,5 +41,9 @@ public class MapOverlay {
 		return users.remove(user.getName());
 	}
 	
+	public void addTown(TownData town)
+	{
+		towns.add(town.getName());
+	}
 	
 }

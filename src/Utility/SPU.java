@@ -6,7 +6,7 @@ package Utility;
 /**
  * @author NanflasTed
  * @author WJLIDDY
- * Last Edit 5/18 by WJLIDDY
+ * Last Edit 6/7 by NanflasTed
  *
  */
 
@@ -15,14 +15,12 @@ import java.util.*;
 
 public class SPU {
 
-	//Time to live definition: time to autodisconnect client when idle
+	//Time to live definition: time to auto-disconnect client when idle
 	public static final int TTL = 30*60*1000; //30 minutes
 	
 	//Database related definitions
 	public static final String DRIVERNAME = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-	public static final String DBUN = "SouthPole";
 	public static final String DBPW = "southpole";
-	public static final String DBURL = "jdbc:sqlserver://127.0.0.1:1336, DatabaseName = SouthPole";
 	public static final int DBTTL = 30*1000;
 	
     //amount of water to put at edge of map
@@ -33,8 +31,8 @@ public class SPU {
     public static final int DAILY_MOVES = 10;
 
     //Commands are requests sent to the server by to the client.
-    //To encode a command to int for transmission, use: Command.XXX.ordinal();
-    //To convert an int back to a command, use: Command.values()[(int)Command.XXX.ordinal()];
+    //To encode a command to integer for transmission, use: Command.XXX.ordinal();
+    //To convert an integer back to a command, use: Command.values()[Command.XXX.ordinal()];
     public static enum Command {
         LOGIN,
         SIGNUP,
@@ -125,12 +123,14 @@ public class SPU {
     	{
     		names.add(line);
     	}
+    	fin.close();
+    	in.close();
     	return names;
     }
     
-    public static boolean verifyHandshake(int handshake)
+    public static boolean verifyHandshake(String serverHS, int handshake)
     {
-    	return (handshake == "connectpls".hashCode());
+    	return (handshake == serverHS.hashCode());
     }
 
 

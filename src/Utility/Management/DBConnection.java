@@ -1,6 +1,7 @@
 package Utility.Management;
 
 import Utility.*;
+
 import java.sql.*;
 import java.util.*;
 
@@ -11,9 +12,6 @@ import java.util.*;
 public class DBConnection {
 
 	public String driver = SPU.DRIVERNAME;
-	public String un = SPU.DBUN;
-	public String pw = SPU.DBPW;
-	public String url = SPU.DBURL;
 	private Connection conn;
 	
 	private Timer timer;
@@ -42,7 +40,7 @@ public class DBConnection {
 		}
 	}
 	
-	public DBConnection()
+	public DBConnection(String url, String un, String pw)
 	{
 		try
 		{
@@ -86,6 +84,11 @@ public class DBConnection {
 		kill.cancel();
 		timer.schedule(kill = new KillTask(conn), SPU.DBTTL);
 		return pst;
+	}
+	
+	public DatabaseMetaData getMD() throws SQLException
+	{
+		return conn.getMetaData();
 	}
 	
 	public void close()

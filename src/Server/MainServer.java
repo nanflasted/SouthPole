@@ -7,6 +7,7 @@ import java.io.*;
 import Utility.*;
 import Utility.Management.*;
 
+
 public class MainServer
 {
 	private DBConnectionPool dbpool;
@@ -14,15 +15,29 @@ public class MainServer
 	private ResultSet rsset;
 	private ServerSocket listener;
 	private Socket client;
-	private MapManager mapMgr;
-	
-	public MainServer(int sp, int ep) throws Exception
+
+	public MainServer(int sp, int ep, String hs, DBConnectionPool inputDBPool, ServerManager mgrref) throws Exception
 	{
-		dbpool = new DBConnectionPool();
-		mapMgr = new MapManager(dbpool);
+		try
+		{
+			if (sp <= 1337)
+			{
+				throw new Exception("Reserved Port Numbers");
+			}
+			
+		}
+		catch (Exception e)
+		{
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			System.exit(1);
+		}
+		dbpool = inputDBPool;
 		for (int i = sp; i <= ep; i++)
 		{
-			new SubServer(i,dbpool,mapMgr).start();
+			SubServer toStart = new SubServer(i,hs,dbpool);
+			mgrref.addSubServer(toStart);
+			toStart.start();
 		}
 		listener = new ServerSocket(1337);
 		while (true)
@@ -30,7 +45,7 @@ public class MainServer
 			client = listener.accept();
 			ObjectInputStream in = new ObjectInputStream(client.getInputStream());
 			int handshake = in.readInt();
-			if (!SPU.verifyHandshake(handshake))
+			if (!SPU.verifyHandshake(hs,handshake))
 			{
 				in.close();
 				client.close();
@@ -55,29 +70,10 @@ public class MainServer
 		}
 	}
 	
+	/*
 	public static void main(String[] args)
 	{
-		try
-		{
-			if (args.length!=2) 
-			{
-				throw new Exception("Wrong Number of Arguments: MainServer <Starting Port> <Ending Port>");
-			}
-			int sp = Integer.parseInt(args[0]);
-			if (sp <= 1337)
-			{
-				throw new Exception("Reserved Port Number");
-			}
-			int ep = Integer.parseInt(args[1]);
-			
-			@SuppressWarnings("unused")
-			MainServer ms = new MainServer(sp,ep);
-		}
-		catch (Exception e)
-		{
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-			System.exit(1);
-		}
+		
 	}
+	*/
 }
