@@ -1,9 +1,9 @@
 package Server.Resource;
 
 import Utility.SPU.*;
-import Utility.Management.*;
 
-public class MapData {
+@SuppressWarnings("serial")
+public class MapData implements java.io.Serializable{
 	private MapOverlay[][] overlay;
 	private int size;
 	
@@ -30,5 +30,10 @@ public class MapData {
 	public Tile getTile(int x, int y)
 	{
 		return overlay[x][y].getTile();
+	}
+	
+	public int getSize()
+	{
+		return size;
 	}
 }

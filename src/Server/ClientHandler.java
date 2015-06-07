@@ -5,6 +5,7 @@ import java.io.*;
 import java.util.*;
 import java.sql.*;
 
+import Server.Resource.MapData;
 import Server.Resource.UserData;
 import Utility.Management.*;
 import Utility.*;
@@ -156,7 +157,8 @@ public class ClientHandler extends Thread{
 				return;
 			}
 			rsset.next();
-			data = (UserData)new ObjectInputStream(rsset.getBinaryStream("class")).readObject();
+			byte[] userByte = rsset.getBytes("class");
+			data = (UserData)(new ObjectInputStream(new ByteArrayInputStream(userByte)).readObject());
 			server.userLogin(data);
 			rsset.close();
 			dbpool.freeConnection(conn);
@@ -189,16 +191,19 @@ public class ClientHandler extends Thread{
 			thisUser.spawn();
 			MapManager.spawnUser(server.getMap(),thisUser);
 			
-			ObjectOutputStream temp = new ObjectOutputStream(new FileOutputStream("temp.ser"));
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ObjectOutputStream temp = new ObjectOutputStream(baos);
 			temp.writeObject(thisUser);
 			temp.flush();
+			byte[] userByte = baos.toByteArray();
 			temp.close();
+			baos.close();
 			
 			conn = dbpool.getConnection();
 			PreparedStatement pst = conn.getPS("INSERT INTO userdata" +" (username,password,class,server) VALUES (?,?,?,?);");
 			pst.setString(1, thisUser.getName());
 			pst.setString(2, pw);
-			pst.setBinaryStream(3, new ObjectInputStream(new FileInputStream("temp.ser")));
+			pst.setBinaryStream(3, new ByteArrayInputStream(userByte));
 			pst.setInt(4, server.getPort());
 			pst.executeUpdate();
 			pst.close();
@@ -242,14 +247,17 @@ public class ClientHandler extends Thread{
 		dbpool = server.getDBPool();
 		try
 		{
-			ObjectOutputStream temp = new ObjectOutputStream(new FileOutputStream("temp.ser"));
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ObjectOutputStream temp = new ObjectOutputStream(baos);
 			temp.writeObject(data);
 			temp.flush();
+			byte[] userByte = baos.toByteArray();
 			temp.close();
+			baos.close();
 			
 			DBConnection conn = dbpool.getConnection();
 			PreparedStatement pst = conn.getPS("UPDATE "+new Integer(server.getPort()).toString()+" SET UserData = ? WHERE un = " + data.getName() + ";");
-			pst.setBinaryStream(1, new ObjectInputStream(new FileInputStream("temp.ser")));
+			pst.setBinaryStream(1, new ByteArrayInputStream(userByte));
 			pst.executeUpdate();
 			pst.close();
 			dbpool.freeConnection(conn);

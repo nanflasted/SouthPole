@@ -38,6 +38,7 @@ public class SubServer extends Thread
 		{
 			e.printStackTrace();
 		}
+		System.out.println("Subserver started at " + new Integer(port).toString());
 		while (true)
 		{	
 			try

@@ -8,15 +8,28 @@ import Utility.*;
 import Utility.Management.*;
 
 
-public class MainServer
+public class MainServer extends Thread
 {
 	private DBConnectionPool dbpool;
 	private DBConnection dbc;
 	private ResultSet rsset;
 	private ServerSocket listener;
 	private Socket client;
-
-	public MainServer(int sp, int ep, String hs, DBConnectionPool inputDBPool, ServerManager mgrref) throws Exception
+	private int sp,ep;
+	private String hs;
+	private DBConnectionPool inputDBPool;
+	private ServerManager mgrref;
+	
+	public MainServer(int sp, int ep, String hs, DBConnectionPool inputDBPool, ServerManager mgrref)
+	{
+		this.sp = sp;
+		this.ep = ep;
+		this.hs = hs;
+		this.inputDBPool = inputDBPool;
+		this.mgrref = mgrref;
+	}
+	
+	public void run()
 	{
 		try
 		{
@@ -24,7 +37,43 @@ public class MainServer
 			{
 				throw new Exception("Reserved Port Numbers");
 			}
-			
+			dbpool = inputDBPool;
+			for (int i = sp; i <= ep; i++)
+			{
+				SubServer toStart = new SubServer(i,hs,dbpool);
+				mgrref.addSubServer(toStart);
+				toStart.start();
+			}
+			listener = new ServerSocket(1337);
+			System.out.println("Main Server Awaiting at 1337");
+			while (true)
+			{
+				client = listener.accept();
+				ObjectInputStream in = new ObjectInputStream(client.getInputStream());
+				int handshake = in.readInt();
+				if (!SPU.verifyHandshake(hs,handshake))
+				{
+					in.close();
+					client.close();
+					continue;
+				}
+				String un = (String)in.readObject();
+				ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
+				dbc = dbpool.getConnection();
+				rsset = dbc.executeQuery("SELECT * FROM redir WHERE username = '" + un + "'");
+				if (rsset.next())
+				{
+					out.writeInt(rsset.getInt("server"));
+				}
+				else
+				{
+					out.writeInt(-1);
+				}
+				in.close();
+				out.close();
+				client.close();
+				dbpool.freeConnection(dbc);
+			}
 		}
 		catch (Exception e)
 		{
@@ -32,44 +81,7 @@ public class MainServer
 			e.printStackTrace();
 			System.exit(1);
 		}
-		dbpool = inputDBPool;
-		for (int i = sp; i <= ep; i++)
-		{
-			SubServer toStart = new SubServer(i,hs,dbpool);
-			mgrref.addSubServer(toStart);
-			toStart.start();
-		}
-		listener = new ServerSocket(1337);
-		while (true)
-		{
-			client = listener.accept();
-			ObjectInputStream in = new ObjectInputStream(client.getInputStream());
-			int handshake = in.readInt();
-			if (!SPU.verifyHandshake(hs,handshake))
-			{
-				in.close();
-				client.close();
-				continue;
-			}
-			String un = (String)in.readObject();
-			ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
-			dbc = dbpool.getConnection();
-			rsset = dbc.executeQuery("SELECT * FROM redir WHERE username = '" + un + "'");
-			if (rsset.next())
-			{
-				out.writeInt(rsset.getInt("server"));
-			}
-			else
-			{
-				out.writeInt(-1);
-			}
-			in.close();
-			out.close();
-			client.close();
-			dbpool.freeConnection(dbc);
-		}
 	}
-	
 	/*
 	public static void main(String[] args)
 	{

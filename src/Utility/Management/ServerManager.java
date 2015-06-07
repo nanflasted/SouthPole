@@ -49,7 +49,7 @@ public class ServerManager extends JFrame implements ActionListener
 	private Tbp sp = new Tbp("Starting Port:","1338");
 	private Tbp ep = new Tbp("Ending Port:","1338");
 	private Tbp hs = new Tbp("HandShake String:","connectpls");
-	private Tbp dburl = new Tbp("Database URL:","jdbc:sqlserver://127.0.0.1:1336, DatabaseName = SouthPole");
+	private Tbp dburl = new Tbp("Database URL:","jdbc:sqlserver://127.0.0.1:1336; DatabaseName = SouthPole");
 	private Tbp dbun = new Tbp("Database username:","SouthPole");
 	private Tbp dbpw = new Tbp("Database password:","southpole");
 	private Tbp mapsize = new Tbp("Map Size:","1000");
@@ -103,7 +103,7 @@ public class ServerManager extends JFrame implements ActionListener
 			//Drop all tables
 			DBConnection dbc = pool.getConnection();
 			DatabaseMetaData metadata = dbc.getMD();
-			ResultSet rsset = metadata.getTables(null,null,null,null);
+			ResultSet rsset = metadata.getTables(null,"dbo",null,null);
 			ArrayList<String> tbls = new ArrayList<String>();
 			while (rsset.next())
 			{
@@ -114,12 +114,12 @@ public class ServerManager extends JFrame implements ActionListener
 			while (!tbls.isEmpty())
 			{
 				dbc = pool.getConnection();
-				PreparedStatement pst = dbc.getPS("DROP TABLE ?");
-				pst.setString(1, tbls.remove(0));
+				PreparedStatement pst = dbc.getPS("DROP TABLE "+tbls.remove(0));
 				pst.executeUpdate();
 				pst.close();
 				pool.freeConnection(dbc);
 			}
+			
 			//Create needed tables
 			//redir
 			dbc = pool.getConnection();
@@ -170,16 +170,7 @@ public class ServerManager extends JFrame implements ActionListener
 
 	public void doStart()
 	{
-		try
-		{
-			@SuppressWarnings("unused")
-			MainServer ms = new MainServer(startPort,endPort,hs.getTxt(),pool,this);
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-			System.exit(1);
-		}
+		new MainServer(startPort,endPort,hs.getTxt(),pool,this).run();
 	}
 	
 	public void addSubServer(SubServer server)

@@ -1,7 +1,6 @@
 package Utility.Management;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.io.*;
 
 import Server.Resource.*;
@@ -9,8 +8,6 @@ import Utility.SPU;
 import Utility.SPU.Tile;
 
 public class MapManager {
-	
-	private int size;
 		
 	public static MapData load(int server, DBConnectionPool dbpool)
 	{
@@ -20,7 +17,9 @@ public class MapManager {
 			dbc = dbpool.getConnection();
 			PreparedStatement pst = dbc.getPS("SELECT map FROM serverdata WHERE portNumber = " + new Integer(server).toString()+";");
 			ResultSet rsset = pst.executeQuery();
-			MapData serverMap = (MapData)((new ObjectInputStream(rsset.getBinaryStream("map")).readObject()));
+			if(!rsset.next()) throw new Exception("Fatal: Map not found!");
+			byte[] mapByte = rsset.getBytes("map");
+			MapData serverMap = (MapData)(new ObjectInputStream(new ByteArrayInputStream(mapByte)).readObject());
 			rsset.close();
 			pst.close();
 			dbpool.freeConnection(dbc);
@@ -37,7 +36,27 @@ public class MapManager {
 	
 	public static void save(MapData data, int server, DBConnectionPool dbpool)
 	{
-		
+		try
+		{
+			DBConnection dbc = dbpool.getConnection();
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+			ObjectOutputStream tmp = new ObjectOutputStream(baos);
+			tmp.writeObject(data);
+			tmp.close();
+			byte[] temp = baos.toByteArray();
+			PreparedStatement pst = dbc.getPS("INSERT INTO serverdata VALUES (?,?);");
+			pst.setInt(1, server);
+			pst.setBinaryStream(2, new ByteArrayInputStream(temp));
+			pst.executeUpdate();
+			pst.close();
+			dbpool.freeConnection(dbc);
+		}
+		catch(Exception e)
+		{
+			System.err.println("Map saving failure!");
+			e.printStackTrace();
+			System.exit(1);
+		}
 	}
 	
 	public static void spawnUser(MapData map, UserData user)
