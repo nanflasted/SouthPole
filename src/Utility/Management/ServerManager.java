@@ -17,14 +17,17 @@ import java.util.*;
 @SuppressWarnings("serial")
 public class ServerManager extends JFrame implements ActionListener
 {
-	
+
+	private boolean started = false;
 	private JPanel mainPanel = new JPanel(new GridLayout(3,3));
 	private JPanel functionalButtons = new JPanel(new GridLayout(1,3));
-	private JButton reset = new JButton("Reset and Apply");
+	private JButton reset = new JButton("Reset");
+	private JButton init = new JButton("Initialize");
 	private JButton start = new JButton("Start");
-	private JButton shutdown = new JButton("Shut Down Server");
 	private DBConnectionPool pool;
 	private int startPort, endPort,size;
+	
+	private MainServer ms;
 	private ArrayList<SubServer> subServerList = new ArrayList<SubServer>();
 	
 	//tbp=text box pair
@@ -61,9 +64,10 @@ public class ServerManager extends JFrame implements ActionListener
 		this.setVisible(false);
 		start.addActionListener(this);
 		reset.addActionListener(this);
+		init.addActionListener(this);
 		functionalButtons.add(reset);
 		functionalButtons.add(start);
-		functionalButtons.add(shutdown);
+		functionalButtons.add(init);
 		this.getContentPane().add(functionalButtons, "South");
 		
 		mainPanel.add(sp);
@@ -85,14 +89,32 @@ public class ServerManager extends JFrame implements ActionListener
 		{
 			doReset();
 		}
+		if (b==init)
+		{
+			doInit();
+		}
 		if (b==start)
 		{
-			doStart();
+			if (!started)
+			{
+				doStart();
+				started = true;
+				b.setText("shut down");
+			}
+			else
+			{
+				doShutdown();
+				started = false;
+				b.setText("start");
+			}
 		}
-		if (b==shutdown)
-		{
-			doShutdown();
-		}
+	}
+	
+	public void doInit()
+	{
+		startPort = Integer.parseInt(sp.getTxt());
+		endPort = Integer.parseInt(ep.getTxt());
+		pool = new DBConnectionPool(dburl.getTxt(),dbun.getTxt(),dbpw.getTxt());
 	}
 	
 	public void doReset()
@@ -158,7 +180,7 @@ public class ServerManager extends JFrame implements ActionListener
 			{
 				MapData map = new MapData(size);
 				MapManager.generateWorld(map, size);
-				MapManager.save(map,i,pool);
+				MapManager.create(map,i,pool);
 			}
 		}
 		catch(Exception e)
@@ -170,7 +192,8 @@ public class ServerManager extends JFrame implements ActionListener
 
 	public void doStart()
 	{
-		new MainServer(startPort,endPort,hs.getTxt(),pool,this).run();
+		MainServer ms = new MainServer(startPort,endPort,hs.getTxt(),pool,this);
+		ms.start();
 	}
 	
 	public void addSubServer(SubServer server)
@@ -179,10 +202,12 @@ public class ServerManager extends JFrame implements ActionListener
 	}
 	public void doShutdown()
 	{
+		if (ms!=null) ms.forceStop();
 		for (SubServer ss : subServerList)
 		{
 			ss.forceStop();
 		}
+		System.exit(0);
 	}
 	
 	public static void main(String args[])

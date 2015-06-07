@@ -34,7 +34,7 @@ public class MapManager {
 		return null;
 	}
 	
-	public static void save(MapData data, int server, DBConnectionPool dbpool)
+	public static void create(MapData data, int server, DBConnectionPool dbpool)
 	{
 		try
 		{
@@ -59,6 +59,30 @@ public class MapManager {
 		}
 	}
 	
+	public static void save(MapData data, int server, DBConnectionPool dbpool)
+	{
+		try
+		{
+			DBConnection dbc = dbpool.getConnection();
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+			ObjectOutputStream tmp = new ObjectOutputStream(baos);
+			tmp.writeObject(data);
+			tmp.close();
+			byte[] temp = baos.toByteArray();
+			PreparedStatement pst = dbc.getPS("UPDATE serverdata SET map = ? WHERE portNumber = ?");
+			pst.setBinaryStream(1, new ByteArrayInputStream(temp));
+			pst.setInt(2, server);
+			pst.executeUpdate();
+			pst.close();
+			dbpool.freeConnection(dbc);
+		}
+		catch(Exception e)
+		{
+			System.err.println("Map saving failure!");
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
 	public static void spawnUser(MapData map, UserData user)
 	{
 		map.getOverlay(user.getX(),user.getY()).addUser(user);

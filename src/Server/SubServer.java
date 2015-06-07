@@ -11,6 +11,7 @@ import Server.Resource.*;
 public class SubServer extends Thread
 {
 	private int port;
+	private boolean running;
 	private DBConnectionPool dbpool;
 	private Socket client;
 	private ServerSocket server;
@@ -26,10 +27,12 @@ public class SubServer extends Thread
 		this.hs = hs;
 		this.dbpool = dbpool;
 		map = MapManager.load(portNumber,dbpool);
+		running=true;
 	}
 	
 	public void run()
 	{
+		running = true;
 		try
 		{
 			server = new ServerSocket(port);
@@ -39,7 +42,7 @@ public class SubServer extends Thread
 			e.printStackTrace();
 		}
 		System.out.println("Subserver started at " + new Integer(port).toString());
-		while (true)
+		while (running)
 		{	
 			try
 			{				
@@ -111,6 +114,7 @@ public class SubServer extends Thread
 	
 	public void forceStop()
 	{
+		running = false;
 		for (ClientHandler ch : handlers)
 		{
 			ch.forceStop();

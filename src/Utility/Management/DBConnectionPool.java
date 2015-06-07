@@ -78,4 +78,12 @@ public class DBConnectionPool {
 	{
 		return available;
 	}
+	
+	public void shutdown()
+	{
+		for (DBConnection dbc:pool)
+		{
+			dbc.close();
+		}
+	}
 }

@@ -10,6 +10,9 @@ import Utility.Management.*;
 
 public class MainServer extends Thread
 {
+	
+	private boolean running;
+	
 	private DBConnectionPool dbpool;
 	private DBConnection dbc;
 	private ResultSet rsset;
@@ -31,6 +34,7 @@ public class MainServer extends Thread
 	
 	public void run()
 	{
+		running = true;
 		try
 		{
 			if (sp <= 1337)
@@ -46,7 +50,7 @@ public class MainServer extends Thread
 			}
 			listener = new ServerSocket(1337);
 			System.out.println("Main Server Awaiting at 1337");
-			while (true)
+			while (running)
 			{
 				client = listener.accept();
 				ObjectInputStream in = new ObjectInputStream(client.getInputStream());
@@ -80,6 +84,21 @@ public class MainServer extends Thread
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 			System.exit(1);
+		}
+	}
+	
+	public void forceStop()
+	{
+		running = false;
+		try
+		{
+			listener.close();
+			if (client!= null) client.close();
+			dbpool.shutdown();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
 		}
 	}
 	/*
