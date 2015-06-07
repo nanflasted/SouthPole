@@ -183,7 +183,10 @@ public class ClientHandler extends Thread{
 			}
 			rsset.close();
 			dbpool.freeConnection(conn);
-			
+			conn = dbpool.getConnection();
+			conn.executeUpdate("INSERT INTO redir (username, server) VALUES ("+un+", "
+									+new Integer(server.getPort()).toString()+");");
+			dbpool.freeConnection(conn);
 			String pw = (String)in.readObject();
 			
 			UserData thisUser = new UserData(un,server.getPort());

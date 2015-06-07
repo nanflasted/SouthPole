@@ -71,7 +71,7 @@ public class MainServer extends Thread
 				}
 				else
 				{
-					out.writeInt(-1);
+					out.writeInt((int)(Math.random()*(ep-sp))+sp);
 				}
 				in.close();
 				out.close();
