@@ -145,15 +145,17 @@ public class ServerManager extends JFrame implements ActionListener
 			//Create needed tables
 			//redir
 			dbc = pool.getConnection();
-			dbc.executeUpdate("CREATE TABLE redir "
+			PreparedStatement pst = 
+			dbc.getPS("CREATE TABLE redir "
 					+ "("
 					+ "username varchar(255), "
 					+ "server int"
 					+ ");");
+			pst.executeUpdate();
 			pool.freeConnection(dbc);			
 			//userdata table
 			dbc = pool.getConnection();
-			PreparedStatement pst = dbc.getPS("CREATE TABLE userdata"
+			pst = dbc.getPS("CREATE TABLE userdata"
 					+ "("
 					+ "username varchar(255),"
 					+ "password varchar(255),"

@@ -61,16 +61,17 @@ public class DBConnection {
 			System.exit(1);
 		}
 	}
-	
+	@Deprecated
 	public void executeUpdate(String update) throws Exception
 	{
+		System.out.println(conn.isClosed());
 		Statement stmt = conn.createStatement();
 		stmt.executeUpdate(update);
 		kill.cancel();
 		timer.schedule(kill = new KillTask(conn), SPU.DBTTL);
 		stmt.close();
 	}
-	
+	@Deprecated
 	public ResultSet executeQuery(String query) throws Exception
 	{
 		Statement stmt = conn.createStatement();

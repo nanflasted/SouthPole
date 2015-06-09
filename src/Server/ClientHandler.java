@@ -73,7 +73,8 @@ public class ClientHandler extends Thread{
 		try
 		{
 			dbpool = server.getDBPool();
-			if(!SPU.verifyHandshake(server.getHandShake(),in.readInt()))
+			int clienths = in.readInt();
+			if(!SPU.verifyHandshake(server.getHandShake(),clienths))
 			{
 				in.close();
 				out.close();
@@ -81,11 +82,12 @@ public class ClientHandler extends Thread{
 				return;
 			}
 			int state;
-			while ((state = in.readInt())!=SPU.Command.LOGOUT.ordinal())
+			do
 			{
+				state = in.readInt();
 				process(state);
 			}
-			process(state);
+			while ((state!=SPU.Command.LOGOUT.ordinal())&&(state!=SPU.Command.SIGNUP.ordinal()));
 			server.removeHandler(this);
 		}
 		catch (Exception e)
@@ -136,9 +138,11 @@ public class ClientHandler extends Thread{
 		try
 		{
 			DBConnection conn = dbpool.getConnection();
-			String un = (String)in.readObject();
-			ResultSet rsset = conn.executeQuery("SELECT * FROM userdata" + " WHERE username = " + un + "AND server = " 
-					+ new Integer(server.getPort()).toString() + ";");
+			String un = (String)in.readObject();		
+			PreparedStatement pst = conn.getPS("SELECT * FROM userdata WHERE username = ? AND server = ?;");
+			pst.setString(1, un);
+			pst.setInt(2, server.getPort());
+			ResultSet rsset = pst.executeQuery();
 			if (!rsset.next())
 			{
 				out.writeInt(SPU.ServerResponse.LOGIN_FAIL.ordinal());
@@ -160,6 +164,7 @@ public class ClientHandler extends Thread{
 			data = (UserData)(new ObjectInputStream(new ByteArrayInputStream(userByte)).readObject());
 			server.userLogin(data);
 			rsset.close();
+			pst.close();
 			dbpool.freeConnection(conn);
 		}
 		catch (Exception e)
@@ -175,17 +180,24 @@ public class ClientHandler extends Thread{
 		{
 			DBConnection conn = dbpool.getConnection();
 			String un = (String)in.readObject();
-			ResultSet rsset = conn.executeQuery("SELECT * FROM userdata" +" WHERE username = " + un + ";");
+			PreparedStatement pst = conn.getPS("SELECT * FROM userdata" +" WHERE username = ?;");
+			pst.setString(1, un);
+			ResultSet rsset = pst.executeQuery();
 			if (rsset.next())
 			{
 				out.writeInt(SPU.ServerResponse.ACCOUNT_CREATE_FAIL.ordinal());
+				out.flush();
 				return;
 			}
 			rsset.close();
+			pst.close();
 			dbpool.freeConnection(conn);
 			conn = dbpool.getConnection();
-			conn.executeUpdate("INSERT INTO redir (username, server) VALUES ("+un+", "
-									+new Integer(server.getPort()).toString()+");");
+			pst = conn.getPS("INSERT INTO redir (username, server) VALUES (?,?);");
+			pst.setString(1,un);
+			pst.setInt(2, server.getPort());
+			pst.executeUpdate();
+			pst.close();
 			dbpool.freeConnection(conn);
 			String pw = (String)in.readObject();
 			
@@ -202,7 +214,7 @@ public class ClientHandler extends Thread{
 			baos.close();
 			
 			conn = dbpool.getConnection();
-			PreparedStatement pst = conn.getPS("INSERT INTO userdata" +" (username,password,class,server) VALUES (?,?,?,?);");
+			pst = conn.getPS("INSERT INTO userdata" +" (username,password,class,server) VALUES (?,?,?,?);");
 			pst.setString(1, thisUser.getName());
 			pst.setString(2, pw);
 			pst.setBinaryStream(3, new ByteArrayInputStream(userByte));
@@ -212,6 +224,7 @@ public class ClientHandler extends Thread{
 			dbpool.freeConnection(conn);
 			
 			out.writeInt(SPU.ServerResponse.ACCOUNT_CREATE_OK.ordinal());
+			out.flush();
 		}
 		catch(Exception e)
 		{
@@ -219,6 +232,7 @@ public class ClientHandler extends Thread{
 			try
 			{
 				out.writeInt(SPU.ServerResponse.ACCOUNT_CREATE_FAIL.ordinal());
+				out.flush();
 			}
 			catch(Exception e2)
 			{

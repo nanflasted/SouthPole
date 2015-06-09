@@ -42,6 +42,7 @@ public class MapManager {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();  
 			ObjectOutputStream tmp = new ObjectOutputStream(baos);
 			tmp.writeObject(data);
+			//tmp.flush();
 			tmp.close();
 			byte[] temp = baos.toByteArray();
 			PreparedStatement pst = dbc.getPS("INSERT INTO serverdata VALUES (?,?);");
@@ -128,7 +129,6 @@ public class MapManager {
                
             }
         }
-        map = new MapData(size);
         map.setWorld(world);
     }
 }

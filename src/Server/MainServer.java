@@ -52,8 +52,11 @@ public class MainServer extends Thread
 			System.out.println("Main Server Awaiting at 1337");
 			while (running)
 			{
+				dbc = null;
+				rsset = null;
 				client = listener.accept();
 				ObjectInputStream in = new ObjectInputStream(client.getInputStream());
+				System.out.println("Main Server Connected from "+client.getInetAddress().toString());
 				int handshake = in.readInt();
 				if (!SPU.verifyHandshake(hs,handshake))
 				{
@@ -64,15 +67,20 @@ public class MainServer extends Thread
 				String un = (String)in.readObject();
 				ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
 				dbc = dbpool.getConnection();
-				rsset = dbc.executeQuery("SELECT * FROM redir WHERE username = '" + un + "'");
+				System.out.println(dbc.isClosed());
+				PreparedStatement pst = dbc.getPS("SELECT * FROM redir WHERE username = '" + un + "'");
+				rsset = pst.executeQuery();
 				if (rsset.next())
 				{
 					out.writeInt(rsset.getInt("server"));
 				}
 				else
 				{
-					out.writeInt((int)(Math.random()*(ep-sp))+sp);
+					out.writeInt(new Integer((int)(Math.random()*(ep-sp))+sp).intValue());
+					out.flush();
 				}
+				rsset.close();
+				pst.close();
 				in.close();
 				out.close();
 				client.close();

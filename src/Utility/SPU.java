@@ -21,7 +21,7 @@ public class SPU {
 	//Database related definitions
 	public static final String DRIVERNAME = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 	public static final String DBPW = "southpole";
-	public static final int DBTTL = 30*1000;
+	public static final int DBTTL = 5*60*1000;
 	
     //amount of water to put at edge of map
     public static final int WATER_BORDER_SIZE = 15;

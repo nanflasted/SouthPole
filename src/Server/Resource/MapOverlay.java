@@ -1,10 +1,12 @@
 package Server.Resource;
 
 import java.util.*;
+
 import Utility.SPU.*;
 
 
-public class MapOverlay {
+@SuppressWarnings("serial")
+public class MapOverlay implements java.io.Serializable {
 
 	private Tile terrain;
 	private ArrayList<String> users;

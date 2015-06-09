@@ -25,7 +25,7 @@ public class MenuScript : MonoBehaviour {
 	// Login menu contents
 	public InputField username, password;
 	public int colorChange;
-	public string ip = "129.22.124.186";
+	public string ip = "127.0.0.1";
 	public int handshake = -775644979; // this is actually the value of "connectpls".hashCode() in java (NOT IKVM)
 	
 	public bool musicMuted, sfxMuted; //Used later for saving user prefs.
@@ -236,18 +236,17 @@ public class MenuScript : MonoBehaviour {
 			
 			// Must now send username.
 			string name = username.text;
-			output.writeChars (name);
+			output.writeObject (name);
 			output.flush ();
-
+			print (name);
 			// Receive whatever port the server sends (random or determined).
 			ObjectInputStream input = new ObjectInputStream (cnxn.getInputStream ());
 			int nextPort = input.readInt ();
-			
 			// Close streams and connection.
 			input.close ();
 			output.close ();
 			cnxn.close ();
-			
+
 			// At this point, either log in or sign up.
 			if (firstTime)
 				signup (nextPort);
@@ -259,7 +258,7 @@ public class MenuScript : MonoBehaviour {
 				print ("Failed to connect");
 			print ("idk");
 
-			e.printStackTrace ();
+			print (e.getStackTrace());
 			return;
 		} catch (System.Exception e) {
 			if (cnxn == null)
@@ -284,20 +283,34 @@ public class MenuScript : MonoBehaviour {
 		try {
 			cnxn = new Socket(ip, port);
 			ObjectOutputStream output = new ObjectOutputStream(cnxn.getOutputStream());
-			output.write(handshake);
+			//output.write(handshake);
+			/* Ted:"Do NOT use output.write(), strictly stick to output.writeInt(), cuz otherwise the readInt()
+			 * process on the server end wait for an entire Int of 4 bytes while you only write 1 byte, and 
+			 * it recognizes the byte you wrote as some other int number because of endianness. More seriously,
+			 * it could cause an EOFException on the server if you write() then close the stream; that will cause
+			 * major trouble if the server was set to run continuously. I've corrected all the following write() 
+			 * to writeInt(). And also, always flush()."
+			 */
+			output.writeInt (handshake);
 			output.flush ();
 
 			// Now that we have connected and sent our handshake, we can send commands.
 			// Here we will just sign up, close the connection, and log in using the given name and PW.
 
-			output.write (1); // this corresponds to the sign-in command
+			output.writeInt (1); // this corresponds to the sign-in command
 			output.flush ();
 
 			// Send username and PW, make sure account name is not taken.
-			output.writeChars(username.text);
+			output.writeObject(username.text);
 			output.flush ();
 
+
 			ObjectInputStream input = new ObjectInputStream(cnxn.getInputStream());
+			/* Ted:"you really can't do this. If you readInt() twice while the server end only writes 
+			 * 1 int, you'll get stuck and so will the server cuz it is waiting for you to send other 
+			 * stuff (your password in this case). Yes you will eventually time out, but at least that 
+			 * thread will get stuck there forever."
+
 			if (input.readInt() == 2) {
 				//Temp
 				print ("Name taken");
@@ -307,20 +320,31 @@ public class MenuScript : MonoBehaviour {
 				output.close ();
 				input.close ();
 				return;
-			}
-			output.writeChars (password.text);
+			}*/
+			output.writeObject (password.text);
 			output.flush ();
 
 			//Check if acc was created
+			/* Ted:"Just using this thing is enough. If you really need a 'name taken' error message from 
+			 * server consider telling me or just add it to the Utility.SPU. Also, it might be a good 
+			 * idea to figure out a way to import Utility.SPU into your client so that your client don't
+			 * have hard coding. Using numbers will be extremely annoying when the SPU.Command gets 
+			 * changed, then you'll have to rewrite every single command ordinals in your entire program, 
+			 * not to say it will be extremely difficult to track them down because they are just numbers,
+			 * unlike SPU.Command.ACCOUNT_CREATE_OK.ordinal(), which you can simply search for and replace."
+			 */
 			Thread.sleep (2000);
-			if (input.readInt () != 3) {
+			int acstatus = input.readInt ();
+			print (acstatus);
+			if (acstatus != 3) { //Ted:"means to avoid this. avoid using 3, or 2 in the above case, directly."
 				print ("REKT");
 			}
 
 			// Log out!
-			output.write (8); // log-out command
+			/* Ted:"No need to log out when signing up. You are not logged in anyways."
+			output.writeInt (8); // log-out command
 			output.flush ();
-
+			*/
 			// At this point, the user is signed up for the server on the given port. So, log in and start playing!
 			cnxn.close ();
 			output.close();
@@ -344,5 +368,7 @@ public class MenuScript : MonoBehaviour {
 	}
 
 	// Useless for me AFAIK.
+	/* Ted:"This is for something to be changed every frame."
+	 */
 	void Update () {}
 }

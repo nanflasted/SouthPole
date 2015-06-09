@@ -36,4 +36,16 @@ public class MapData implements java.io.Serializable{
 	{
 		return size;
 	}
+	
+	private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException
+	{
+		out.defaultWriteObject();
+		out.writeObject(overlay);
+	}
+	
+	private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException
+	{
+		in.defaultReadObject();
+		overlay = (MapOverlay[][]) in.readObject();
+	}
 }

@@ -47,10 +47,11 @@ public class SubServer extends Thread
 			try
 			{				
 				client = server.accept();
+				System.out.println("Subserver " + new Integer(port).toString() + " connected from "+client.getInetAddress().toString());
 				ClientHandler ch = new ClientHandler(this, client);
 				addHandler(ch);
 				ch.start();
-				client.close();
+				//client.close();
 			}
 			catch(Exception e)
 			{
