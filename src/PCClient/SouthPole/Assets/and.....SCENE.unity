@@ -6537,6 +6537,8 @@ MonoBehaviour:
   username: {fileID: 1880372605}
   password: {fileID: 532800303}
   colorChange: 0
+  ip: 127.0.0.1
+  handshake: -775644979
   musicMuted: 0
   sfxMuted: 0
 --- !u!1 &1737989967

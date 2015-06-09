@@ -25,7 +25,8 @@ public class MenuScript : MonoBehaviour {
 	// Login menu contents
 	public InputField username, password;
 	public int colorChange;
-	public string ip = "127.0.0.1";
+	public string ip = "129.22.124.186";
+	public int handshake = -775644979; // this is actually the value of "connectpls".hashCode() in java (NOT IKVM)
 	
 	public bool musicMuted, sfxMuted; //Used later for saving user prefs.
 	
@@ -221,9 +222,8 @@ public class MenuScript : MonoBehaviour {
 	public void connectToMainServer(bool firstTime) {
 		// Connect to server address at port 1337 (main server).
 		// CAUTION: Ted's IP currently unknown. Will ask later for testing. For now IP is set to 127.0.0.1.*********
-		
-		// TO DO: Configure in case the main server or sub server is down.
-		
+
+		// TO DO: Provisions in case main server or subserver is down.
 		Socket cnxn = null;
 
 		try {
@@ -231,8 +231,6 @@ public class MenuScript : MonoBehaviour {
 			cnxn = new Socket (ip, 1337);
 
 			ObjectOutputStream output = new ObjectOutputStream (cnxn.getOutputStream ());
-			int handshake = -775644979; // This is actually the value of "connectpls".hashCode() in java.
-			// The literal is used to avoid implementation differences.
 			output.writeInt (handshake);
 			output.flush ();
 			
@@ -257,21 +255,84 @@ public class MenuScript : MonoBehaviour {
 				login (nextPort);
 					
 		} catch (java.lang.Exception e) {
+			if (cnxn == null)
+				print ("Failed to connect");
+			print ("idk");
+
 			e.printStackTrace ();
 			return;
 		} catch (System.Exception e) {
+			if (cnxn == null)
+				print ("Failed to connect");
+			print ("idk");
 			print (e.StackTrace);
 			return;
 		} 
 	}
 
 	public void login (int port) {
-		// ...
+		// TO DO: Make provisions in case the user is not signed up. OR the subserver is down.
+
+		// Code goes here
 	}
 	
 	public void signup (int port) {
+		// TO DO: Make provisions in case the username is already taken. OR the subserver is down.
+
 		// First, connect to the subserver at the given port.
-		// Then, sign up. ( ͡° ͜ʖ ͡°)
+		Socket cnxn = null;
+		try {
+			cnxn = new Socket(ip, port);
+			ObjectOutputStream output = new ObjectOutputStream(cnxn.getOutputStream());
+			output.write(handshake);
+			output.flush ();
+
+			// Now that we have connected and sent our handshake, we can send commands.
+			// Here we will just sign up, close the connection, and log in using the given name and PW.
+
+			output.write (1); // this corresponds to the sign-in command
+			output.flush ();
+
+			// Send username and PW, make sure account name is not taken.
+			output.writeChars(username.text);
+			output.flush ();
+
+			ObjectInputStream input = new ObjectInputStream(cnxn.getInputStream());
+			if (input.readInt() == 2) {
+				//Temp
+				print ("Name taken");
+				output.write (8);
+				output.flush ();
+				cnxn.close ();
+				output.close ();
+				input.close ();
+				return;
+			}
+			output.writeChars (password.text);
+			output.flush ();
+
+			//Check if acc was created
+			Thread.sleep (2000);
+			if (input.readInt () != 3) {
+				print ("REKT");
+			}
+
+			// Log out!
+			output.write (8); // log-out command
+			output.flush ();
+
+			// At this point, the user is signed up for the server on the given port. So, log in and start playing!
+			cnxn.close ();
+			output.close();
+			input.close();
+			//login (port);
+			print ("IT SUPER WORKED");
+
+		}catch (java.lang.Exception e) {
+			print("DIDNT WORK - Java");
+		}catch (System.Exception e) {
+			print ("DIDNT WORK - C#");
+		}
 	}
 
 	public void LoginClick() {
