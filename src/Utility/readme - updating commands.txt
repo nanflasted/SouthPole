@@ -1,0 +1,1 @@
+If you are going to update the Command enum, remember to go to PCClient -> SouthPole and update the commands using the batch script and "READ BEFORE UPDATING COMMANDS" file I have included. This ensures the change will be recognized by the PC client. -James

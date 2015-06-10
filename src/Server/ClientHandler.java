@@ -15,12 +15,12 @@ public class ClientHandler extends Thread{
 	private Socket client=null;
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
-	
+
 	private SubServer server;
 	private DBConnectionPool dbpool;
-	
+
 	private Timer timer;
-	
+
 	private UserData data;
 	private class DCTask extends TimerTask
 	{
@@ -29,7 +29,7 @@ public class ClientHandler extends Thread{
 		{
 			this.handler = handler;
 		}
-		
+
 		public void run()
 		{
 			try
@@ -53,8 +53,8 @@ public class ClientHandler extends Thread{
 		}
 	}
 	private DCTask autoDC;
-	
-	
+
+
 	public ClientHandler(SubServer server, Socket client) throws Exception
 	{
 		this.server = server;
@@ -65,9 +65,9 @@ public class ClientHandler extends Thread{
 		autoDC = new DCTask(this);
 		timer.schedule(autoDC, SPU.TTL);
 	}
-	
-	
-	
+
+
+
 	public void run()
 	{
 		try
@@ -95,7 +95,7 @@ public class ClientHandler extends Thread{
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void process(int state)
 	{
 		autoDC.cancel();
@@ -123,7 +123,7 @@ public class ClientHandler extends Thread{
 			break;
 		case MOVERIGHT:
 			move(SPU.Command.MOVERIGHT.ordinal());
-			break;		
+			break;
 		case LOGOUT:
 			logout();
 			break;
@@ -131,14 +131,14 @@ public class ClientHandler extends Thread{
 			return;
 		}
 	}
-	
+
 	private void login()
 	{
 		dbpool = server.getDBPool();
 		try
 		{
 			DBConnection conn = dbpool.getConnection();
-			String un = (String)in.readObject();		
+			String un = (String)in.readObject();
 			PreparedStatement pst = conn.getPS("SELECT * FROM userdata WHERE username = ? AND server = ?;");
 			pst.setString(1, un);
 			pst.setInt(2, server.getPort());
@@ -146,23 +146,27 @@ public class ClientHandler extends Thread{
 			if (!rsset.next())
 			{
 				out.writeInt(SPU.ServerResponse.LOGIN_FAIL.ordinal());
+				out.flush(); // insert lenny
 				return;
 			}
 			if (server.isOnline(un))
 			{
 				out.writeInt(SPU.ServerResponse.LOGIN_FAIL.ordinal());
-				
+				out.flush();
 				return;
 			}
 			if (!(rsset.getString("password").equals((String)in.readObject())))
 			{
 				out.writeInt(SPU.ServerResponse.LOGIN_FAIL.ordinal());
+				out.flush();
 				return;
 			}
 			rsset.next();
 			byte[] userByte = rsset.getBytes("class");
 			data = (UserData)(new ObjectInputStream(new ByteArrayInputStream(userByte)).readObject());
 			server.userLogin(data);
+			out.writeInt(SPU.ServerResponse.LOGIN_OK.ordinal());
+			out.flush();
 			rsset.close();
 			pst.close();
 			dbpool.freeConnection(conn);
@@ -200,11 +204,11 @@ public class ClientHandler extends Thread{
 			pst.close();
 			dbpool.freeConnection(conn);
 			String pw = (String)in.readObject();
-			
+
 			UserData thisUser = new UserData(un,server.getPort());
 			thisUser.spawn();
 			MapManager.spawnUser(server.getMap(),thisUser);
-			
+
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ObjectOutputStream temp = new ObjectOutputStream(baos);
 			temp.writeObject(thisUser);
@@ -212,7 +216,7 @@ public class ClientHandler extends Thread{
 			byte[] userByte = baos.toByteArray();
 			temp.close();
 			baos.close();
-			
+
 			conn = dbpool.getConnection();
 			pst = conn.getPS("INSERT INTO userdata" +" (username,password,class,server) VALUES (?,?,?,?);");
 			pst.setString(1, thisUser.getName());
@@ -222,7 +226,7 @@ public class ClientHandler extends Thread{
 			pst.executeUpdate();
 			pst.close();
 			dbpool.freeConnection(conn);
-			
+
 			out.writeInt(SPU.ServerResponse.ACCOUNT_CREATE_OK.ordinal());
 			out.flush();
 		}
@@ -256,7 +260,7 @@ public class ClientHandler extends Thread{
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void logout()
 	{
 		server.userLogoff(data.getName());
@@ -270,15 +274,15 @@ public class ClientHandler extends Thread{
 			byte[] userByte = baos.toByteArray();
 			temp.close();
 			baos.close();
-			
+
 			DBConnection conn = dbpool.getConnection();
 			PreparedStatement pst = conn.getPS("UPDATE "+new Integer(server.getPort()).toString()+" SET UserData = ? WHERE un = " + data.getName() + ";");
 			pst.setBinaryStream(1, new ByteArrayInputStream(userByte));
 			pst.executeUpdate();
 			pst.close();
 			dbpool.freeConnection(conn);
-			
-			
+
+
 			in.close();
 			out.close();
 			client.close();
@@ -288,7 +292,7 @@ public class ClientHandler extends Thread{
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void forceStop()
 	{
 		try {

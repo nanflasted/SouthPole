@@ -1,0 +1,20 @@
+You should only have to update commands if the SPU.Command enum changes.
+
+Instructions:
+1) Delete Utility.dll in this folder and in Assets/IKVM. Also delete Utility.jar for convenience.
+2) Re-compile SPU.java, and make a jar file using all of the SPU class files. DO NOT USE Eclipse's jar tool, the resulting library will not be recognized by the main Unity script. You have to do it manually through the command line (instructions below).
+3) Put the jar file in this folder.
+4) Run updateCommands.bat.
+
+You should be good to go now!
+
+------------------------------------------------------------------------------------------------------------
+
+How to create a jar through the command line:
+
+1) Make a folder containing the class files you wish to include in your jar.
+2) Start the command line, and first type "cd <PathToYourNewFolder>"
+-----> Example: cd C:\Users\JHoak\Desktop\Utility
+
+3) Run the command "jar cf <NewJarName.jar> *"
+The new jar will be created in the folder you just made.
