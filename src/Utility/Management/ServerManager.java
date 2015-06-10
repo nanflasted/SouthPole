@@ -182,6 +182,7 @@ public class ServerManager extends JFrame implements ActionListener
 			{
 				MapData map = new MapData(size);
 				MapManager.generateWorld(map, size);
+				MapManager.spawnTowns(map);
 				MapManager.create(map,i,pool);
 			}
 		}

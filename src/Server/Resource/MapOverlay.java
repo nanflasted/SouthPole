@@ -1,16 +1,17 @@
 package Server.Resource;
 
+import java.io.*;
 import java.util.*;
 
 import Utility.SPU.*;
 
 
 @SuppressWarnings("serial")
-public class MapOverlay implements java.io.Serializable {
+public class MapOverlay implements Serializable {
 
 	private Tile terrain;
 	private ArrayList<String> users;
-	private ArrayList<String> towns;
+	private TownData town = null;
 	
 	public MapOverlay(Tile ground)
 	{
@@ -43,9 +44,27 @@ public class MapOverlay implements java.io.Serializable {
 		return users.remove(user.getName());
 	}
 	
-	public void addTown(TownData town)
+	public boolean addTown(TownData newTown)
 	{
-		towns.add(town.getName());
+		if (town != null) return false;
+		town = newTown;
+		return true;
 	}
 	
+	private void writeObject(ObjectOutputStream out) throws IOException
+	{
+		out.defaultWriteObject();
+		out.writeObject(terrain);
+		out.writeObject(town);
+		out.writeObject(users);		
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+	{
+		in.defaultReadObject();
+		terrain = (Tile)in.readObject();
+		town = (TownData)in.readObject();
+		users = (ArrayList<String>)in.readObject();
+	}
 }

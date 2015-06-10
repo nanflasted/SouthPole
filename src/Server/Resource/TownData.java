@@ -1,15 +1,15 @@
 package Server.Resource;
 
-public class TownData {
+import Utility.SPU;
+
+public class TownData implements java.io.Serializable{
 
 	private int x;
 	private int y;
 	private String name;
 	
-	public TownData(int x, int y, String name)
+	public TownData(String name)
 	{
-		this.x = x;
-		this.y = y;
 		this.name = name;
 	}
 	
@@ -26,5 +26,13 @@ public class TownData {
 	public String getName()
 	{
 		return name;
+	}
+	
+	public void spawn()
+	{
+		int spawnX = (int)(Math.random()*(SPU.DEFAULT_MAP_SIZE-2*SPU.WATER_BORDER_SIZE))+SPU.WATER_BORDER_SIZE;
+		int spawnY = (int)(Math.sqrt((Math.pow((SPU.DEFAULT_MAP_SIZE/2-SPU.WATER_BORDER_SIZE),2)-Math.pow(spawnX, 2)))+0.5);
+		x = spawnX;
+		y = spawnY;
 	}
 }

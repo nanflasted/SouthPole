@@ -1,6 +1,7 @@
 package Utility.Management;
 
 import java.sql.*;
+import java.util.*;
 import java.io.*;
 
 import Server.Resource.*;
@@ -101,6 +102,36 @@ public class MapManager {
 		{
 			System.err.println(e.getMessage());
 			System.exit(1);
+		}
+	}
+	
+	public static void spawnTowns(MapData map)
+	{
+		ArrayList<String> townnames=null;
+		try 
+		{
+			townnames = SPU.generateName();
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			System.exit(1);
+		}
+		boolean flag;
+		TownData newTown;
+		String name;
+		for (int i = 0; i < (int)(map.getSize()*Math.PI/25); i++)
+		{
+			flag = false;
+			newTown = null;
+			name = townnames.remove((int)(Math.random()*townnames.size()));
+			do
+			{
+				newTown = new TownData(name);
+				newTown.spawn();
+				flag = map.getOverlay(newTown.getX(), newTown.getY()).addTown(newTown);
+			}
+			while(!flag);			
 		}
 	}
 	
