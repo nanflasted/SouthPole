@@ -87,7 +87,7 @@ public class ClientHandler extends Thread{
 				state = in.readInt();
 				process(state);
 			}
-			while ((state!=SPU.Command.LOGOUT.ordinal())&&(state!=SPU.Command.SIGNUP.ordinal()));
+			while ((state!=SPU.Command.LOGOUT.ordinal())&&(state!=SPU.Command.SIGNUP.ordinal())&&(state!=SPU.Command.DISCONNECT.ordinal()));
 			server.removeHandler(this);
 		}
 		catch (Exception e)
@@ -126,6 +126,9 @@ public class ClientHandler extends Thread{
 			break;
 		case LOGOUT:
 			logout();
+			break;
+		case DISCONNECT:
+			disconnect();
 			break;
 		default:
 			return;
@@ -283,6 +286,20 @@ public class ClientHandler extends Thread{
 			dbpool.freeConnection(conn);
 
 
+			in.close();
+			out.close();
+			client.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public void disconnect() //force disconnect
+	{
+		try
+		{
 			in.close();
 			out.close();
 			client.close();

@@ -43,6 +43,7 @@ public class SPU {
         MOVEDOWN,
         MOVERIGHT,
         LOGOUT,
+        DISCONNECT
     }
 
     //A response sent from a server back to a client.
