@@ -124,7 +124,7 @@ public class MapManager {
 		{
 			flag = false;
 			newTown = null;
-			name = townnames.remove((int)(Math.random()*townnames.size()));
+			name = townnames.remove((int)(Math.random()*(townnames.size()-1)));
 			do
 			{
 				newTown = new TownData(name);

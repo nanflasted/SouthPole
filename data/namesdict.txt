@@ -1,49 +1,210 @@
-Athens
-Ashland
-Black Hollow 
-Brendenburg
-Covington
-Cleveland
-Danktown
-Desmond
-Detroit
 Eaton
-East Elwind
-Fairfield
-Falcon's Point
-Garigill
-Grenston
-Heather
-Hallfield
-Islesbury
-Igloo City
-Julian
-Jefferson
-Knightsburg
-Kalgary
-Lancaster
-Loraine
-Longview
-Marion
-Marksley
-New London
-New Hope
-Ophelia
-October Hill
-Paradise
-Psydon
-Quincy
-Quillton
-Ruston
-Rose Lake
-Springfield
-Scottsboro
-Tigersville
-Trenton
-Union City
-Upper Holland
-Vandailia
-Vexiville
-Woodsville
-Whiteridge 
-Windermere
+Nanjing
+Pittzburg
+Herndon
+Detroit
+Auschwitz
+Jerusalem
+Persepolis
+Roanoke
+Waterloo
+Nagasaki
+Hastings
+Castile
+Dresden
+Chernobyl
+Arctica
+Babylon
+Gothem
+Shawshank
+Mordor
+Albania
+London
+Oran
+Salem
+Korriban
+Coruscant
+Twilight Zone
+Zaius
+Droogston
+Neo Tokyo
+Neo Seoul
+Big Isle
+Earth 2
+Babylon
+Tyrell
+Shell Beach
+Formics
+Lucky Starr
+Mordhaus
+Rapture
+Zebes
+Grunia
+Midgar
+Nabudis
+Ghostown
+17 City
+Mount Massive
+Raven Rock
+Hillys
+Pandora
+Pacific City
+Amarr
+Gestahlian
+Illium
+Omega
+Neo Arcadia
+Syndicate
+Alpha Complex
+Aperture
+Raccoon City
+Centauri
+Koprulu
+Hyrule
+Shura
+Ba Sing Se
+Akihabara
+Nerv
+Sern
+Niihama
+Eaton
+Nanjing
+Pittzburg
+Herndon
+Detroit
+Auschwitz
+Jerusalem
+Persepolis
+Roanoke
+Waterloo
+Nagasaki
+Hastings
+Castile
+Dresden
+Chernobyl
+Arctica
+Babylon
+Gothem
+Shawshank
+Mordor
+Albania
+London
+Oran
+Salem
+Korriban
+Coruscant
+Twilight Zone
+Zaius
+Droogston
+Neo Tokyo
+Neo Seoul
+Big Isle
+Earth 2
+Babylon
+Tyrell
+Shell Beach
+Formics
+Lucky Starr
+Mordhaus
+Rapture
+Zebes
+Grunia
+Midgar
+Nabudis
+Ghostown
+17 City
+Mount Massive
+Raven Rock
+Hillys
+Pandora
+Pacific City
+Amarr
+Gestahlian
+Illium
+Omega
+Neo Arcadia
+Syndicate
+Alpha Complex
+Aperture
+Raccoon City
+Centauri
+Koprulu
+Hyrule
+Shura
+Ba Sing Se
+Akihabara
+Nerv
+Sern
+Niihama
+Eaton
+Nanjing
+Pittzburg
+Herndon
+Detroit
+Auschwitz
+Jerusalem
+Persepolis
+Roanoke
+Waterloo
+Nagasaki
+Hastings
+Castile
+Dresden
+Chernobyl
+Arctica
+Babylon
+Gothem
+Shawshank
+Mordor
+Albania
+London
+Oran
+Salem
+Korriban
+Coruscant
+Twilight Zone
+Zaius
+Droogston
+Neo Tokyo
+Neo Seoul
+Big Isle
+Earth 2
+Babylon
+Tyrell
+Shell Beach
+Formics
+Lucky Starr
+Mordhaus
+Rapture
+Zebes
+Grunia
+Midgar
+Nabudis
+Ghostown
+17 City
+Mount Massive
+Raven Rock
+Hillys
+Pandora
+Pacific City
+Amarr
+Gestahlian
+Illium
+Omega
+Neo Arcadia
+Syndicate
+Alpha Complex
+Aperture
+Raccoon City
+Centauri
+Koprulu
+Hyrule
+Shura
+Ba Sing Se
+Akihabara
+Nerv
+Sern
+Niihama
+
+
+

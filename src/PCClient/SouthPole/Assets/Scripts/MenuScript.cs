@@ -83,7 +83,7 @@ public class MenuScript : MonoBehaviour {
 			sr = new StreamReader ("Assets/misc/login.ini");
 		} catch (System.Exception e) {
 			// The login file doesn't exist (i.e. user hasn't even logged in yet). So, do nothing.
-			print (e.StackTrace);
+			print (e.Message);
 			return false;
 		}
 
