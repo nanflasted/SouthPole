@@ -4470,7 +4470,7 @@ MonoBehaviour:
     m_HighlightedTrigger: Highlighted
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 968331620}
   m_TextComponent: {fileID: 1220966277}
   m_Placeholder: {fileID: 1172050970}
@@ -4688,7 +4688,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1916831517}
+      - m_Target: {fileID: 1715343897}
         m_MethodName: RegisterClick
         m_Mode: 1
         m_Arguments:
@@ -7132,7 +7132,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1916831517}
+      - m_Target: {fileID: 1715343897}
         m_MethodName: LoginClick
         m_Mode: 1
         m_Arguments:
@@ -7954,7 +7954,7 @@ MonoBehaviour:
   loginMenu: {fileID: 953485700}
   registerQuestionMenu: {fileID: 1847542050}
   registrationMenu: {fileID: 865233893}
-  connectionMgr: {fileID: 0}
+  connectionMgr: {fileID: 1916831516}
   username: {fileID: 1880372605}
   password: {fileID: 532800303}
   errorMessage: {fileID: 1471455936}
@@ -9197,6 +9197,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ip: 127.0.0.1
   handshake: -775644979
+  cmd: -1
   usernameLogin: {fileID: 1880372605}
   passwordLogin: {fileID: 532800303}
   usernameReg: {fileID: 2071159081}

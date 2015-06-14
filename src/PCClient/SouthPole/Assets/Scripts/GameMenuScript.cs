@@ -67,6 +67,18 @@ public class GameMenuScript : MonoBehaviour {
 		quitOptionCanvas.enabled = false;
 	}
 
+	public void QuitToMainMenu() {
+		((GameScript)(GameObject.Find ("Connection Manager").GetComponent (typeof(GameScript)))).logout ();
+		Application.LoadLevel (0);
+	}
+
+	public void QuitToDesktop() {
+		((GameScript)(GameObject.Find ("Connection Manager").GetComponent (typeof(GameScript)))).logout ();
+		// Wait a bit for connection to close
+		new WaitForSeconds (3.0f);
+		Application.Quit ();
+	}
+
 	// Update is used to respond to key presses
 	public void Update () {
 		// Check for keys pressed
