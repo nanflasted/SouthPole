@@ -1413,7 +1413,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 05f09ca209213f3459a37c41b77305cd, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
@@ -4688,7 +4688,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1715343897}
+      - m_Target: {fileID: 1916831517}
         m_MethodName: RegisterClick
         m_Mode: 1
         m_Arguments:
@@ -7132,7 +7132,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1715343897}
+      - m_Target: {fileID: 1916831517}
         m_MethodName: LoginClick
         m_Mode: 1
         m_Arguments:
@@ -7954,15 +7954,10 @@ MonoBehaviour:
   loginMenu: {fileID: 953485700}
   registerQuestionMenu: {fileID: 1847542050}
   registrationMenu: {fileID: 865233893}
-  musicBox: {fileID: 1390937076}
-  sfxBox: {fileID: 738439964}
-  musicTgl: {fileID: 1165270521}
-  sfxTgl: {fileID: 239916473}
+  connectionMgr: {fileID: 0}
   username: {fileID: 1880372605}
   password: {fileID: 532800303}
   errorMessage: {fileID: 1471455936}
-  ip: 127.0.0.1
-  handshake: -775644979
 --- !u!1 &1735843789
 GameObject:
   m_ObjectHideFlags: 0
@@ -9173,6 +9168,57 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1908270845}
+--- !u!1 &1916831516
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 224: {fileID: 1916831518}
+  - 114: {fileID: 1916831517}
+  m_Layer: 5
+  m_Name: Connection Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1916831517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1916831516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efe4378a39606e344a09b75aa4b43819, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ip: 127.0.0.1
+  handshake: -775644979
+  usernameLogin: {fileID: 1880372605}
+  passwordLogin: {fileID: 532800303}
+  usernameReg: {fileID: 2071159081}
+  passwordReg: {fileID: 968331619}
+  errorMessage: {fileID: 1471455936}
+--- !u!224 &1916831518
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1916831516}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.05124998, y: 1.05124998, z: 1.05124998}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_AnchorMin: {x: .5, y: .5}
+  m_AnchorMax: {x: .5, y: .5}
+  m_AnchoredPosition: {x: 400, y: 174.554108}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: .5, y: .5}
 --- !u!1 &1918669179
 GameObject:
   m_ObjectHideFlags: 0

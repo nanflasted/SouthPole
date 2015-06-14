@@ -3,10 +3,12 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
 
+// Disable "variable declared but not used" warnings
+#pragma warning disable 0168
+
 public class ButtonScript : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler {
 
-	public AudioSource hover;
-	public AudioSource click;
+	public AudioSource hover, click;
 
 	// Use this for initialization
 	void Start () {
@@ -20,10 +22,5 @@ public class ButtonScript : MonoBehaviour, IPointerEnterHandler, IPointerDownHan
 	
 	public void OnPointerDown(PointerEventData d) {
 		click.Play ();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
 	}
 }

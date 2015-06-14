@@ -552,8 +552,8 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: .960784316, g: .960784316, b: .960784316, a: 1}
-    m_PressedColor: {r: .784313738, g: .784313738, b: .784313738, a: 1}
+    m_HighlightedColor: {r: .80392158, g: .80392158, b: .80392158, a: 1}
+    m_PressedColor: {r: .647058845, g: .647058845, b: .647058845, a: 1}
     m_DisabledColor: {r: .784313738, g: .784313738, b: .784313738, a: .501960814}
     m_ColorMultiplier: 1
     m_FadeDuration: 0
@@ -1502,8 +1502,8 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: .960784316, g: .960784316, b: .960784316, a: 1}
-    m_PressedColor: {r: .784313738, g: .784313738, b: .784313738, a: 1}
+    m_HighlightedColor: {r: .80392158, g: .80392158, b: .80392158, a: 1}
+    m_PressedColor: {r: .647058845, g: .647058845, b: .647058845, a: 1}
     m_DisabledColor: {r: .784313738, g: .784313738, b: .784313738, a: .501960814}
     m_ColorMultiplier: 1
     m_FadeDuration: 0
@@ -1886,8 +1886,8 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: .960784316, g: .960784316, b: .960784316, a: 1}
-    m_PressedColor: {r: .784313738, g: .784313738, b: .784313738, a: 1}
+    m_HighlightedColor: {r: .80392158, g: .80392158, b: .80392158, a: 1}
+    m_PressedColor: {r: .647058845, g: .647058845, b: .647058845, a: 1}
     m_DisabledColor: {r: .784313738, g: .784313738, b: .784313738, a: .501960814}
     m_ColorMultiplier: 1
     m_FadeDuration: 0
@@ -4524,8 +4524,8 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: .960784316, g: .960784316, b: .960784316, a: 1}
-    m_PressedColor: {r: .784313738, g: .784313738, b: .784313738, a: 1}
+    m_HighlightedColor: {r: .80392158, g: .80392158, b: .80392158, a: 1}
+    m_PressedColor: {r: .647058845, g: .647058845, b: .647058845, a: 1}
     m_DisabledColor: {r: .784313738, g: .784313738, b: .784313738, a: .501960814}
     m_ColorMultiplier: 1
     m_FadeDuration: 0
@@ -5156,10 +5156,6 @@ MonoBehaviour:
   quitOptionCanvas: {fileID: 1679350796}
   optionsMenu: {fileID: 1356695877}
   exitText: {fileID: 46042301}
-  musicBox: {fileID: 1936463490}
-  sfxBox: {fileID: 355091154}
-  musicTgl: {fileID: 1577583908}
-  sfxTgl: {fileID: 1911606428}
 --- !u!1 &1567033459
 GameObject:
   m_ObjectHideFlags: 0

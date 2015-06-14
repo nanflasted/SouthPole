@@ -7,8 +7,6 @@ using UnityEngine.UI;
 // Disable "variable declared but not used" warnings
 #pragma warning disable 0168
 
-// TO DO: Volume on start menu.
-
 public class OptionsScript : MonoBehaviour {
 
 	// Options menu contents
@@ -34,6 +32,7 @@ public class OptionsScript : MonoBehaviour {
 		sfxMuted = false;
 		
 		loadPrefs (); // may change bool values above according to user prefs file if it exists.
+		music.Play ();
 	}
 
 	// Changes the slider value if the user puts a number in the text box to its right.
@@ -127,6 +126,21 @@ public class OptionsScript : MonoBehaviour {
 		SFXSliderChanged ();
 	}
 
-	// ( ͡° ͜ʖ ͡°)
-	void Update () {}
+	// Save user preferences.
+	public void savePrefs() {
+		// Start w/ music volume, SFX volume, and mute statuses.
+		int musicVolume = Convert.ToInt16(musicBox.text),
+		sfxVolume = Convert.ToInt16 (sfxBox.text);
+		// Gather info to put in the file.
+		System.Text.StringBuilder sb = new System.Text.StringBuilder ();
+		sb.AppendLine ("MusicVolume=" + musicVolume);
+		sb.AppendLine ("SFXVolume=" + sfxVolume);
+		sb.AppendLine ("MusicMuted=" + musicTgl.isOn);
+		sb.AppendLine ("SFXMuted=" + sfxTgl.isOn);
+		
+		// Open a file for writing + overwrite the old settings (or create a new file).
+		StreamWriter sw = new StreamWriter ("Assets/misc/userPrefs.ini");
+		sw.Write (sb.ToString ());
+		sw.Close ();
+	}
 }
