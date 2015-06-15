@@ -6,21 +6,24 @@ using System.Collections;
 // Disable "variable declared but not used" warnings
 #pragma warning disable 0168
 
+// This script basically just manages button sounds, which play when hovering over and clicking on a button.
 public class ButtonScript : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler {
 
-	public AudioSource hover, click;
+	AudioSource hoverSound, clickSound;
 
 	// Use this for initialization
 	void Start () {
-		hover = hover.GetComponent<AudioSource> ();
-		click = click.GetComponent<AudioSource> ();
+		hoverSound = hoverSound.GetComponent<AudioSource> ();
+		clickSound = clickSound.GetComponent<AudioSource> ();
 	}
-	
+
+	// "Hover" sound
 	public void OnPointerEnter(PointerEventData d){
-		hover.Play ();
+		hoverSound.Play ();
 	}
-	
+
+	// Click sound
 	public void OnPointerDown(PointerEventData d) {
-		click.Play ();
+		clickSound.Play ();
 	}
 }
