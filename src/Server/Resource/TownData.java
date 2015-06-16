@@ -1,5 +1,7 @@
 package Server.Resource;
 
+import java.util.*;
+
 import Utility.SPU;
 
 public class TownData implements java.io.Serializable{
@@ -7,6 +9,8 @@ public class TownData implements java.io.Serializable{
 	private int x;
 	private int y;
 	private String name;
+	private ArrayList<ItemData> items;
+	private ArrayList<DogeData>	doges;
 	
 	public TownData(String name)
 	{

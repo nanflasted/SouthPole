@@ -57,11 +57,11 @@ public class GameScript : MonoBehaviour {
 		try {
 			// 1st step: Connect to main server and send handshake.
 			cnxn = new Socket (ip, 1337);
-			
+
 			ObjectOutputStream output = new ObjectOutputStream (cnxn.getOutputStream ());
 			output.writeInt (handshake);
 			output.flush ();
-			
+
 			// Must now send username.
 			string username = newAcct ? usernameReg.text : usernameLogin.text;
 			output.writeObject (username);
@@ -87,6 +87,7 @@ public class GameScript : MonoBehaviour {
 			// Display some kind of error window if there was a connection error (basically a Java exception).
 			// If the connection is null, the connection attempt failed; otherwise, the connection timed out.
 			StartMenuScript sms = (StartMenuScript)(GameObject.Find ("Start Menu").GetComponent(typeof(StartMenuScript)));
+			print("Got here");
 			if (cnxn == null)
 				sms.RaiseErrorWindow("Failed to connect. Check your connection settings. The main server may be down.");
 			else
@@ -116,7 +117,7 @@ public class GameScript : MonoBehaviour {
 			// Send handshake
 			output.writeInt (handshake);
 			output.flush ();
-			
+
 			// Now that we have connected and sent our handshake, we can send commands.
 			// Here we will just sign up, close the connection, and log in using the given name and PW.
 			
@@ -126,7 +127,7 @@ public class GameScript : MonoBehaviour {
 			// Send username and PW.
 			output.writeObject(usernameReg.text);
 			output.flush ();
-			
+
 			output.writeObject (passwordReg.text);
 			output.flush ();
 			
@@ -165,7 +166,7 @@ public class GameScript : MonoBehaviour {
 		}catch (System.Exception e) {
 			// This handles C# exceptions. These shouldn't happen, which is why the errors are printed to the console (for us to test ourselves).
 			print ("Encountered a C# exception:\n");
-			print (e.Message);
+			print (e.StackTrace);
 		}
 	}
 
