@@ -13,13 +13,13 @@ using UnityEngine.UI;
 // (i.e. graphics, resolution) later on in development.
 public class OptionsScript : MonoBehaviour {
 	
-	AudioSource music; // background music
+	public AudioSource music; // background music
 
 	// Options menu contents
-	Slider musicScroll, sfxScroll;
-	InputField musicBox, sfxBox;
-	Toggle musicTgl, sfxTgl;
-	bool musicMuted, sfxMuted; //Used later for saving user prefs.
+	public Slider musicScroll, sfxScroll;
+	public InputField musicBox, sfxBox;
+	public Toggle musicTgl, sfxTgl;
+	public bool musicMuted, sfxMuted; //Used later for saving user prefs.
 	
 	// Initialization
 	void Start () {

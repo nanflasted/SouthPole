@@ -12,9 +12,9 @@ using UnityEngine.UI;
 public class GameMenuScript : MonoBehaviour {
 
 	// Menus used
-	Canvas pauseMenu, quitConfirmMenu, mainMenuOptionCanvas, quitOptionCanvas, optionsMenu;
+	public Canvas pauseMenu, quitConfirmMenu, mainMenuOptionCanvas, quitOptionCanvas, optionsMenu;
 
-	Text exitText; // this text displays when quitting to either the main menu or to the desktop, and changes based on your option.
+	public Text exitText; // this text displays when quitting to either the main menu or to the desktop, and changes based on your option.
 
 	// Use this for initialization
 	void Start () {

@@ -496,6 +496,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 1455028529}
+  clickSound: {fileID: 2010242710}
 --- !u!1 &119100617
 GameObject:
   m_ObjectHideFlags: 0
@@ -919,6 +921,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 76783107}
+  clickSound: {fileID: 1045240910}
 --- !u!1 &239916471
 GameObject:
   m_ObjectHideFlags: 0
@@ -1025,6 +1029,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 745544488}
+  clickSound: {fileID: 1477831347}
 --- !u!1 &240949506
 GameObject:
   m_ObjectHideFlags: 0
@@ -1784,6 +1790,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 1815971890}
+  clickSound: {fileID: 1735843791}
 --- !u!114 &410815967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2143,6 +2151,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 819927753}
+  clickSound: {fileID: 686117159}
 --- !u!114 &493629460
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3470,6 +3480,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 1060562150}
+  clickSound: {fileID: 2137571624}
 --- !u!114 &766313928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3759,6 +3771,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 0}
+  clickSound: {fileID: 0}
 --- !u!1 &819927751
 GameObject:
   m_ObjectHideFlags: 0
@@ -4986,6 +5000,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 264270944}
+  clickSound: {fileID: 799546500}
 --- !u!114 &980368777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5932,6 +5948,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 1713232262}
+  clickSound: {fileID: 1036106992}
 --- !u!114 &1071030151
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6080,6 +6098,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 1945468295}
+  clickSound: {fileID: 291824735}
 --- !u!114 &1077790990
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6465,6 +6485,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 2047496986}
+  clickSound: {fileID: 513294009}
 --- !u!1 &1172050968
 GameObject:
   m_ObjectHideFlags: 0
@@ -7302,6 +7324,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efe4378a39606e344a09b75aa4b43819, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  usernameLogin: {fileID: 1880372605}
+  passwordLogin: {fileID: 532800303}
+  usernameReg: {fileID: 2071159081}
+  passwordReg: {fileID: 968331619}
+  loginErrorMessage: {fileID: 1471455936}
+  regFailedMessage: {fileID: 987369076}
 --- !u!4 &1438347068
 Transform:
   m_ObjectHideFlags: 0
@@ -7639,6 +7667,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 34609135}
+  clickSound: {fileID: 961758129}
 --- !u!114 &1504089716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7887,6 +7917,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 1890579761}
+  clickSound: {fileID: 1947235264}
 --- !u!1 &1579511764
 GameObject:
   m_ObjectHideFlags: 0
@@ -8162,6 +8194,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 434222805}
+  clickSound: {fileID: 840563297}
 --- !u!1 &1706786606
 GameObject:
   m_ObjectHideFlags: 0
@@ -8237,6 +8271,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 0}
+  clickSound: {fileID: 0}
 --- !u!1 &1708385684
 GameObject:
   m_ObjectHideFlags: 0
@@ -8569,6 +8605,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fdde31bb2e3dc747b914b46eee425b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startMenu: {fileID: 1715343896}
+  quitMenu: {fileID: 723025412}
+  optionsMenu: {fileID: 2029277162}
+  loginMenu: {fileID: 953485700}
+  registerQuestionMenu: {fileID: 1847542050}
+  registrationMenu: {fileID: 865233893}
+  errorWindow: {fileID: 938612744}
+  connectionMgr: {fileID: 1438347067}
+  username: {fileID: 1880372605}
+  password: {fileID: 532800303}
+  loginErrorMessage: {fileID: 1471455936}
+  regFailedMessage: {fileID: 987369076}
+  windowErrorMessage: {fileID: 1708385687}
 --- !u!1 &1735843789
 GameObject:
   m_ObjectHideFlags: 0
@@ -8962,6 +9011,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 1143982439}
+  clickSound: {fileID: 592828798}
 --- !u!1 &1789627565
 GameObject:
   m_ObjectHideFlags: 0
@@ -9157,6 +9208,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 1007910491}
+  clickSound: {fileID: 194935635}
 --- !u!1 &1815971888
 GameObject:
   m_ObjectHideFlags: 0
@@ -9924,6 +9977,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 1092984968}
+  clickSound: {fileID: 1327004674}
 --- !u!1 &1945468293
 GameObject:
   m_ObjectHideFlags: 0
@@ -10490,6 +10545,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcd3924f0872b084dbb2375dc3bbf9fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  music: {fileID: 0}
+  musicScroll: {fileID: 0}
+  sfxScroll: {fileID: 0}
+  musicBox: {fileID: 0}
+  sfxBox: {fileID: 0}
+  musicTgl: {fileID: 0}
+  sfxTgl: {fileID: 0}
+  musicMuted: 0
+  sfxMuted: 0
 --- !u!1 &2047496984
 GameObject:
   m_ObjectHideFlags: 0

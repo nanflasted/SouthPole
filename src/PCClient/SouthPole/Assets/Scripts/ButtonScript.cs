@@ -9,7 +9,7 @@ using System.Collections;
 // This script basically just manages button sounds, which play when hovering over and clicking on a button.
 public class ButtonScript : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler {
 
-	AudioSource hoverSound, clickSound;
+	public AudioSource hoverSound, clickSound;
 
 	// Use this for initialization
 	void Start () {

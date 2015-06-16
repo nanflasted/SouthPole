@@ -136,6 +136,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 1803139261}
+  clickSound: {fileID: 1758308199}
 --- !u!114 &7810185
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -460,45 +462,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 46042298}
---- !u!1 &57179850
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 57179852}
-  - 114: {fileID: 57179851}
-  m_Layer: 0
-  m_Name: Connection Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &57179851
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 57179850}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: efe4378a39606e344a09b75aa4b43819, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &57179852
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 57179850}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 384.3396, y: 213.211655, z: -7.5703125}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
 --- !u!1 &67005065
 GameObject:
   m_ObjectHideFlags: 0
@@ -633,6 +596,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 800563686}
+  clickSound: {fileID: 1891384918}
 --- !u!1 &68468944
 GameObject:
   m_ObjectHideFlags: 0
@@ -1581,6 +1546,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 671153746}
+  clickSound: {fileID: 1150907580}
 --- !u!1 &451854404
 GameObject:
   m_ObjectHideFlags: 0
@@ -1631,6 +1598,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 0}
+  clickSound: {fileID: 0}
 --- !u!114 &451854407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1961,6 +1930,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 1984147671}
+  clickSound: {fileID: 1555173521}
 --- !u!1 &592489461
 GameObject:
   m_ObjectHideFlags: 0
@@ -2247,6 +2218,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 34435181}
+  clickSound: {fileID: 1022849937}
 --- !u!222 &602357842
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2433,7 +2406,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
 --- !u!1 &671153744
 GameObject:
   m_ObjectHideFlags: 0
@@ -3197,6 +3170,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 0}
+  clickSound: {fileID: 0}
 --- !u!222 &988315795
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3811,6 +3786,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 0}
+  clickSound: {fileID: 0}
 --- !u!222 &1062741576
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4111,7 +4088,7 @@ RectTransform:
   - {fileID: 996036902}
   - {fileID: 1679350795}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -4311,7 +4288,7 @@ RectTransform:
   - {fileID: 1911606426}
   - {fileID: 1439881956}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -4382,6 +4359,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcd3924f0872b084dbb2375dc3bbf9fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  music: {fileID: 1530902048}
+  musicScroll: {fileID: 1954397917}
+  sfxScroll: {fileID: 113985839}
+  musicBox: {fileID: 1936463490}
+  sfxBox: {fileID: 355091154}
+  musicTgl: {fileID: 1577583908}
+  sfxTgl: {fileID: 1911606428}
+  musicMuted: 0
+  sfxMuted: 0
 --- !u!1 &1367458906
 GameObject:
   m_ObjectHideFlags: 0
@@ -4582,6 +4568,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 149148584}
+  clickSound: {fileID: 1047028954}
 --- !u!1 &1391665734
 GameObject:
   m_ObjectHideFlags: 0
@@ -4710,6 +4698,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 605521104}
+  clickSound: {fileID: 592489463}
 --- !u!222 &1391665739
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5089,7 +5079,7 @@ RectTransform:
   - {fileID: 412520613}
   - {fileID: 67005068}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -5160,6 +5150,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c81c1cf15a1c66b45b113a26d0fc7b09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pauseMenu: {fileID: 1558487011}
+  quitConfirmMenu: {fileID: 1247472932}
+  mainMenuOptionCanvas: {fileID: 996036903}
+  quitOptionCanvas: {fileID: 1679350796}
+  optionsMenu: {fileID: 1356695877}
+  exitText: {fileID: 46042301}
 --- !u!1 &1567033459
 GameObject:
   m_ObjectHideFlags: 0
@@ -5270,6 +5266,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 0}
+  clickSound: {fileID: 0}
 --- !u!114 &1577583908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5858,7 +5856,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
 --- !u!1 &1803139260
 GameObject:
   m_ObjectHideFlags: 0
@@ -6229,6 +6227,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSound: {fileID: 0}
+  clickSound: {fileID: 0}
 --- !u!114 &1911606428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6767,7 +6767,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
 --- !u!1 &2122255074
 GameObject:
   m_ObjectHideFlags: 0

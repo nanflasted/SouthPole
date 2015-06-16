@@ -36,8 +36,8 @@ public class GameScript : MonoBehaviour {
 		 DISCONNECT = SPU.Command.DISCONNECT.ordinal();
 
 	// Other fields -- input fields and messages.
-	InputField usernameLogin, passwordLogin, usernameReg, passwordReg;
-	Text loginErrorMessage, regFailedMessage;
+	public InputField usernameLogin, passwordLogin, usernameReg, passwordReg;
+	public Text loginErrorMessage, regFailedMessage;
 
 	// Initialization
 	void Start () {

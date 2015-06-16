@@ -13,12 +13,12 @@ using UnityEngine.UI;
 public class StartMenuScript : MonoBehaviour {
 	
 	// These vars hold the menus for toggling.
-	Canvas startMenu, quitMenu, optionsMenu, loginMenu, registerQuestionMenu, registrationMenu, errorWindow;
-	GameScript connectionMgr; // manages the game and the connection -- see the script's source for details.
+	public Canvas startMenu, quitMenu, optionsMenu, loginMenu, registerQuestionMenu, registrationMenu, errorWindow;
+	public GameScript connectionMgr; // manages the game and the connection -- see the script's source for details.
 	
 	// Login menu contents
-	InputField username, password;
-	Text loginErrorMessage, regFailedMessage, windowErrorMessage;
+	public InputField username, password;
+	public Text loginErrorMessage, regFailedMessage, windowErrorMessage;
 	
 	// Use this for initialization
 	void Start () {
