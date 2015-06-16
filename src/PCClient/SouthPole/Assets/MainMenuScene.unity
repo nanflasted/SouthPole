@@ -579,6 +579,103 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 119100617}
+--- !u!1 &170754960
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 170754961}
+  - 82: {fileID: 170754962}
+  m_Layer: 5
+  m_Name: Hover
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &170754961
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 170754960}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -440, y: 3, z: 0}
+  m_LocalScale: {x: .499999881, y: .499999881, z: .499999881}
+  m_Children: []
+  m_Father: {fileID: 807802322}
+  m_RootOrder: 0
+--- !u!82 &170754962
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 170754960}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 8b5bcd9c23091e841907e64fb3cc897f, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
 --- !u!1 &194935634
 GameObject:
   m_ObjectHideFlags: 0
@@ -3725,6 +3822,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 170754961}
   - {fileID: 838046408}
   m_Father: {fileID: 364775445}
   m_RootOrder: 0
@@ -3771,8 +3869,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hoverSound: {fileID: 0}
-  clickSound: {fileID: 0}
+  hoverSound: {fileID: 170754962}
+  clickSound: {fileID: 838046409}
 --- !u!1 &819927751
 GameObject:
   m_ObjectHideFlags: 0
@@ -3897,7 +3995,7 @@ Transform:
   m_LocalScale: {x: .49999994, y: .5, z: .5}
   m_Children: []
   m_Father: {fileID: 807802322}
-  m_RootOrder: 0
+  m_RootOrder: 1
 --- !u!82 &838046409
 AudioSource:
   m_ObjectHideFlags: 0
@@ -8271,8 +8369,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f440494719b02f478d5987e9a453cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hoverSound: {fileID: 0}
-  clickSound: {fileID: 0}
+  hoverSound: {fileID: 1412411488}
+  clickSound: {fileID: 1059087926}
 --- !u!1 &1708385684
 GameObject:
   m_ObjectHideFlags: 0
@@ -10545,13 +10643,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcd3924f0872b084dbb2375dc3bbf9fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  music: {fileID: 0}
-  musicScroll: {fileID: 0}
-  sfxScroll: {fileID: 0}
-  musicBox: {fileID: 0}
-  sfxBox: {fileID: 0}
-  musicTgl: {fileID: 0}
-  sfxTgl: {fileID: 0}
+  music: {fileID: 290310990}
+  musicScroll: {fileID: 196025353}
+  sfxScroll: {fileID: 1415831114}
+  musicBox: {fileID: 1390937076}
+  sfxBox: {fileID: 738439964}
+  musicTgl: {fileID: 1165270521}
+  sfxTgl: {fileID: 239916473}
   musicMuted: 0
   sfxMuted: 0
 --- !u!1 &2047496984
