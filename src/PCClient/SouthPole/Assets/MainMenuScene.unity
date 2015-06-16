@@ -7428,6 +7428,7 @@ MonoBehaviour:
   passwordReg: {fileID: 968331619}
   loginErrorMessage: {fileID: 1471455936}
   regFailedMessage: {fileID: 987369076}
+  startMenu: {fileID: 1715343896}
 --- !u!4 &1438347068
 Transform:
   m_ObjectHideFlags: 0

@@ -35,9 +35,10 @@ public class GameScript : MonoBehaviour {
 		 LOGOUT =SPU.Command.LOGOUT.ordinal(),
 		 DISCONNECT = SPU.Command.DISCONNECT.ordinal();
 
-	// Other fields -- input fields and messages.
+	// Other fields
 	public InputField usernameLogin, passwordLogin, usernameReg, passwordReg;
 	public Text loginErrorMessage, regFailedMessage;
+	public Canvas startMenu;
 
 	// Initialization
 	void Start () {
@@ -48,6 +49,7 @@ public class GameScript : MonoBehaviour {
 		passwordReg = passwordReg.GetComponent<InputField> ();
 		loginErrorMessage = loginErrorMessage.GetComponent<Text> ();
 		regFailedMessage = regFailedMessage.GetComponent<Text> ();
+		startMenu = startMenu.GetComponent<Canvas> ();
 	}
 
 	// Connect to server address at port 1337 (main server) and get a new port on which to login or sign up.
@@ -86,8 +88,7 @@ public class GameScript : MonoBehaviour {
 		} catch (java.lang.Exception e) {
 			// Display some kind of error window if there was a connection error (basically a Java exception).
 			// If the connection is null, the connection attempt failed; otherwise, the connection timed out.
-			StartMenuScript sms = (StartMenuScript)(GameObject.Find ("Start Menu").GetComponent(typeof(StartMenuScript)));
-			print("Got here");
+			StartMenuScript sms = (StartMenuScript)(startMenu.GetComponent(typeof(StartMenuScript)));
 			if (cnxn == null)
 				sms.RaiseErrorWindow("Failed to connect. Check your connection settings. The main server may be down.");
 			else
@@ -137,7 +138,7 @@ public class GameScript : MonoBehaviour {
 			bool acctCreated = input.readInt () == SPU.ServerResponse.ACCOUNT_CREATE_OK.ordinal(); 
 			if (!acctCreated) {
 				// Display an error message if registration failed.
-				StartMenuScript  sms = (StartMenuScript)(GameObject.Find("Start Menu").GetComponent(typeof(StartMenuScript)));
+				StartMenuScript  sms = (StartMenuScript)(startMenu.GetComponent(typeof(StartMenuScript)));
 				sms.RaiseErrorWindow("Account creation failed. That name may already be taken.");
 			}
 			
@@ -158,7 +159,7 @@ public class GameScript : MonoBehaviour {
 		}catch (java.lang.Exception e) {
 			// Display some kind of error window if there was a connection error (basically a Java exception).
 			// If the connection is null, the connection attempt failed; otherwise, the connection timed out.
-			StartMenuScript sms = (StartMenuScript)(GameObject.Find ("Start Menu").GetComponent(typeof(StartMenuScript)));
+			StartMenuScript sms = (StartMenuScript)(startMenu.GetComponent(typeof(StartMenuScript)));
 			if (cnxn == null)
 				sms.RaiseErrorWindow("Failed to connect. Check your connection settings. The subserver may be down.");
 			else
@@ -213,7 +214,7 @@ public class GameScript : MonoBehaviour {
 				return;
 			}
 			// At this point, login was successful.
-			((StartMenuScript)(GameObject.Find ("Start Menu").GetComponent(typeof(StartMenuScript)))).saveLogin();
+			((StartMenuScript)(startMenu.GetComponent(typeof(StartMenuScript)))).saveLogin();
 			loginErrorMessage.enabled = false;
 
 			// Need to get the map first so the user can see stuff. First send the command, then receive the map and visibility.
@@ -221,7 +222,8 @@ public class GameScript : MonoBehaviour {
 			output.flush ();
 
 			int visibility = input.readInt ();
-			SPU.Tile[][] map = (SPU.Tile[][])(input.readObject ());		
+			SPU.Tile[][] map = (SPU.Tile[][])(input.readObject ());
+			startMenu.enabled = false;
 			Application.LoadLevel (1);	// load the game.
 			// TO DO MUCH LATER: Draw the map, using visibility to determine visible tiles, and put this in the new scene.
 
@@ -245,17 +247,18 @@ public class GameScript : MonoBehaviour {
 			input.close ();
 			output.close ();
 			cnxn.close ();
+			startMenu.enabled = true;
 
 		}catch (java.lang.Exception e) {
 			// Deal with a failed connection attempt
 			if (cnxn == null) {
-				StartMenuScript sms = (StartMenuScript)(GameObject.Find ("Start Menu").GetComponent(typeof(StartMenuScript)));
+				StartMenuScript sms = (StartMenuScript)(startMenu.GetComponent(typeof(StartMenuScript)));
 				sms.RaiseErrorWindow("Failed to connect. Check your connection settings. The subserver may be down.");
 			}
 			else {
 				// Return to main menu, since connection has timed out.
 				Application.LoadLevel (0);
-				StartMenuScript sms = (StartMenuScript)(GameObject.Find ("Start Menu").GetComponent(typeof(StartMenuScript)));
+				StartMenuScript sms = (StartMenuScript)(startMenu.GetComponent(typeof(StartMenuScript)));
 				sms.RaiseErrorWindow("Connection timed out. Check your connection. The subserver may have gone down.");
 			}
 		}catch (System.Exception e) {

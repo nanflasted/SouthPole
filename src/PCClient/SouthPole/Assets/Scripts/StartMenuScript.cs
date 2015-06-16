@@ -22,6 +22,7 @@ public class StartMenuScript : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
+		DontDestroyOnLoad (this);
 		startMenu = startMenu.GetComponent<Canvas>();
 		quitMenu = quitMenu.GetComponent<Canvas> ();
 		optionsMenu = optionsMenu.GetComponent<Canvas> ();
