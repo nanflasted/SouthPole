@@ -29,6 +29,8 @@ public class SPU {
     public static final int DEFAULT_MAP_SIZE = 1000;
     //amount of moves given per day.
     public static final int DAILY_MOVES = 10;
+    //amount of initial resources available in towns
+    public static final int INITRS = 5;
 
     //Commands are requests sent to the server by to the client.
     //To encode a command to integer for transmission, use: Command.XXX.ordinal();
