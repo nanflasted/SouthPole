@@ -10,6 +10,7 @@ import Utility.SPU;
 public class UserData implements java.io.Serializable{
 
 	private String un;
+	private double dosh = 10000.00;
 	private int dailyMoves = SPU.DAILY_MOVES;
 	private int server;
 	private int x;
@@ -89,6 +90,13 @@ public class UserData implements java.io.Serializable{
 			}
 		}
 		return res;
+	}
+	
+	public boolean spend(double money)
+	{
+		if (dosh < money) return false;
+		dosh -= money;
+		return true;
 	}
 }
 

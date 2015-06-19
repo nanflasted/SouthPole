@@ -1,10 +1,18 @@
 package Server.Resource;
 
-public class DogeData{
+public class DogeData implements Purchasable{
 
 	private double food;
 	private double power;
 	private double failureProb;
+	private double price;
+	private double weight;
+	
+	public DogeData()
+	{
+		
+	}
+	
 	
 	public double getFood()
 	{
@@ -19,5 +27,10 @@ public class DogeData{
 	public double getFailure()
 	{
 		return failureProb;
+	}
+	
+	public double getPrice()
+	{
+		return price;
 	}
 }

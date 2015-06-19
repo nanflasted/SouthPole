@@ -5,7 +5,7 @@ import java.io.*;
 import java.util.*;
 import java.sql.*;
 
-import Server.Resource.UserData;
+import Server.Resource.*;
 import Utility.Management.*;
 import Utility.*;
 
@@ -123,6 +123,12 @@ public class ClientHandler extends Thread{
 			break;
 		case MOVERIGHT:
 			move(SPU.Command.MOVERIGHT.ordinal());
+			break;
+		case REQUEST:
+			request();
+			break;
+		case PURCHASE:
+			purchaseFromTown();
 			break;
 		case LOGOUT:
 			logout();
@@ -264,6 +270,42 @@ public class ClientHandler extends Thread{
 		}
 	}
 
+	//give back the information of a certain tile
+	private void request()
+	{
+		int i, j;
+		try
+		{
+			i = in.readInt();
+			j = in.readInt();
+			MapOverlay tileInfo = server.getMap().getOverlay(data.getX()+i, data.getY()+j);
+			out.writeObject(tileInfo);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	private void purchaseFromTown()
+	{
+		try
+		{
+			int i,j;
+			i = in.readInt();
+			j = in.readInt();
+			Purchasable target = (Purchasable)in.readObject();
+			MapOverlay overlay = server.getMap().getOverlay(data.getX()+i, data.getY()+j);
+			if (!overlay.getTown().processPurchase(target)) {out.writeInt(SPU.ServerResponse.MOVE_FAIL.ordinal()); return;}
+			if (!data.spend(target.getPrice())) {out.writeInt(SPU.ServerResponse.MOVE_FAIL.ordinal()); return;}
+			out.writeInt(SPU.ServerResponse.MOVE_OK.ordinal());
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
 	private void logout()
 	{
 		server.userLogoff(data.getName());
@@ -296,7 +338,7 @@ public class ClientHandler extends Thread{
 		}
 	}
 	
-	public void disconnect() //force disconnect
+	private void disconnect() //force disconnect
 	{
 		try
 		{
@@ -321,4 +363,5 @@ public class ClientHandler extends Thread{
 		server.removeHandler(this);
 		this.interrupt();
 	}
+	
 }

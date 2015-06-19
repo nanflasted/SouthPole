@@ -68,4 +68,22 @@ public class TownData implements java.io.Serializable{
 		x = spawnX;
 		y = spawnY;
 	}
+	
+	public boolean processPurchase(Purchasable target)
+	{
+		for (Purchasable t : items)
+		{
+			if (t.equals(target)){
+				return items.remove(target);
+			}
+		}
+		for (Purchasable t : doges)
+		{
+			if (t.equals(target))
+			{
+				return items.remove(target);
+			}
+		}
+		return false;
+	}
 }

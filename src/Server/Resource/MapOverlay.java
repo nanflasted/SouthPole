@@ -67,4 +67,9 @@ public class MapOverlay implements Serializable {
 		town = (TownData)in.readObject();
 		users = (ArrayList<String>)in.readObject();
 	}
+	
+	public TownData getTown()
+	{
+		return town;
+	}
 }
