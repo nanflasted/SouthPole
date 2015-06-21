@@ -77,8 +77,8 @@ public class MainServer extends Thread
 				else
 				{
 					out.writeInt(new Integer((int)(Math.random()*(ep-sp))+sp).intValue());
-					out.flush();
 				}
+				out.flush();
 				rsset.close();
 				pst.close();
 				in.close();

@@ -24,7 +24,7 @@ public class GameScript : MonoBehaviour {
 	int handshake = -775644979; // this is actually the value of "connectpls".hashCode() in java.
 	int cmd = -1; // used MUCH later in processing user commands to server
 
-	// Command enum constants
+	// Command enum constants	
 	int LOGIN = SPU.Command.LOGIN.ordinal(),
 		 SIGNUP = SPU.Command.SIGNUP.ordinal(),
 		 GETCOND =SPU.Command.GETCOND.ordinal(),
@@ -223,8 +223,11 @@ public class GameScript : MonoBehaviour {
 
 			int visibility = input.readInt ();
 			SPU.Tile[][] map = (SPU.Tile[][])(input.readObject ());
-			startMenu.enabled = false;
+			((Canvas)(GameObject.Find("Login Menu").GetComponent<Canvas>())).enabled = false;
+			((Canvas)(GameObject.Find ("Registration Menu").GetComponent<Canvas>())).enabled = false;
 			Application.LoadLevel (1);	// load the game.
+			Destroy (GameObject.Find ("Main Menu Music"));
+			startMenu.enabled = false;
 			// TO DO MUCH LATER: Draw the map, using visibility to determine visible tiles, and put this in the new scene.
 
 			// At this point, process move commands one at a time (or logout if the user chooses).
@@ -239,7 +242,7 @@ public class GameScript : MonoBehaviour {
 				cmd = getCommand();
 
 				// This is a tiny waiting period so users don't send a million commands per second and so the server doesn't have to process as many commands.
-				System.Threading.Thread.Sleep(250);
+				Thread.sleep(250);
 			}
 			// At this point, user is ready to log out (cmd == LOGOUT).
 			output.writeInt (LOGOUT);
@@ -247,24 +250,28 @@ public class GameScript : MonoBehaviour {
 			input.close ();
 			output.close ();
 			cnxn.close ();
-			startMenu.enabled = true;
+			Destroy(startMenu);
+			Destroy (GameObject.Find ("BG Music"));
+			Destroy (this);
 
 		}catch (java.lang.Exception e) {
 			// Deal with a failed connection attempt
 			if (cnxn == null) {
 				StartMenuScript sms = (StartMenuScript)(startMenu.GetComponent(typeof(StartMenuScript)));
 				sms.RaiseErrorWindow("Failed to connect. Check your connection settings. The subserver may be down.");
+				print (e.getMessage());
 			}
 			else {
 				// Return to main menu, since connection has timed out.
 				Application.LoadLevel (0);
 				StartMenuScript sms = (StartMenuScript)(startMenu.GetComponent(typeof(StartMenuScript)));
 				sms.RaiseErrorWindow("Connection timed out. Check your connection. The subserver may have gone down.");
+				print (e.getMessage());
 			}
 		}catch (System.Exception e) {
 			// This handles C# exceptions. These shouldn't happen, which is why the errors are printed to the console (for us to test ourselves).
 			print ("Encountered a C# exception:");
-			print (e.Message);
+			print (e.StackTrace);
 		}
 	}
 

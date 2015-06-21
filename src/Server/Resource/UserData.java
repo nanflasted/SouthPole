@@ -10,7 +10,6 @@ import Utility.SPU;
 public class UserData implements java.io.Serializable{
 
 	private String un;
-	private double dosh = 10000.00;
 	private int dailyMoves = SPU.DAILY_MOVES;
 	private int server;
 	private int x;
@@ -18,14 +17,14 @@ public class UserData implements java.io.Serializable{
 	private int visibility; //how many tiles can be seen by this user around himself on each side
 	private double health;
 	private ArrayList<ItemData> supplies = new ArrayList<ItemData>();
-	
-	
+
+
 	public UserData(String un, int server)
 	{
 		this.un = un;
 		this.server = server;
 	}
-	
+
 	public void spawn()
 	{
 		int spawnX = (int)(Math.random()*(SPU.DEFAULT_MAP_SIZE-2*SPU.WATER_BORDER_SIZE))+SPU.WATER_BORDER_SIZE;
@@ -34,27 +33,27 @@ public class UserData implements java.io.Serializable{
 		y = spawnY;
 		visibility = 5;
 	}
-	
+
 	public int getVisibility()
 	{
 		return visibility;
 	}
-	
+
 	public int getX()
 	{
 		return x;
 	}
-	
+
 	public int getY()
 	{
 		return y;
 	}
-	
+
 	public int getMoves()
 	{
 		return dailyMoves;
 	}
-	
+
 	public boolean move(MapData map, int direction)
 	{
 		if (dailyMoves==0) return false;
@@ -74,29 +73,22 @@ public class UserData implements java.io.Serializable{
 		return true;
 	}
 
-	public String getName() 
+	public String getName()
 	{
 		return un;
 	}
 
-	public SPU.Tile[][] look(MapData map) 
+	public SPU.Tile[][] look(MapData map)
 	{
 		SPU.Tile[][] res = new SPU.Tile[visibility*2+1][visibility*2+1];
 		for (int i = x-visibility;i<=x+visibility;i++)
 		{
 			for (int j = y-visibility;j<=y+visibility;j++)
 			{
-				res[i][j] = map.getTile(i, j);
+				res[i - x + visibility][j - y + visibility] = map.getTile(i - x + visibility,j - y + visibility);
 			}
 		}
 		return res;
-	}
-	
-	public boolean spend(double money)
-	{
-		if (dosh < money) return false;
-		dosh -= money;
-		return true;
 	}
 }
 

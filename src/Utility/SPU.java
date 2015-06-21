@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package Utility;
 
@@ -17,12 +17,12 @@ public class SPU {
 
 	//Time to live definition: time to auto-disconnect client when idle
 	public static final int TTL = 30*60*1000; //30 minutes
-	
+
 	//Database related definitions
 	public static final String DRIVERNAME = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 	public static final String DBPW = "southpole";
 	public static final int DBTTL = 5*60*1000;
-	
+
     //amount of water to put at edge of map
     public static final int WATER_BORDER_SIZE = 15;
     //length of edge of map in tiles
@@ -75,39 +75,45 @@ public class SPU {
     }
 
     public static int moveX(int x, int direction)
-    {
+	{
+	    switch (Command.values()[direction])
+	    {
+			case MOVELEFT:
+				return x;
+			case MOVERIGHT:
+				return x;
+			case MOVEUP:
+				return x-1;
+			case MOVEDOWN:
+				return x+1;
+			case STAY:
+			case GETCOND:
+				return x;
+			default:
+				return -1;
+	    }
+	}
+
+	public static int moveY(int y, int direction)
+	{
     	switch (Command.values()[direction])
     	{
-    	case MOVELEFT:
-    		return x;
-    	case MOVERIGHT:
-    		return x;
-    	case MOVEUP:
-    		return x-1;
-    	case MOVEDOWN:
-    		return x+1;
-		default:
-    		return -1;	
+			case MOVELEFT:
+				return y-1;
+			case MOVERIGHT:
+				return y+1;
+			case MOVEUP:
+				return y;
+			case MOVEDOWN:
+				return y;
+			case STAY:
+			case GETCOND:
+				return y;
+			default:
+				return -1;
     	}
-    }
-    
-    public static int moveY(int y, int direction)
-    {
-    	switch (Command.values()[direction])
-    	{
-    	case MOVELEFT:
-    		return y-1;
-    	case MOVERIGHT:
-    		return y+1;
-    	case MOVEUP:
-    		return y;
-    	case MOVEDOWN:
-    		return y;
-		default:
-    		return -1;	
-    	}
-    }
-    
+	}
+
     public static String dataISReadLine(DataInputStream stream) throws IOException {
         StringBuilder res = new StringBuilder();
         char temp;
@@ -132,7 +138,7 @@ public class SPU {
     	in.close();
     	return names;
     }
-    
+
     public static boolean verifyHandshake(String serverHS, int handshake)
     {
     	return (handshake == serverHS.hashCode());

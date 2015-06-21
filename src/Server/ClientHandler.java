@@ -170,7 +170,6 @@ public class ClientHandler extends Thread{
 				out.flush();
 				return;
 			}
-			rsset.next();
 			byte[] userByte = rsset.getBytes("class");
 			data = (UserData)(new ObjectInputStream(new ByteArrayInputStream(userByte)).readObject());
 			server.userLogin(data);
@@ -286,7 +285,7 @@ public class ClientHandler extends Thread{
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void purchaseFromTown()
 	{
 		try
@@ -305,7 +304,7 @@ public class ClientHandler extends Thread{
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void logout()
 	{
 		server.userLogoff(data.getName());
@@ -337,7 +336,7 @@ public class ClientHandler extends Thread{
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void disconnect() //force disconnect
 	{
 		try
@@ -363,5 +362,4 @@ public class ClientHandler extends Thread{
 		server.removeHandler(this);
 		this.interrupt();
 	}
-	
 }
