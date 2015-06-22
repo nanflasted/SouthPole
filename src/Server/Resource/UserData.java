@@ -17,6 +17,7 @@ public class UserData implements java.io.Serializable{
 	private int visibility; //how many tiles can be seen by this user around himself on each side
 	private double health;
 	private ArrayList<ItemData> supplies = new ArrayList<ItemData>();
+	private ArrayList<DogeData>	activeDoges = new ArrayList<DogeData>();
 
 
 	public UserData(String un, int server)
@@ -89,6 +90,37 @@ public class UserData implements java.io.Serializable{
 			}
 		}
 		return res;
+	}
+	
+	public void activateDoge(DogeData doge)
+	{
+		activeDoges.add(doge);
+	}
+	
+	public void deactivateDoge(DogeData doge)
+	{
+		activeDoges.remove(doge);
+	}
+	
+	public double calculatePower()
+	{
+		double power = 0;
+		for (DogeData d : activeDoges)
+		{
+			power += d.getPower();
+		}
+		return power;
+	}
+	
+	public double calculateWeight()
+	{
+		double weight = 0;
+		for (ItemData i : supplies)
+		{
+			weight += i.getWeight();
+		}
+		// calculate the weight of doges as well?
+		return weight;
 	}
 }
 

@@ -10,4 +10,9 @@ public class ItemData implements Purchasable {
 	{
 		return price;
 	}
+	
+	public double getWeight()
+	{
+		return weight;
+	}
 }
