@@ -5,11 +5,13 @@ using System.Collections;
 
 // Disable "variable declared but not used" warnings
 #pragma warning disable 0168
+#pragma warning disable 0219
+#pragma warning disable 0414
 
 // This script basically just manages button sounds, which play when hovering over and clicking on a button.
 public class ButtonScript : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler {
 
-	public AudioSource hoverSound, clickSound;
+	public AudioSource hoverSound, clickSound; // self-explanatory
 
 	// Use this for initialization
 	void Start () {

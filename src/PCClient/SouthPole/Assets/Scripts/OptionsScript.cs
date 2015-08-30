@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 // Disable "variable declared but not used" warnings
 #pragma warning disable 0168
+#pragma warning disable 0219
+#pragma warning disable 0414
 
 // This script deals with managing user preferences in the main menu and in the game.
 // Currently only audio volumes/muting are included, but we can add other options 
@@ -20,6 +22,10 @@ public class OptionsScript : MonoBehaviour {
 	public InputField musicBox, sfxBox;
 	public Toggle musicTgl, sfxTgl;
 	public bool musicMuted, sfxMuted; //Used later for saving user prefs.
+
+	// Temporary values (if the user hits "Cancel" in the options menu)
+	public int tempMusicVol, tempSfxVol;
+	public bool tempMusicTgl, tempSfxTgl;
 	
 	// Initialization
 	void Start () {
@@ -162,5 +168,32 @@ public class OptionsScript : MonoBehaviour {
 		StreamWriter sw = new StreamWriter ("Assets/misc/userPrefs.ini");
 		sw.Write (sb.ToString ());
 		sw.Close ();
+	}
+
+	// Save current values so user can revert his/her changes when clicking "Cancel."
+	public void saveVals() {
+		tempMusicVol = Convert.ToInt16 (musicBox.text);
+		tempSfxVol = Convert.ToInt16 (sfxBox.text);
+		tempMusicTgl = musicTgl.isOn;
+		tempSfxTgl = sfxTgl.isOn;
+	}
+
+	// Revert changes when the user clicks "Cancel."
+	public void Revert() {
+		// Set muted bools first.
+		musicTgl.isOn = tempMusicTgl;
+		sfxTgl.isOn = tempSfxTgl;
+		
+		// Change mute statuses and volumes depending on temp values.
+		MuteMusicToggled (); 
+		MuteSFXToggled ();
+		
+		// Then, set sliders (and use methods to change BOTH boxes and volume).
+		musicScroll.value = tempMusicVol;
+		sfxScroll.value = tempSfxVol;
+		
+		// Set text box values automatically
+		MusicSliderChanged (); 
+		SFXSliderChanged ();
 	}
 }

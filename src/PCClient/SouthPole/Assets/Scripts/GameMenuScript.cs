@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 // Disable "variable declared but not used" warnings
 #pragma warning disable 0168
+#pragma warning disable 0219
+#pragma warning disable 0414
 
 // This class manages the in-game menu.
 // From there, you can choose to continue playing the game, change options, quit to the main menu, or quit the game entirely.
@@ -42,6 +44,8 @@ public class GameMenuScript : MonoBehaviour {
 	public void OptionsClick() {
 		pauseMenu.enabled = false;
 		optionsMenu.enabled = true;
+
+		((OptionsScript)(optionsMenu.GetComponent (typeof(OptionsScript)))).saveVals ();
 	}
 
 	// Close the options menu and save changes.
@@ -49,6 +53,13 @@ public class GameMenuScript : MonoBehaviour {
 		pauseMenu.enabled = true;
 		optionsMenu.enabled = false;
 		((OptionsScript)(optionsMenu.GetComponent(typeof(OptionsScript)))).savePrefs ();
+	}
+
+	// Close the options menu and revert changes.
+	public void CancelClick() {
+		pauseMenu.enabled = true;
+		optionsMenu.enabled = false;
+		((OptionsScript)(optionsMenu.GetComponent (typeof(OptionsScript)))).Revert ();
 	}
 
 	// Ask if the user wants to return to the main menu.
@@ -66,7 +77,6 @@ public class GameMenuScript : MonoBehaviour {
 		// If you experience problems, try removing the comment slashes from the next line and commenting out the line after it.
 		// ((GameScript)(GameObject.Find ("Connection Manager"))).logout ();
 		((GameScript)(GameObject.Find ("Connection Manager").GetComponent (typeof(GameScript)))).logout ();
-		
 		Application.LoadLevel (0); // goes to main menu
 	}
 
@@ -86,8 +96,6 @@ public class GameMenuScript : MonoBehaviour {
 		// ((GameScript)(GameObject.Find ("Connection Manager"))).logout ();
 		((GameScript)(GameObject.Find ("Connection Manager").GetComponent (typeof(GameScript)))).logout ();
 		
-		// Wait a bit for connection to close, then quit
-		System.Threading.Thread.Sleep(3000);
 		Application.Quit ();
 	}
 
@@ -116,7 +124,7 @@ public class GameMenuScript : MonoBehaviour {
 			}
 			if (optionsMenu.enabled) {
 				optionsMenu.enabled = false;
-				((OptionsScript)(optionsMenu.GetComponent(typeof(OptionsScript)))).savePrefs ();
+				((OptionsScript)(optionsMenu.GetComponent(typeof(OptionsScript)))).Revert();
 			}
 		}
 	}

@@ -15,6 +15,7 @@ using Utility;
 // Disable "variable declared but not used" warnings
 #pragma warning disable 0168
 #pragma warning disable 0219
+#pragma warning disable 0414
 
 // This class manages the game and connection stuff, in-game and in the main menu.
 public class GameScript : MonoBehaviour {
@@ -23,6 +24,7 @@ public class GameScript : MonoBehaviour {
 	string ip = "127.0.0.1";
 	int handshake = -775644979; // this is actually the value of "connectpls".hashCode() in java.
 	int cmd = -1; // used MUCH later in processing user commands to server
+	int cmdDelay = 250; // # of milliseconds between processing commands from user
 
 	// Command enum constants	
 	int LOGIN = SPU.Command.LOGIN.ordinal(),
@@ -70,7 +72,7 @@ public class GameScript : MonoBehaviour {
 			output.flush ();
 			
 			// Receive whatever port the server sends (random or determined).
-			cnxn.setSoTimeout(15000); // 15-sec timeout for input reads
+			cnxn.setSoTimeout(10000); // 10-sec timeout for input reads
 			ObjectInputStream input = new ObjectInputStream (cnxn.getInputStream ());
 			int nextPort = input.readInt ();
 			
@@ -134,7 +136,7 @@ public class GameScript : MonoBehaviour {
 			
 			// Check if acc was created
 			ObjectInputStream input = new ObjectInputStream(cnxn.getInputStream());
-			cnxn.setSoTimeout(15000);
+			cnxn.setSoTimeout(10000);
 			bool acctCreated = input.readInt () == SPU.ServerResponse.ACCOUNT_CREATE_OK.ordinal(); 
 			if (!acctCreated) {
 				// Display an error message if registration failed.
@@ -153,6 +155,7 @@ public class GameScript : MonoBehaviour {
 			if (acctCreated) {
 				usernameLogin.text = usernameReg.text;
 				passwordLogin.text = passwordReg.text;
+				((StartMenuScript)(startMenu.GetComponent(typeof(StartMenuScript)))).RegToLogin();
 				loginAndPlay (port);
 			}
 			
@@ -202,7 +205,7 @@ public class GameScript : MonoBehaviour {
 
 			// Check if login was successful or failed
 			ObjectInputStream input = new ObjectInputStream(cnxn.getInputStream());
-			cnxn.setSoTimeout(15000);
+			cnxn.setSoTimeout(10000);
 			if (input.readInt () != SPU.ServerResponse.LOGIN_OK.ordinal()) {
 				// Login failed at this point. Disconnect from the server so the user can try again.
 				loginErrorMessage.enabled = true;
@@ -223,14 +226,14 @@ public class GameScript : MonoBehaviour {
 
 			int visibility = input.readInt ();
 			SPU.Tile[][] map = (SPU.Tile[][])(input.readObject ());
-			((Canvas)(GameObject.Find("Login Menu").GetComponent<Canvas>())).enabled = false;
-			((Canvas)(GameObject.Find ("Registration Menu").GetComponent<Canvas>())).enabled = false;
 			Application.LoadLevel (1);	// load the game.
+			Destroy(GameObject.Find("Login Menu"));
+			Destroy(GameObject.Find("Registration Menu"));
 			Destroy (GameObject.Find ("Main Menu Music"));
-			startMenu.enabled = false;
 			// TO DO MUCH LATER: Draw the map, using visibility to determine visible tiles, and put this in the new scene.
 
 			// At this point, process move commands one at a time (or logout if the user chooses).
+			/*
 			cmd = getCommand();
 			while (cmd != LOGOUT) {
 				// First write the command...
@@ -242,16 +245,17 @@ public class GameScript : MonoBehaviour {
 				cmd = getCommand();
 
 				// This is a tiny waiting period so users don't send a million commands per second and so the server doesn't have to process as many commands.
-				Thread.sleep(250);
+				Thread.sleep(cmdDelay);
 			}
+			*/
 			// At this point, user is ready to log out (cmd == LOGOUT).
 			output.writeInt (LOGOUT);
 			output.flush();
 			input.close ();
 			output.close ();
 			cnxn.close ();
-			Destroy(startMenu);
 			Destroy (GameObject.Find ("BG Music"));
+			Application.LoadLevel(0); ///////////////////////////////////////////////TEMP AF
 			Destroy (this);
 
 		}catch (java.lang.Exception e) {

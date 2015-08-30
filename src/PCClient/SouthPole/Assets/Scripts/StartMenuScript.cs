@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 // Disable "variable declared but not used" warnings
 #pragma warning disable 0168
+#pragma warning disable 0219
+#pragma warning disable 0414
 
 // This script handles the main menu and allows for the user to play multiplayer, change options, or exit.
 // The single-player mode is not yet supported.
@@ -68,7 +70,7 @@ public class StartMenuScript : MonoBehaviour {
 	
 	// Load saved login data.
 	public bool loadLogin() {
-		// Try to load data from the login file ("login.ini").
+		// Try to load data from the login file ("login.ini") if it exists.
 		StreamReader sr = null;	
 		try {
 			sr = new StreamReader ("Assets/misc/login.ini");
@@ -141,6 +143,13 @@ public class StartMenuScript : MonoBehaviour {
 		errorWindow.enabled = false;
 	}
 
+	// Just in case the user has a successful registration but the connection fails, he/she will be taken back to the login menu
+	// 		INSTEAD OF the registration menu.
+	public void RegToLogin() {
+		registrationMenu.enabled = false;
+		loginMenu.enabled = true;
+	}
+
 	/*****          Single-Player Methods (CURRENTLY NOTHING, BASICALLY)          *****/
 
 	// Start single player.
@@ -154,6 +163,8 @@ public class StartMenuScript : MonoBehaviour {
 	public void OptionsPress() {
 		startMenu.enabled = false;
 		optionsMenu.enabled = true;
+
+		((OptionsScript)(optionsMenu.GetComponent (typeof(OptionsScript)))).saveVals ();
 	}
 	
 	// Finished changing options. Go back to main menu and save preferences.
@@ -162,8 +173,15 @@ public class StartMenuScript : MonoBehaviour {
 		startMenu.enabled = true;
 		((OptionsScript)(optionsMenu.GetComponent(typeof(OptionsScript)))).savePrefs ();
 	}
+	
+	// Close the options menu and revert changes.
+	public void CancelClick() {
+		optionsMenu.enabled = false;
+		startMenu.enabled = true;
+		((OptionsScript)(optionsMenu.GetComponent (typeof(OptionsScript)))).Revert ();
+	}
 
-	/*****          Quit Game Methods          *****/
+	/*****          "Quit Game" Methods          *****/
 	
 	// Pulls up the quit menu if the Quit button on main menu is clicked.
 	public void OnExitPress() {
