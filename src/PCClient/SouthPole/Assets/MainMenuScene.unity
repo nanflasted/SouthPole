@@ -5653,7 +5653,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Register failed. Please enter a username and password.
+  m_Text: Registration failed. Please enter a username and password.
 --- !u!224 &987369077
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7774,6 +7774,8 @@ MonoBehaviour:
   loginErrorMessage: {fileID: 1471455936}
   regFailedMessage: {fileID: 987369076}
   startMenu: {fileID: 1715343896}
+  isQuitting: 0
+  isLoading: 0
 --- !u!4 &1438347068
 Transform:
   m_ObjectHideFlags: 0

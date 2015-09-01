@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.IO;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,14 +21,12 @@ using Utility;
 // This class manages the game and connection stuff, in-game and in the main menu.
 public class GameScript : MonoBehaviour {
 
-	// Constants -- may be changed later (except for cmd - leave this alone)
+	// Constants -- may be changed later
 	string ip = "127.0.0.1";
 	int handshake = -775644979; // this is actually the value of "connectpls".hashCode() in java.
-	int cmd = -1; // used MUCH later in processing user commands to server
-	int cmdDelay = 250; // # of milliseconds between processing commands from user
 
 	// Command enum constants	
-	int LOGIN = SPU.Command.LOGIN.ordinal(),
+	static int LOGIN = SPU.Command.LOGIN.ordinal(),
 		 SIGNUP = SPU.Command.SIGNUP.ordinal(),
 		 GETCOND =SPU.Command.GETCOND.ordinal(),
 		 MOVEUP =SPU.Command.MOVEUP.ordinal(),
@@ -41,6 +40,12 @@ public class GameScript : MonoBehaviour {
 	public InputField usernameLogin, passwordLogin, usernameReg, passwordReg;
 	public Text loginErrorMessage, regFailedMessage;
 	public Canvas startMenu;
+	public static int cmd = SPU.Command.GETCOND.ordinal(); // used MUCH later in processing user commands to server
+	public static bool logout = false; // used for commands also, when logging out
+	public bool isQuitting = false; // used in case the user wants to quit the game entirely
+	public System.Threading.Thread userInputThread = null;
+	public AsyncOperation load = null;
+	public bool isLoading = false;
 
 	// Initialization
 	void Start () {
@@ -89,15 +94,17 @@ public class GameScript : MonoBehaviour {
 			
 		} catch (java.lang.Exception e) {
 			// Display some kind of error window if there was a connection error (basically a Java exception).
-			// If the connection is null, the connection attempt failed; otherwise, the connection timed out.
+			// If the socket is null, the connection attempt failed; otherwise, the connection timed out, or something else happened.
 			StartMenuScript sms = (StartMenuScript)(startMenu.GetComponent(typeof(StartMenuScript)));
 			if (cnxn == null)
 				sms.RaiseErrorWindow("Failed to connect. Check your connection settings. The main server may be down.");
-			else
+			else if (e.GetType() == typeof(SocketTimeoutException)) 
 				sms.RaiseErrorWindow("Connection timed out. Check your connection. The main server may have gone down.");
+			else
+				sms.RaiseErrorWindow("An unknown exception occurred when trying to connect to the main server.");
 		} catch (System.Exception e) {
-			// This handles C# exceptions. These shouldn't happen, which is why the errors are printed to the console (for us to test ourselves).
-			print ("Encountered a C# exception:");
+			// This handles C# exceptions. These shouldn't happen, which is why the errors are printed to the console (for us to test for ourselves).
+			print ("Encountered a C# exception:\n");
 			print (e.Message);
 		} 
 	}
@@ -113,6 +120,7 @@ public class GameScript : MonoBehaviour {
 
 		// First, connect to the subserver at the given port.
 		Socket cnxn = null;
+		bool acctCreated = false;
 		try {
 			cnxn = new Socket(ip, port);
 			ObjectOutputStream output = new ObjectOutputStream(cnxn.getOutputStream());
@@ -137,7 +145,7 @@ public class GameScript : MonoBehaviour {
 			// Check if acc was created
 			ObjectInputStream input = new ObjectInputStream(cnxn.getInputStream());
 			cnxn.setSoTimeout(10000);
-			bool acctCreated = input.readInt () == SPU.ServerResponse.ACCOUNT_CREATE_OK.ordinal(); 
+			acctCreated = input.readInt () == SPU.ServerResponse.ACCOUNT_CREATE_OK.ordinal(); 
 			if (!acctCreated) {
 				// Display an error message if registration failed.
 				StartMenuScript  sms = (StartMenuScript)(startMenu.GetComponent(typeof(StartMenuScript)));
@@ -161,14 +169,18 @@ public class GameScript : MonoBehaviour {
 			
 		}catch (java.lang.Exception e) {
 			// Display some kind of error window if there was a connection error (basically a Java exception).
-			// If the connection is null, the connection attempt failed; otherwise, the connection timed out.
+			// If the socket is null, the connection attempt failed; otherwise, the connection timed out, or something else happened.
 			StartMenuScript sms = (StartMenuScript)(startMenu.GetComponent(typeof(StartMenuScript)));
 			if (cnxn == null)
 				sms.RaiseErrorWindow("Failed to connect. Check your connection settings. The subserver may be down.");
-			else
+			else if (e.GetType() == typeof(SocketTimeoutException) && !acctCreated)
 				sms.RaiseErrorWindow("Connection timed out. Check your connection. The subserver may have gone down.");
+			else if (acctCreated)
+				sms.RaiseErrorWindow("Connection timed out, but registration was successful. The subserver may have gone down suddenly.");
+			else
+				sms.RaiseErrorWindow("An unknown exception occurred when trying to connect to the main server.");
 		}catch (System.Exception e) {
-			// This handles C# exceptions. These shouldn't happen, which is why the errors are printed to the console (for us to test ourselves).
+			// This handles C# exceptions. These shouldn't happen, which is why the errors are printed to the console (for us to test for ourselves).
 			print ("Encountered a C# exception:\n");
 			print (e.StackTrace);
 		}
@@ -184,6 +196,7 @@ public class GameScript : MonoBehaviour {
 
 		// First, connect to the subserver at the given port.
 		Socket cnxn = null;
+		bool playerInGame = false; // tracks whether the player is in-game (i.e. not in the main menu)
 		try {
 			cnxn = new Socket(ip, port);
 			ObjectOutputStream output = new ObjectOutputStream(cnxn.getOutputStream());
@@ -226,15 +239,25 @@ public class GameScript : MonoBehaviour {
 
 			int visibility = input.readInt ();
 			SPU.Tile[][] map = (SPU.Tile[][])(input.readObject ());
-			Application.LoadLevel (1);	// load the game.
+
+			// Load the game and start necessary threads.
+			isLoading = true;
+			StartCoroutine("LoadGame");
+			while (isLoading);
+			playerInGame = true;
 			Destroy(GameObject.Find("Login Menu"));
 			Destroy(GameObject.Find("Registration Menu"));
 			Destroy (GameObject.Find ("Main Menu Music"));
+
+			// Create a thread to process user inputs (i.e. for the menu and for player movement)
+			userInputThread = new System.Threading.Thread(new ThreadStart(new UserInputThread().ProcessInput));
+			userInputThread.Start();
+			while (!userInputThread.IsAlive); //loop until thread activates
+
 			// TO DO MUCH LATER: Draw the map, using visibility to determine visible tiles, and put this in the new scene.
 
 			// At this point, process move commands one at a time (or logout if the user chooses).
-			/*
-			cmd = getCommand();
+		
 			while (cmd != LOGOUT) {
 				// First write the command...
 				output.writeInt (cmd);
@@ -242,69 +265,134 @@ public class GameScript : MonoBehaviour {
 				// ...then receive the updated visibility and map from the server.
 				visibility = input.readInt();
 				map = (SPU.Tile[][])(input.readObject());
-				cmd = getCommand();
-
-				// This is a tiny waiting period so users don't send a million commands per second and so the server doesn't have to process as many commands.
-				Thread.sleep(cmdDelay);
 			}
-			*/
+
 			// At this point, user is ready to log out (cmd == LOGOUT).
 			output.writeInt (LOGOUT);
 			output.flush();
+
+			// The game can just exit everything completely if the user is quitting to desktop.
+			if (isQuitting)
+				Application.Quit ();
+
 			input.close ();
 			output.close ();
 			cnxn.close ();
 			Destroy (GameObject.Find ("BG Music"));
-			Application.LoadLevel(0); ///////////////////////////////////////////////TEMP AF
+			isLoading = true;
+			StartCoroutine("LoadMainMenu");
+			while (isLoading);
 			Destroy (this);
 
 		}catch (java.lang.Exception e) {
 			// Deal with a failed connection attempt
-			if (cnxn == null) {
-				StartMenuScript sms = (StartMenuScript)(startMenu.GetComponent(typeof(StartMenuScript)));
+			StartMenuScript sms = (StartMenuScript)(startMenu.GetComponent(typeof(StartMenuScript)));
+			if (cnxn == null) 
 				sms.RaiseErrorWindow("Failed to connect. Check your connection settings. The subserver may be down.");
-				print (e.getMessage());
-			}
-			else {
-				// Return to main menu, since connection has timed out.
-				Application.LoadLevel (0);
-				StartMenuScript sms = (StartMenuScript)(startMenu.GetComponent(typeof(StartMenuScript)));
+			else if (e.GetType() == typeof(SocketTimeoutException) && !playerInGame)
 				sms.RaiseErrorWindow("Connection timed out. Check your connection. The subserver may have gone down.");
-				print (e.getMessage());
+			else {
+				// Return to the main menu, since connection has timed out.
+				Destroy (startMenu);
+				Destroy (GameObject.Find ("BG Music"));
+				userInputThread.Abort();
+				userInputThread.Join();
+				isLoading = true;
+				StartCoroutine("LoadMainMenu");
+				while (isLoading);
+				StartMenuScript sms2 = ((StartMenuScript)(GameObject.Find("Start Menu").GetComponent<StartMenuScript>()));
+				sms2.RaiseErrorWindow("Connection timed out. Check your connection. The subserver may have gone down.");
+				Destroy (this);
 			}
 		}catch (System.Exception e) {
-			// This handles C# exceptions. These shouldn't happen, which is why the errors are printed to the console (for us to test ourselves).
-			print ("Encountered a C# exception:");
+			// This handles C# exceptions. These shouldn't happen, which is why the errors are printed to the console (for us to test for ourselves).
+			print ("Encountered a C# exception:\n");
 			print (e.StackTrace);
 		}
-	}
-
-	// This gets the next command based on user input.
-	// If the command is set to logout (based on the method logout() -- see below), then it just returns logout as well.
-	public int getCommand() {
-		// Commands are decided by the button pressed (or clicked -- see pause menu buttons).
-		// If the user is not logging out, then s/he may move or do nothing depending on keys pressed.
-		// Mouse support can be added once we get the map visually implemented.
-		if (cmd == LOGOUT)
-			return LOGOUT;
-
-		if (Input.GetKeyDown (KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
-			return MOVEUP;
-		if (Input.GetKeyDown (KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
-			return MOVELEFT;
-		if (Input.GetKeyDown (KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
-			return MOVEDOWN;
-		if (Input.GetKeyDown (KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
-			return MOVERIGHT;
-
-		// If the user is not moving, we can just update the map (to see surroundings).
-		return GETCOND;
 	}
 
 	// This can be called by the methods QuitToMainMenu() and QuitToDesktop() in GameMenuScript.
 	// Once called, the command is set to logout and it will be the next (and last) command processed in the loginAndPlay() method above.
 	// (It will be called only if the user confirms he/she wants to quit to either the main menu or the desktop.)
-	public void logout() {
-		cmd = LOGOUT;
+	// IsQuitting refers to whether or not the user is quitting to desktop.
+	public void setLogout(bool isQuitting) {
+		logout = true;
+		this.isQuitting = isQuitting;
 	}
+
+	IEnumerator LoadMainMenu() {
+		load = Application.LoadLevelAsync(0);
+		yield return load;
+		isLoading = false;
+	}
+
+	IEnumerator LoadGame() {
+		load = Application.LoadLevelAsync(1);
+		yield return load;
+		isLoading = false;
+	}
+
+	// This thread handles displaying the in-game menu as well as processing movement commands (and logging out, kind of).
+	public class UserInputThread {
+		public void ProcessInput() {
+			bool menuEnabled = false;
+			Canvas pauseMenu = GameObject.Find("Pause Menu").GetComponent<Canvas>(),
+				quitConfirmMenu = GameObject.Find ("QuitConfirmationMenu").GetComponent<Canvas>(),
+				mainMenuOptionCanvas = GameObject.Find ("MM Yes Button Canvas").GetComponent<Canvas>(),
+				quitOptionCanvas = GameObject.Find("Quit Button Canvas").GetComponent<Canvas>(),
+				optionsMenu = GameObject.Find("Options Menu").GetComponent<Canvas>();
+
+			while (true) {
+				// Part 1: Menu Stuff
+
+				// Check if Esc key is pressed first.
+				if (Input.GetKeyDown(KeyCode.Escape)) {
+
+					// Toggle pause menu if pressed
+					pauseMenu.enabled = !pauseMenu.enabled;
+
+					// Check if menu screen(s) are open (i.e. main, options, or quit dialog)
+					if (!quitConfirmMenu.enabled && !optionsMenu.enabled)
+						menuEnabled=pauseMenu.enabled;
+
+					// If any other menus are currently open, close them and return to the pause menu.
+					if (quitConfirmMenu.enabled) {
+						quitConfirmMenu.enabled = false;
+						mainMenuOptionCanvas.enabled = false;
+						quitOptionCanvas.enabled = false;
+					}
+					if (optionsMenu.enabled) {
+						optionsMenu.enabled = false;
+						((OptionsScript)(optionsMenu.GetComponent(typeof(OptionsScript)))).Revert();
+					}
+				}
+
+				// Part 2: Move Commands (and logging out, if applicable)
+
+				// If the user chose to log out (through the menu), do NOT process the move commands.
+				if (logout) {
+					cmd = LOGOUT;
+					break;
+				}
+
+				// By default, the character stays in place while getting the new map info from the server.
+				cmd = GETCOND;
+
+				// If the menu screen is up, do NOT process other move commands (i.e. go to the next iteration).
+				if (menuEnabled)
+					continue;
+
+				// Now, if the user is not logging out, determine the next command to be called by checking what keys are pressed
+				//    (WASD or arrow keys). Priority-based ("Else if" for each statement).
+				if (Input.GetKeyDown (KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+					cmd = MOVEUP;
+				else if (Input.GetKeyDown (KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+					cmd = MOVELEFT;
+				else if (Input.GetKeyDown (KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+					cmd = MOVEDOWN;
+				else if (Input.GetKeyDown (KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+					cmd = MOVERIGHT;
+			}
+		}
+	};
 }

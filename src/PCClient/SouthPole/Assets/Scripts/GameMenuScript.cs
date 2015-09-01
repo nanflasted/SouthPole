@@ -75,9 +75,8 @@ public class GameMenuScript : MonoBehaviour {
 	public void QuitToMainMenu() {
 		// I have not been able to test this method or QuitToDesktop().
 		// If you experience problems, try removing the comment slashes from the next line and commenting out the line after it.
-		// ((GameScript)(GameObject.Find ("Connection Manager"))).logout ();
-		((GameScript)(GameObject.Find ("Connection Manager").GetComponent (typeof(GameScript)))).logout ();
-		Application.LoadLevel (0); // goes to main menu
+		// ((GameScript)(GameObject.Find ("Connection Manager"))).setLogout (false);
+		((GameScript)(GameObject.Find ("Connection Manager").GetComponent (typeof(GameScript)))).setLogout (false);
 	}
 
 	// Ask if the user wants to quit to the desktop.
@@ -92,11 +91,9 @@ public class GameMenuScript : MonoBehaviour {
 	// Log out and close the game entirely.
 	public void QuitToDesktop() {
 		// I have not been able to test this method or QuitToMainMenu().
-		// If you experience problems, try removing the comment slashes from the next line and putting slashes in front of the line after it.
-		// ((GameScript)(GameObject.Find ("Connection Manager"))).logout ();
-		((GameScript)(GameObject.Find ("Connection Manager").GetComponent (typeof(GameScript)))).logout ();
-		
-		Application.Quit ();
+		// If you experience problems, try removing the comment slashes from the next line and commenting out the line after it.
+		// ((GameScript)(GameObject.Find ("Connection Manager"))).setLogout (true);
+		((GameScript)(GameObject.Find ("Connection Manager").GetComponent (typeof(GameScript)))).setLogout (true);
 	}
 
 	// The "No" button appears when the user is asked if he/she wants to quit to the main menu or to the desktop.
@@ -106,26 +103,5 @@ public class GameMenuScript : MonoBehaviour {
 		quitConfirmMenu.enabled = false;
 		mainMenuOptionCanvas.enabled = false;
 		quitOptionCanvas.enabled = false;
-	}
-
-	// Update is used to respond to an Esc. key press (brings up the pause menu)
-	public void Update () {
-		// Check if the Esc. key is pressed
-		if (Input.GetKeyDown (KeyCode.Escape)) {
-
-			// Toggle pause menu if pressed
-			pauseMenu.enabled = !pauseMenu.enabled;
-
-			// If any other menus are currently open, close them and return to the pause menu.
-			if (quitConfirmMenu.enabled) {
-				quitConfirmMenu.enabled = false;
-				mainMenuOptionCanvas.enabled = false;
-				quitOptionCanvas.enabled = false;
-			}
-			if (optionsMenu.enabled) {
-				optionsMenu.enabled = false;
-				((OptionsScript)(optionsMenu.GetComponent(typeof(OptionsScript)))).Revert();
-			}
-		}
 	}
 }
